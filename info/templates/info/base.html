@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block meta %}
+    <!-- Add any additional meta tags here -->
+    {% endblock %}
+    {% block styles %}
+    {% endblock %}
+    <style>
+      footer.cor-footer {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 60px 40px;
+        font-size: 0.875rem;
+      }
+
+      .footer-columns {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px;
+        margin-bottom: var(--margin, 2rem);
+      }
+
+      .footer-column h4 {
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .footer-column a {
+        display: block;
+        text-decoration: none;
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-column a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+<body>
+
+  <header>
+    <h1>{{ title }}</h1>
+  </header>
+
+  <nav>
+    <a href="/">Home</a>
+    <a href="/product">Product</a>
+    <a href="/company">Compnay</a>
+    <a href="/resources">Resources</a>
+    <a href="/support">Support</a>
+    <a href="/legal">Legal</a>
+    <a href="/departments">Departments</a>
+  </nav>
+
+  <main>
+    {% block content %}
+    <p>Welcome to the home page!</p>
+    {% endblock %}
+  <main>
+
+
+</body>
+
+
+<footer class="cor-footer">
+
+
+  <div class="footer-columns">
+    <div class="footer-column">
+      <h4>Product</h4>
+      <a href="{% url 'product_home' %}">Product Overview</a>
+      <a href="#">Features</a>
+      <a href="#">Pricing</a>
+      <a href="#">Integrations</a>
+      <a href="#">API</a>
+    </div>
+    <div class="footer-column">
+      <h4>Company</h4>
+      <a href="{% url 'company_home' %}">Company Overview</a>
+      <a href="#">About Us</a>
+      <a href="#">Careers</a>
+      <a href="#">Leadership</a>
+      <a href="#">Press</a>
+    </div>
+    <div class="footer-column">
+      <h4>Resources</h4>
+      <a href="{% url 'resources_home' %}">Resource Center</a>
+      <a href="#">Blog</a>
+      <a href="#">Events</a>
+      <a href="#">Guides</a>
+      <a href="#">Webinars</a>
+    </div>
+    <div class="footer-column">
+      <h4>Support</h4>
+      <a href="{% url 'support_home' %}">Support Center</a>
+      <a href="#">Help Center</a>
+      <a href="#">Community</a>
+      <a href="#">System Status</a>
+      <a href="#">Contact Support</a>
+    </div>
+    <div class="footer-column">
+      <h4>Legal</h4>
+      <a href="{% url 'legal_home' %}">Legal Overview</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Policy</a>
+      <a href="#">Accessibility</a>
+    </div>
+    <div class="footer-column">
+      <h4>Departments</h4>
+      <a href="{% url 'departments_home' %}">Departments Overview</a>
+      <a href="#">HR Portal</a>
+      <a href="#">IT Services</a>
+      <a href="#">Facilities</a>
+      <a href="#">Finance</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Abracadabra Sports. All rights reserved.</p>
+  </div>
+
+
+</footer>
+
+
+</html>

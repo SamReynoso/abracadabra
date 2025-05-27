@@ -1,0 +1,58 @@
+<section class="app-card">
+  <details class="app-card__details">
+    <summary class="app-card__summary">
+      <strong>Day {{ day_number }}</strong> — {{ label }}
+      <br>
+      <br>
+
+      <div>
+        <strong>Venues [ 3 ]</strong><br>
+        <button>&lt;</button>
+        <button>&gt;</button>
+        <strong>The Big Stadium</strong>
+      </div>
+
+      <div>
+      </div>
+
+      <div>
+      </div>
+
+      <div>
+      </div>
+
+
+
+
+
+
+
+    </summary>
+    <div class="day-table-container">
+      <table class="day-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            {% for area in play_areas %}
+              <th>{{ area.label }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for time_slot in time_slots %}
+            <tr>
+              <td>{{ time_slot.label }}</td>
+              {% for area in play_areas %}
+                <td>
+                  <span>
+                    AbracadabraSportsTeam vs another team  with a name
+                  </span>
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>

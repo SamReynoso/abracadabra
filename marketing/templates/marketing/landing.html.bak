@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="/static/debug.css">
+  </head>
+
+
+  <header class="page-header">
+    <h1>Welcome to Our Landing Page</h1>
+    <p>Your journey starts here!</p>
+  </header>
+
+
+  <nav class="page-navigation">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/info/">Services</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="/app/">App</a></li>
+        <li><a href="/user/profile/">Profile</a></li>
+        {% else %}
+        <li><a href="/demo/">Demo</a></li>
+        <li><a href="/user/register/">Create Account</a></li>
+        {% endif %}
+    </ul>
+  </nav>
+
+
+  <body>
+
+    <main>
+
+      <header>
+        <h2>Featured Content</h2>
+      </header>
+
+      <section>
+        <h3>Latest News</h3>
+        <p>Stay updated with our latest news and announcements.</p>
+      </section>
+
+    </main>
+
+  </body>
+
+
+  <aside class="sidebar left">
+    <h2>Left Sidebar</h2>
+    <p>Additional information or links can go here.</p>
+  </aside>
+
+
+  <aside class="sidebar right">
+    <h2>Right Sidebar</h2>
+    <p>More resources or advertisements can be placed here.</p>
+  </aside>
+
+
+  <footer class="page-footer">
+    <p>&copy; 2023 Your Company Name. All rights reserved.</p>
+    <p>Follow us on:
+      <a href="https://twitter.com" target="_blank">Twitter</a> |
+      <a href="https://facebook.com" target="_blank">Facebook</a> |
+      <a href="https://instagram.com" target="_blank">Instagram</a>
+    </p>
+  </footer>
+
+
+</html>

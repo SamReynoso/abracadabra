@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}<title>{{ title }}</title>{% endblock %}
+
+    {% block meta %}
+    {% endblock%}
+
+    {% block styles %}
+    {% endblock%}
+
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+
+</head>
+
+
+<body>
+  {% block header%} {% endblock %}
+  {% block nav %} {% endblock %}
+  {% block main %} {% endblock %}
+  {% block footer %} {% endblock %}
+  {% block left_sidebar %}{% endblock %}
+  {% block right_sidebar %} {% endblock %}
+  {% block scripts %}{% endblock %}
+</body>
+
+
+</html>

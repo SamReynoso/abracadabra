@@ -1,0 +1,104 @@
+:root {
+  --bg: #fdfdfd;
+  --fg: #333;
+  --accent: #445;
+  --muted: #999;
+  --border: #ddd;
+  --highlight: #eef;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 2rem;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, sans-serif;
+}
+
+main {
+  display: block;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h1, h2, h3, h4, h5 {
+  margin-top: 2rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+a {
+  color: #06c;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+section {
+  padding: 1rem 0;
+  border-top: 1px solid var(--border);
+}
+
+article {
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin: 1rem 0;
+}
+
+nav {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background: var(--highlight);
+  border: 1px solid var(--border);
+}
+
+ul, ol {
+  padding-left: 1.5rem;
+}
+
+blockquote {
+  margin: 1rem;
+  padding-left: 1rem;
+  border-left: 4px solid var(--accent);
+  color: var(--muted);
+  font-style: italic;
+}
+
+code, pre {
+  font-family: monospace;
+  background: #eee;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+figure {
+  margin: 1rem 0;
+  text-align: center;
+}
+figcaption {
+  font-size: 0.9em;
+  color: var(--muted);
+}
+
+button, input, select, textarea {
+  font: inherit;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}

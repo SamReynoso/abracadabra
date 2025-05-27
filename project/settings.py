@@ -21,6 +21,9 @@ ROOT_URLCONF = 'project.urls'
 STATIC_URL = 'static/'
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SITE_ID = 2
+LOGIN_REDIRCT_URL = '/user/profile/'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/user/profile/'
 
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
@@ -30,17 +33,37 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
 
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
     'app',
+    'core',
     'user',
     'info',
+    'marketing',
 ]
 
+MIDDLEWARE = [
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+
+    'allauth.account.middleware.AccountMiddleware',
+
+]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / '../db.sqlite3',
     }
 }
 
@@ -76,12 +99,3 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-MIDDLEWARE = [
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-]

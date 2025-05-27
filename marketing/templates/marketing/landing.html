@@ -1,0 +1,130 @@
+{% extends "core/base-marketing.html" %}
+
+{% block main %}<main>
+
+
+  <!-- Hero Section -->
+  <article class="landing-hero">
+    <div class="landing-hero__background">
+      <section class="hero-style">
+        <div class="hero-grid">
+
+          <div class="hero-text">
+            <h2>Chaos-Proof Your Tournament Day</h2>
+            <p class="hero-subtext">
+              Built by and for directors—ditch the spreadsheets, run events like a machine.
+            </p>
+            <div class="hero-cta">
+              <a class="btn-primary" href="/app">Get Started Free</a>
+              <a class="btn-secondary" href="#">View Live Demo</a>
+            </div>
+          </div>
+
+          <div class="hero-screenshot">
+            <img src="/assets/dashboard-sample.png" alt="AbracadabraSports dashboard preview" />
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </article>
+
+  <section id="under-construction">
+    <div class="text-content">
+    <h1>Abracadabra Is Live—and Evolving Fast</h1>
+    <p>
+      Tournament day doesn't wait, and neither do we. The core system is already running—and it's built to handle the chaos. We’re releasing new features weekly to make your job even easier.
+    </p>
+    <p>
+      Don’t wait for “perfect.” Run your next event with tools that actually help.
+    </p>
+      <p class="quote">
+        Fast for beginners, powerful for pros.
+      </p>
+    </div>
+  </section>
+
+  <div class="band">
+    <p class="quote">
+      No more stress—whether you're running one field or fifty.
+    </p>
+  </div>
+
+  <section id="features">
+    <div class="text-content">
+      <h1>Built for Directors, Trusted by Hustlers</h1> 
+      <p>
+        Whether you're running a one-day round robin or managing dozens of fields across multiple venues, Abracadabra adapts to your workflow—not the other way around.
+      </p>
+      <p>
+        It’s fast and approachable when you need to move quick. It gets out of your way when you just need a schedule. But when you’re ready to dig deep—custom timing, blackout periods, staff schedules—it’s all there.
+      </p>
+      <p>
+        The demo is being integrated now. Soon, you’ll be able to set up divisions, teams, and venues in minutes.
+      </p>
+    </div>
+  </section>
+
+  <section id="section-3">
+    <div class="text-content">
+        <h1>From Chaos to Control</h1>
+        <p>
+          You shouldn’t have to babysit your tools. Abracadabra gives you the power to handle complexity—but only when you ask for it.
+        </p>
+        <p>
+          Fast setup. Clean UI. No hidden traps. Just a system that flexes with your needs.
+        </p>
+        <p class="quote">
+           Abracadabra helps you run events smoothly—fast setup, clean scheduling, and tools that scale with your vision.
+        </p>
+    </div>
+  </section>
+
+  <section id="community">
+  <div class="text-content">
+    <h1>Made for Directors. Backed by Builders.</h1>
+    <p>
+      Abracadabra isn’t a faceless platform—we're tournament junkies, weekend warriors, and volunteers who’ve run more brackets than we can count. We’re building the tools we always wanted.
+    </p>
+    <p>
+      You get more than just software—you get a team that listens, improves fast, and gives a damn about your events.
+    </p>
+    <div class="hero-cta">
+      <a class="btn-primary" href="/app">Join Free Today</a>
+      <a class="btn-secondary" href="#">See It in Action</a>
+    </div>
+  </div>
+</section>
+
+</main>{% endblock %}
+
+
+{% block scripts %}<script>
+
+
+  const sections = document.querySelectorAll("main > section");
+
+  function handleScroll() {
+    const viewPoint = window.innerHeight;
+
+    sections.forEach(section => {
+      const top = section.getBoundingClientRect().top;
+      const sectionMargin = parseInt(getComputedStyle(section).marginTop, 10) || 0;
+
+      if (top < viewPoint + (sectionMargin * 0.66)) {
+        section.classList.add("view");
+      } else {
+        section.classList.remove("view");
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+    window.addEventListener("load", handleScroll);
+  });
+
+
+</script>{% endblock %}
+

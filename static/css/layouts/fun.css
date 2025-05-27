@@ -1,0 +1,185 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root 
+{
+  --header-height: 5rem;
+  --nav-height: 3rem;
+  --padding: 5rem;
+  --border-radius: 0.25rem;
+  --section-gap: 4rem;
+}
+
+
+html { font-size: 200%; }
+
+h1 { font-size: 2.2em; }
+
+h2 { font-size: 1.5em; }
+
+h3 { font-size: 1.1em; }
+
+ol { font-size: .9em; }
+
+ul { list-style-type: none; }
+
+a {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+
+body {
+  font-size: 1rem;
+  font-family: Arial;
+}
+
+header {
+  display: flex;
+  height: var(--header-height);
+  width: 100%;
+}
+
+header img.logo {
+  height: 100%;
+  width: auto;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  height: var(--nav-height);
+  line-height: var(--nav-height);
+  z-index: var(--nav-z-index);
+}
+
+nav ul {
+  display: flex;
+  flex-direction: row;
+}
+
+nav ul li {
+  flex: 1;
+  text-align: center;
+}
+nav ul li a {
+  text-decoration: none;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: var(--nav-height);
+  padding-bottom: 10rem;
+  transition: margin 0.3s ease;
+}
+
+main > section {
+  padding: var(--padding);
+  margin-top: calc(var(--section-gap) * 3);
+  width: 80ch;
+  border-radius: var(--border-radius);
+  opacity: 0;
+  transition: opacity 1s ease, margin 1s ease;
+}
+
+main > section.view {
+  margin-top: var(--section-gap);
+  opacity: 1;
+}
+
+.landing-hero {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  border-radius: 0;
+}
+
+div.band {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(var(--section-gap) * 2);
+  width: 100vw;
+  margin-top: var(--section-gap);
+}
+
+div.card {
+  max-width: 40rem;
+}
+
+div.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+}
+
+.text-content {
+  justify-content: center;
+}
+
+.text-content p {
+  line-height: 1.5;
+  max-width: 80ch;
+}
+
+
+
+.postscript {
+  font-style: italic;
+  font-size: 0.8em;
+  display: flex;
+  align-items: center;
+  max-width: 80ch;
+}
+
+.quote {
+  font-style: italic;
+  font-size: 1.2em;
+  display: flex;
+  padding: 1rem;
+  margin-top: 1ch;
+  max-width: 80ch;
+}
+
+@media (max-width: 2800px) {
+  html {
+    font-size: 100%;
+  }
+}
+
+@media (max-width: 950px) {
+  html {
+    font-size: 85%;
+  }
+  main > section {
+    width: 90vw;
+  }
+}
+
+@media (max-width: 550px) {
+  :root {
+    --padding: 2rem;
+    --border-radius: 0;
+  }
+
+  html {
+    font-size: 75%;
+  }
+  main > section {
+    width: 100vw;
+  }
+}

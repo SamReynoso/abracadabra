@@ -1,0 +1,13 @@
+:root {
+  --gray: rgb(60, 60, 60);
+  --blue: rgb(20, 120, 223);
+  --yellow: rgb(255, 150, 0);
+  --red: rgb(200, 30, 10);
+  --green: rgb(30, 160, 10);
+  --accent-color: rgb(100, 0, 200);
+  --very-light-blue: rgb(250, 250, 255);
+  --light-blue: rgb(225, 225, 240);
+  --medium-blue: rgb(160, 160, 255);
+  --accent-blue: rgb(105, 105, 200);
+  --dark-blue: rgb(0, 0, 65);
+}

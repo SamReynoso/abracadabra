@@ -1,6 +1,6 @@
 {% extends "core/html.html" %}
 
-{% block title %}Abracadabra Sports{% endblock %}
+{% block title %}<title>Abracadabra Sports</title>{% endblock %}
 
 {% block meta %}
 <meta name="description" content="Chaos-Proof Your Tournament Day with Abracadabra Sports. Built by and for directors—ditch the spreadsheets, run events like a machine.">
@@ -10,8 +10,8 @@
 {% block styles %}
   <link rel="stylesheet" href="/static/css/layouts/footer.css">
   <link rel="stylesheet" href="/static/css/themes/purple.css">
-  <link rel="stylesheet" href="/static/css/layouts/fun.css">
-  <link rel="stylesheet" href="/static/css/hero.css">
+  <link rel="stylesheet" href="/static/css/layouts/marketing.css">
+  <link rel="stylesheet" href="/static/css/layouts/hero.css">
 {% endblock %}
 
 
@@ -34,7 +34,11 @@
     <li><a href="/discover">Discover</a></li>
     <li><a href="/app">Direct</a></li>
     <li><a href="/info">About</a></li>
-    <li><a href="/user/accounts/login">Login</a></li>
+    {% if user.is_authenticated %}
+      <li><a href="/user/account">Account</a></li>
+    {% else %}
+      <li><a href="/user/accounts/login">Login</a></li>
+    {% endif %}
   </ul>
 
 </nav>{% endblock %}

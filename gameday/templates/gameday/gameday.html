@@ -1,0 +1,148 @@
+{% extends "gameday/base.html" %}
+
+{% block content %}
+        <a href="/gameday/division/">view division</a>
+      <details>
+        <summary>Devisions</summary>
+          <table class="gameday-division-table">
+            <tbody>
+              <tr><td>Division</td></tr>
+              <tr><td>Division</td></tr>
+              <tr><td>Division</td></tr>
+              <tr><td>Division</td></tr>
+              <tr><td>Division</td></tr>
+              <tr><td>Division</td></tr>
+              <tr><td>Division</td></tr>
+              <tr><td>Division</td></tr>
+              <tr><td>Division</td></tr>
+              <tr><td>Division</td></tr>
+            </tbody>
+          </table>
+      </details>
+      <details>
+        <summary>My Teams</summary>
+        <table class="gameday-division-table">
+          <tbody>
+            <tr>
+              <td>U13 M</td>
+              <td><progress value="3" max="3" style="width: 100%;">2 of 3 games played</progress></td>
+              <td>Rank: 1</td>
+            </tr>
+            <tr>
+              <td>U15 M</td>
+              <td><progress value="1" max="3" style="width: 100%;">2 of 3 games played</progress></td>
+              <td>Rank: 2</td>
+            </tr>
+            <tr>
+              <td>U17 M</td>
+              <td><progress value="2" max="3" style="width: 100%;">2 of 3 games played</progress></td>
+              <td>Rank: 3</td>
+            </tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details>
+        <summary>My Games</summary>
+        <table class="gameday-division-table">
+          <tbody>
+            <tr>
+              <td>Game 1</td>
+              <td>Opponent 1</td>
+              <td>Score: 3-2</td>
+            </tr>
+            <tr>
+              <td>Game 2</td>
+              <td>Opponent 2</td>
+              <td>Score: 1-4</td>
+            </tr>
+            <tr>
+              <td>Game 3</td>
+              <td>Opponent 3</td>
+              <td>Score: 0-0</td>
+            </tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details>
+        <summary>Team Performance Summary</summary>
+        <progress value="2" max="3" style="width: 100%; margin-top: 1rem;">2 of 3 games played</progress>
+        <div style="width: 300px; max-height: 300px; position: relative;">
+          <canvas id="teamPerformanceChart" ></canvas>
+        <div>
+      </details>
+
+      <details>
+        <summary>Recently Viewed</summary>
+        <details>
+          <summary>Recently Viewed Teams</summary>
+          <table class="gameday-division-table">
+            <tbody>
+              <tr>
+                <td>Team A</td>
+                <td>Last Game: 2-1 Win</td>
+              </tr>
+              <tr>
+                <td>Team B</td>
+                <td>Last Game: 0-3 Loss</td>
+              </tr>
+              <tr>
+                <td>Team C</td>
+                <td>Last Game: 1-1 Draw</td>
+              </tr>
+            </tbody>
+          </table>
+        </details>
+
+        <details>
+          <summary>Recently Viewed Games</summary>
+          <table class="gameday-division-table">
+            <tbody>
+              <tr>
+                <td>Game 1</td>
+                <td>Teams: A vs B</td>
+                <td>Date: 2023-10-01</td>
+              </tr>
+              <tr>
+                <td>Game 2</td>
+                <td>Teams: C vs D</td>
+                <td>Date: 2023-10-02</td>
+              </tr>
+              <tr>
+                <td>Game 3</td>
+                <td>Teams: E vs F</td>
+                <td>Date: 2023-10-03</td>
+              </tr>
+            </tbody>
+          </table>
+        </details>
+      </details>
+    </div>
+{% endblock %}
+{% block scripts %}
+  <script>
+    const ctx = document.getElementById('teamPerformanceChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Win', 'Loss', 'Draw', 'Pending'],
+        datasets: [{
+          label: 'Team A Results',
+          data: [2, 1, 1, 1],
+          backgroundColor: ['#4CAF50', '#f44336', '#FFC107' , '#2196F3'],
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  </script>
+{% endblock %}

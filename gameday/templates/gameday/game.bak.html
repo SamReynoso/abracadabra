@@ -1,0 +1,176 @@
+{% extends "gameday/base.html" %}
+
+{% block content %}
+
+<h2>Game 1</h2>
+<section>
+  <h3>Status</h3>
+  <a href="/gameday/scoreboard/">Full screen scoreboard</a>
+</section>
+<section>
+  <canvas id="scoreChart" width="400" height="200"></canvas>
+</section>
+
+      <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; font-family: sans-serif; background: #f5f5f5; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 1.2rem; width: fit-content; margin: 1rem auto;">
+
+        <div style="text-align: right;">
+          <div style="font-weight: bold;">Team A</div>
+          <div style="font-size: 1.5rem;" id="red">3</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <div style="font-size: 0.9rem; color: #666;">Q2</div>
+          <div style="font-size: 1.6rem; font-weight: bold;" id="clock">00:00</div>
+          <div style="font-size: 0.8rem; color: #999;" id="pos">Poss: _____</div>
+        </div>
+
+        <div style="text-align: left;">
+          <div style="font-weight: bold;">Team B</div>
+          <div style="font-size: 1.5rem;" id="blue">4</div>
+        </div>
+      </div>
+      <progress value="60" max="60" style="width: 100%;">60 out of 60 minutes played</progress>
+      <a href="/gameday/game" class="button">View Game</a>
+
+{% endblock %}
+{% block scripts %}
+<script>
+
+
+
+
+const scoreData = [
+{ red: 0, blue: 0, time: 0, display_time: "00:00" , pos: '_'},
+{ red: 2, blue: 0, time: 43, display_time: "00:43", pos: '<'},
+{ red: 2, blue: 2, time: 60, display_time: "01:30", pos: '>' },
+{ red: 5, blue: 2, time: 65, display_time: "02:00", pos: '<' },
+{ red: 5, blue: 4, time: 150, display_time: "02:30", pos: '>' },
+{ red: 7, blue: 4, time: 180, display_time: "03:00", pos: '<' },
+{ red: 7, blue: 5, time: 240, display_time: "04:00",  pos: '>' },
+{ red: 9, blue: 5, time: 300, display_time: "05:00", pos: '<' }
+];
+
+
+const redScore = document.getElementById('red');
+const blueScore = document.getElementById('blue');
+const clock = document.getElementById('clock');
+const pos = document.getElementById('pos');
+const canvas = document.getElementById('scoreChart');
+const labels = scoreData.map(point => point.time);
+const redScores = scoreData.map(point => point.red);
+const blueScores = scoreData.map(point => point.blue);
+const ctx = canvas.getContext('2d');
+
+
+
+
+
+
+
+
+const verticalLinePlugin = {
+  id: 'scoreboardLine',
+  afterDatasetsDraw(chart, args, options) {
+    const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
+
+    if (typeof options.xValue !== 'number') return; // don't draw if no value
+
+    const xPixel = x.getPixelForValue(options.xValue);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(xPixel, top);
+    ctx.lineTo(xPixel, bottom);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = options.color || 'black';
+    ctx.stroke();
+    ctx.restore();
+  }
+};
+
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    datasets: [
+      {
+        label: 'Red',
+        data: scoreData.map(point => ({ x: point.time, y: point.red })),
+        borderColor: 'red',
+        backgroundColor: 'rgba(255, 0, 0, 0.1)',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        tension: 0.2,
+        fill: false,
+      },
+      {
+        label: 'Blue',
+        data: scoreData.map(point => ({ x: point.time, y: point.blue })),
+        borderColor: 'blue',
+        backgroundColor: 'rgba(0, 0, 255, 0.1)',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        tension: 0.2,
+        fill: false,
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: { mode: 'index', intersect: false },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: 'Score' },
+        ticks: { stepSize: 1 }
+      },
+      x: {
+        type: 'linear',
+        position: 'bottom',
+        title: { display: true, text: 'Time (seconds)' }
+      },
+    },
+    plugins: {
+      scoreboardLine: {
+        xValue: scoreData[0].time, // Initial value for the vertical line
+        color: 'black' // Color of the vertical line
+      }
+    }
+  },
+  plugins: [
+    verticalLinePlugin,
+  ]
+});
+
+
+function setScoreboard(index) {
+
+  redScore.textContent = scoreData[index].red;
+  blueScore.textContent = scoreData[index].blue;
+  clock.textContent = scoreData[index].display_time;
+  pos.textContent = `Poss: ${scoreData[index].pos}`;
+  chart.options.plugins.scoreboardLine.xValue = scoreData[index].time;
+  chart.update();
+}
+
+
+
+
+
+
+document.getElementById('scoreChart').addEventListener('click', function(event) {
+  const canvasPosition = Chart.helpers.getRelativePosition(event, chart);
+  const xScale = chart.scales.x;
+
+  const clickedTime = xScale.getValueForPixel(canvasPosition.x);
+  const times = scoreData.map(point => point.time);
+  const lower = times.reduce((a, b) => (b <= clickedTime && b > a ? b : a), -Infinity);
+  setScoreboard(scoreData.findIndex(point => point.time === lower));
+});
+
+
+</script>
+{% endblock %}

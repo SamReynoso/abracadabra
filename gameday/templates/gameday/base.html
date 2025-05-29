@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gameday</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+    :root {
+      --primary-color: #4CAF50;
+      --secondary-color: #f0f0f0;
+      --text-color: #333;
+      --font-family: Arial, sans-serif;
+    }
+    html * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: var(--font-family);
+      line-height: 1.5rem;
+      color: var(--text-color);
+      background-color: var(--secondary-color);
+    }
+
+    progress.winners-bracket {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    summary{
+      padding: .5rem;
+      margin-top: .1rem;
+      cursor: pointer;
+    }
+
+    summary.large {
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+
+    main * {
+      background-color:rgba(0, 0, 0, 0.05) 
+    }
+
+    h1.page-title {
+      font-size: 2.4rem;
+      margin: 20px;
+    }
+
+    .main-content-container {
+      background-color: var(--secondary-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .main-content-container dl {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: fit-content;
+    }
+    .main-content-container dt {
+      font-size: .8rem;
+      color: rgb(95, 95, 95); 
+    }
+
+    .main-content-container dd {
+      margin-left: 0;
+      color: var(--text-color);
+    }
+
+    .gameday-division-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .gameday-division-table td {
+      padding: .5rem;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .gap {
+      gap: 1rem;
+    }
+    .pad {
+      padding: 1rem;
+    }
+    .gameday-matchup {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      margin-bottom: 1rem;
+      max-width: 600px;
+    }
+
+    .team-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+    </style>
+
+</head>
+<body>
+  <header>
+  </header>
+  <nav>
+  </nav>
+  <main>
+    <h1 class="page-title">Gameday</h1>
+    <div class="main-content-container">
+      <header class="tournament-information-header">
+        <h2>This Tournament Name</h2>
+        <div class="row gap pad">
+          <dl>
+            <dt>Start Date:</dt>
+            <dd>2023-10-01</dd>
+            <dt>End Date:</dt>
+            <dd>2023-10-02</dd>
+            <dt>Local:</dt>
+            <dd>Local City</dd>
+          </dl>
+          <dl>
+            <dt>Status:</dt>
+            <dd>Live</dd>
+            <dt>In progress:</dt>
+            <dd>14</dd>
+            <dt>Time:</dt>
+            <dd>10:38 AM</dd>
+          </dl>
+        </div>
+      </header>
+
+      {% block content %}
+      {% endblock %}
+
+  </main>
+  <footer>
+  </footer>
+
+  {% block scripts %}
+  {% endblock %}
+
+</body>
+<html>

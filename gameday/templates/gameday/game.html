@@ -1,0 +1,36 @@
+{% extends "gameday/base.html" %}
+
+{% block content %}
+
+<section>
+  <h2>Game 1</h2>
+  <h3><a href="/gameday/division/">U13 M Bronze Division</a></h3>
+  <dl>
+    <dt>Status:</dt>
+    <dd>Scheduled</dd>
+    <dt>Date:</dt>
+    <dd>2023-10-01</dd>
+    <dt>Time:</dt>
+    <dd>10:00 AM - 11:00 AM</dd>
+  </dl>
+  <div class="gameday-matchup">
+    <div>
+      <img class="team-logo" src="/assets/defaults/team-logo-1.jpg" alt="Team Logo 1">
+      <h3>Team A</h3>
+    </div>
+    <img src="/assets/defaults/vs.jpg" alt="VS">
+    <div>
+    <img class="team-logo" src="/assets/defaults/team-logo-2.jpg" alt="Team Logo 2">
+    <h3>Team B</h3>
+    </div>
+  </div>
+  <dl>
+    <dt>Winner:</dt>
+    <dd>Proceeds to Game 8</dd>
+    <dt>Losser</dt>
+    <dd>Eliminated</dd>
+  </dl>
+</section>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

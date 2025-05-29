@@ -1,0 +1,71 @@
+{% extends "core/html.html" %}
+
+{% block title %}<title>Abracadabra Sports Account</title>{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Chaos-Proof Your Tournament Day with Abracadabra Sports. Built by and for directors—ditch the spreadsheets, run events like a machine.">
+<meta name="keywords" content="sports, tournament management, event management, sports software, sports scheduling">
+{% endblock %}
+
+
+{% block styles %}
+  <link rel="stylesheet" href="/static/css/layouts/user.css">
+{% endblock %}
+
+
+{% block left_sidebar %}
+<aside class="sidebar">
+
+  <div class="sidebar-header">
+    <h2>Preferences</h2>
+  </div>
+
+  <div class="sidebar-section">
+    <ul class="sidebar__nav-list">
+      <li>
+        <a class="page-link active" href="/user/profile">Profile</a>
+        <ul class="sidebar-submenu">
+          <li><a class="active" href="/user/profile#general">General</a></li>
+          <li><a href="/user/profile#security">Security</a></li>
+          <li><a href="/user/profile#notifications">Notifications</a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="page-link"  href="/user/app">Profile</a>
+        <ul class="sidebar-submenu">
+          <li><a href="/user/app#settings">Settings</a></li>
+          <li><a href="/user/app#preferences">Preferences</a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="page-link"  href="/user/info">Settings</a>
+        <ul class="sidebar-submenu">
+          <li><a href="/user/info#general">General</a></li>
+          <li><a href="/user/info#privacy">Privacy</a></li>
+          <li><a href="/user/info#security">Security</a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="page-link"  href="/user/billing">Billing</a>
+        <ul class="sidebar-submenu">
+          <li><a href="/user/billing#plans">Plans</a></li>
+          <li><a href="/user/billing#invoices">Invoices</a></li>
+          <li><a href="/user/billing#payment-methods">Payment Methods</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <footer class="sidebar-footer">
+    <img 
+      src="/assets/abracadabra-logo-with-name.svg"
+      alt="Abracadabra Sports Logo"
+      class="logo invert"
+      width="200"
+      height="50"
+      >
+  </footer>
+
+</aside>
+{% endblock %}
+

@@ -15,15 +15,20 @@ USE_TZ = True
 
 ALLOWED_HOSTS = []
 SECRET_KEY =  os.getenv("DJANGO_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
+SITE_ID = 2
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_URLCONF = 'project.urls'
 STATIC_URL = 'static/'
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-SITE_ID = 2
-LOGIN_REDIRCT_URL = '/user/profile/'
 ACCOUNT_SIGNUP_REDIRECT_URL = '/user/profile/'
+LOGIN_REDIRECT_URL = '/user/profile/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/goodbye/'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/welcome/'
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
 
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
@@ -44,7 +49,10 @@ INSTALLED_APPS = [
     'user',
     'info',
     'marketing',
+    'discover',
+    'gameday',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

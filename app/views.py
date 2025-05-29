@@ -4,15 +4,8 @@ import random
 
 
 def index(request):
-    jwt = request.COOKIES.get("jwt")
-    print("[APP app] : jwt ------->", jwt)
-    print("this is the app", "-" * 20)
-    user = request.user
-    if user.is_authenticated:
-        print("User is authenticated:", user.username)
-    else:
-        print("User is not authenticated", user)
-    return render(request, "core/index.html")
+    return render(request, "app/index.html")
+
 
 
 COUNT = 0

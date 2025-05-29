@@ -1,0 +1,126 @@
+{% extends "marketing/base.html" %}
+
+{% block main %}<main>
+  <article class="landing-hero">
+    <div class="landing-hero__background">
+      <section class="hero-style">
+        <div class="hero-grid">
+
+          <div class="hero-text">
+            <h2>Setting up bill payment is easy as Abracadabra</h2>
+            <p class="hero-subtext">
+              
+            </p>
+            <div class="hero-cta">
+              <a class="btn-primary" href="#">Quick Setup</a>
+              <a class="btn-secondary" href="#">Plans</a>
+            </div>
+          </div>
+
+          <div class="hero-screenshot">
+            <img src="/assets/dashboard-sample.png" alt="payment-protal-preview.png" />
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </article>
+
+<section>
+  <h1>Feature Locked</h1>
+  <p>This feature requires a subscription. Choose a plan to continue.</p>
+  <a href="/billing/plans">View Plans</a>
+</section>
+
+<!-- Pricing Plans Page -->
+<section>
+  <h1>Choose a Plan</h1>
+  <div>
+    <h2>Free</h2>
+    <ul>
+      <li>Basic features</li>
+      <li>No support</li>
+    </ul>
+    <a href="/billing/checkout?plan=free">Select</a>
+  </div>
+  <div>
+    <h2>Pro - $20/month</h2>
+    <ul>
+      <li>All basic features</li>
+      <li>Email support</li>
+    </ul>
+    <a href="/billing/checkout?plan=pro">Select</a>
+  </div>
+  <div>
+    <h2>Enterprise - $50/month</h2>
+    <ul>
+      <li>Everything in Pro</li>
+      <li>Priority support</li>
+    </ul>
+    <a href="/billing/checkout?plan=enterprise">Select</a>
+  </div>
+</section>
+
+<!-- Checkout Redirect Page -->
+<section>
+  <h1>Redirecting to Secure Payment...</h1>
+  <p>Please wait while we redirect you to Stripe checkout.</p>
+</section>
+
+<!-- Billing Dashboard -->
+<section>
+  <h1>Your Billing</h1>
+  <p>Current Plan: Pro</p>
+  <p>Next Billing Date: July 8</p>
+  <p>Card on file: **** **** **** 1234</p>
+  <a href="/billing/manage">Change Plan</a>
+</section>
+
+<!-- Manage Plan Page -->
+<section>
+  <h1>Manage Your Plan</h1>
+  <form action="/billing/change" method="post">
+    <label>
+      <input type="radio" name="plan" value="free"> Free
+    </label><br>
+    <label>
+      <input type="radio" name="plan" value="pro"> Pro
+    </label><br>
+    <label>
+      <input type="radio" name="plan" value="enterprise"> Enterprise
+    </label><br>
+    <button type="submit">Update Plan</button>
+  </form>
+</section>
+
+</main>{% endblock %}
+
+
+{% block scripts %}<script>
+
+
+  const sections = document.querySelectorAll("main > section");
+
+  function handleScroll() {
+    const viewPoint = window.innerHeight;
+
+    sections.forEach(section => {
+      const top = section.getBoundingClientRect().top;
+      const sectionMargin = parseInt(getComputedStyle(section).marginTop, 10) || 0;
+
+      if (top < viewPoint + (sectionMargin * 0.66)) {
+        section.classList.add("view");
+      } else {
+        section.classList.remove("view");
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+    window.addEventListener("load", handleScroll);
+  });
+
+
+</script>{% endblock %}

@@ -1,10 +1,56 @@
-{% extends "core/base-user.html" %}
+{% extends "user/base.html" %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}<title>Profile</title>{% endblock %}
 
 {% block main %}
-{% endblock %}
+  <main>
+    <section class="user-section" id="General">
+      <h2>General</h2>
+      <label>
+        <input type="checkbox">
+        Toggle Section
+      </label>
+      <label>
+        <input type="checkbox">
+        Toggle Section
+      </label>
+      <label>
+        <input type="checkbox">
+        Toggle Section
+      </label>
+    </section>
 
-{% block left_sidebar %}
-<p>this is the profile page side bar that you should be able to see.</p>
+    <section class="user-section" id="security">
+      <h2>Security</h2>
+      <label>
+        <input type="checkbox">
+        Toggle Section
+      </label>
+      <label>
+        <input type="checkbox">
+        Toggle Section
+      </label>
+      <label>
+        <input type="checkbox">
+        Toggle Section
+      </label>
+    </section>
+
+    <section class="user-section" id="notifications">
+      <h2>Notifications</h2>
+      <label>
+        <input type="checkbox">
+        Toggle Section
+      </label>
+      <label>
+        <input type="checkbox">
+        Toggle Section
+      </label>
+      <label>
+        <input type="checkbox">
+        Toggle Section
+      </label>
+    </section>
+
+  </main>
 {% endblock %}

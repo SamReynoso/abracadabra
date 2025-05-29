@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scoreboard Display</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: white;
+      font-family: 'Arial', sans-serif;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .scoreboard {
+      text-align: center;
+      font-size: 8vw;
+      margin-bottom: 20vh;
+    }
+    .row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2vw;
+    }
+    .team {
+      margin-top: 50vh;
+      width: 30vw;
+    }
+    .clock {
+      font-size: 12vw;
+      width: 35vw;
+    }
+    .period {
+      font-size: 3vw;
+      margin-top: 2vh;
+    }
+  </style>
+</head>
+<body>
+  <div class="scoreboard">
+    <div class="row">
+      <div class="team" id="redScore">0</div>
+      <div class="clock" id="clockTime">00:00</div>
+      <div class="team" id="blueScore">0</div>
+    </div>
+    <div class="period" id="period">Period 1</div>
+  </div>
+
+  <script>
+    const state = {
+      red: 999,
+      blue: 999,
+      clock: '00:00',
+      period: 'Period 1'
+    };
+
+    function updateUI() {
+      document.getElementById('redScore').textContent = state.red;
+      document.getElementById('blueScore').textContent = state.blue;
+      document.getElementById('clockTime').textContent = state.clock;
+      document.getElementById('period').textContent = state.period;
+    }
+
+    // Hook for external calls (e.g. polling server or socket)
+    window.updateScoreboard = (data) => {
+      if ('red' in data) state.red = data.red;
+      if ('blue' in data) state.blue = data.blue;
+      if ('clock' in data) state.clock = data.clock;
+      if ('period' in data) state.period = data.period;
+      updateUI();
+    };
+
+    updateUI(); // initial render
+  </script>
+</body>
+</html>

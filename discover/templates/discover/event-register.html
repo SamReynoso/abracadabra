@@ -1,0 +1,77 @@
+{% extends 'discover/base.html' %}
+
+{% block title %}
+<title>Abracadabra Sports - Event Registration</title>
+{% endblock %}
+
+{% block main %}
+<main style="padding: 10px;">
+  <h1>Event Registration</h1>
+
+  <div class="registration-form-container">
+    <div>
+      <img class="event-image" src="/assets/event.png" alt="Event Poster" >
+
+      <section class="event-pricing">
+        <h2>Price: $99.99</h2>
+        <h3>Per Division</h3>
+      </section>
+
+
+      <section class="event-details">
+        <h2>Event Title</h2>
+        <p>
+          This is a brief description of the event or organization. It provides an overview of what the event is about, 
+          its significance, and any other relevant details that might interest potential attendees.
+        </p>
+        <ul class="event-meta">
+          <li><strong>Date:</strong> [MM/DD/YYYY]</li>
+          <li><strong>Location:</strong> [Venue Name, City, State]</li>
+          <li><strong>Contact:</strong> [email@example.com]</li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="registration-form">
+      <h3>Register Your Team</h3>
+      <p class="account-prompt">
+        Save team and division info, track status and more by <a href="/signup">creating an account</a>.
+      </p>
+
+      <form method="POST" action="/register" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="team_name">Team Name</label>
+          <input type="text" id="team_name" name="team_name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Contact Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="logo">Team Logo (Optional)</label>
+          <input type="file" id="logo" name="logo" accept="image/*">
+        </div>
+
+        <fieldset class="form-group">
+          <legend>Select Division(s)</legend>
+          <label><input type="checkbox" name="divisions" value="u10"> Under 10 (U10)</label><br>
+          <label><input type="checkbox" name="divisions" value="u12"> Under 12 (U12)</label><br>
+          <label><input type="checkbox" name="divisions" value="u14"> Under 14 (U14)</label><br>
+          <label><input type="checkbox" name="divisions" value="u16"> Under 16 (U16)</label><br>
+          <label><input type="checkbox" name="divisions" value="open"> Open Division</label>
+        </fieldset>
+
+        <div class="form-group confirm">
+          <label><input type="checkbox" required> I confirm the above information is correct</label>
+        </div>
+
+        <button class="btn-submit" type="submit">Submit Registration</button>
+      </form>
+    </section>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'discover/base.html' %}
+
+{% block title %}<title>Abracadabra Sports - Marketplace</title>{% endblock %}
+
+{% block main %}
+<main>
+  <div class="details-page">
+
+    <div class="large-poster">
+      <img class="large-poster" src="/assets/event.png" alt="Event Poster">
+    </div>
+
+    <div class="details-page">
+      <div class="details-page__col">
+        <h2>Event title</h2>
+        <p>
+          This is a brief description of the event or organization. It provides an overview of what the event is about, 
+          its significance, and any other relevant details that might interest potential attendees.
+        </p>
+        <hr>
+        <h3>This Event's Organization Name</h3>
+        <a href="/discover/org">view</a>
+        <p>
+          This is a short blurb about the organization hosting the event. It gives insight into the organization's 
+          mission, values, and activities, helping attendees understand who is behind the event.
+        </p>
+        <hr>
+        <h3>About this Event</h3>
+        <ul>
+          <li>User filled info</li>
+          <li>User filled info</li>
+          <li>User filled info</li>
+          <li>User filled info</li>
+        </ul>
+      </div>
+
+
+
+      <div class="details-page__col bordered">
+        <h2>price {$$$.$$}</h2>
+        <h3>Per person or group</h3>
+        <h3>About this Event</h3>
+        <hr>
+        <ul>
+          <li><a href="/discover/register/">Register</a></li>
+          <li><button>add to list</a></li>
+        </ul>
+        <hr>
+        <p>Dev note: or the tournament is live/over. We have to show something here.</p>
+        <ul>
+          <li><a href="/gameday/">gameday</a></li>
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+{% endblock %}
+

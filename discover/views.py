@@ -15,3 +15,7 @@ def org(request):
 
 def dashboard(request):
     return render(request, 'discover/dashboard.html')
+
+def persona(request):
+    return render(request, 'discover/persona-details.html')
+

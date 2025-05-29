@@ -1,0 +1,106 @@
+{% extends 'discover/base.html' %}
+
+{% block title %}<title>Director Profile</title>{% endblock %}
+
+{% block main %}
+<main style="display: flex; flex-direction: row; gap: 2rem; padding: 2rem; flex-wrap: wrap;">
+  <div class="column">
+    <div class="section">
+        <img class="profile-picture" src="/assets/defaults/profile.jpg" alt="Profile Picute" />
+        <dl>
+          <dt>Location:</dt>
+          <dd>Denver, CO, USA</dd>
+        </dl>
+        <div>
+          <h3>Organizer</h3>
+          <ul>
+            <li><p><a href="/discover/org">Gabby Hoops</a></p></li>
+          </ul>
+        </div>
+      <h2>About</h2>
+      <p>
+        Gabby has been involved in youth sports for over 10 years, focusing on basketball development. She is passionate
+        about creating opportunities for young athletes to grow and excel.
+      </p>
+      <div class="share-links">
+        Share: <a href="#">Facebook</a> <a href="#">Twitter</a> <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+  <div class="column">
+
+    <div class="section">
+      <h2>Organizer(1)</h2>
+      <ul>
+        <li>
+          <div>
+            <h3><a href="/discover/org">Gabby Hoops</a></h3>
+            <img class="org-thumbnail" src="/assets/defaults/org-thumbnail.jpg" alt="Organization Thumbnail" />
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Coach(2)</h2>
+      <ul>
+        <li>
+          <div>
+            <h3><a href="/discover/org">Gabby Hoops</a></h3>
+            <img class="org-thumbnail" src="/assets/defaults/org-thumbnail.jpg" alt="Organization Thumbnail" />
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <h3><a href="/discover/org">Hoops Academy</a></h3>
+            <img class="org-thumbnail" src="/assets/defaults/org-thumbnail.jpg" alt="Organization Thumbnail" />
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Attendant(5)</h2>
+      <ul>
+        <li>
+          <div>
+            <h3><a href="/discover/org">Gabby Hoops</a></h3>
+            <img class="org-thumbnail" src="/assets/defaults/org-thumbnail.jpg" alt="Organization Thumbnail" />
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <h3><a href="/discover/org">Hoops Academy</a></h3>
+            <img class="org-thumbnail" src="/assets/defaults/org-thumbnail.jpg" alt="Organization Thumbnail" />
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Connections(231)</h2>
+      <ul>
+        <li>
+          <div>
+            <h3><a href="/discover/org">Gabby Hoops</a></h3>
+            <img class="org-thumbnail" src="/assets/defaults/org-thumbnail.jpg" alt="Organization Thumbnail" />
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <h3><a href="/discover/org">Hoops Academy</a></h3>
+            <img class="org-thumbnail" src="/assets/defaults/org-thumbnail.jpg" alt="Organization Thumbnail" />
+          </div>
+        </li>
+      </ul>
+    </div>
+
+
+  </div>
+
+</main>
+{% endblock %}
+

@@ -44,9 +44,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
+    'persona',
     'app',
     'core',
-    'user',
     'info',
     'marketing',
     'discover',
@@ -72,8 +72,18 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / '../db.sqlite3',
+        }
     }
-}
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'abs_db',
+#        'USER': os.getenv("DB_USER", "abs_admin"),
+#        'PASSWORD': os.getenv("DB_PASSWORD", "password"),
+#        'HOST': os.getenv("DB_HOST", "localhost"),
+#        'PORT': os.getenv("DB_PORT", ""),
+#    }
+#}
 
 TEMPLATES = [
     {

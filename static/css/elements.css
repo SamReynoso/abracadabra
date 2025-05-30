@@ -1,0 +1,11 @@
+img.thumbnail {
+  background-color: white;
+  width: 5rem;
+  height: 5rem;
+}
+
+img.search-poster {
+  width: 20rem;
+  height: 30rem;
+  object-fit: cover;
+}

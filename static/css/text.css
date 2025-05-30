@@ -1,0 +1,6 @@
+.quote {
+  font-size: .8em;
+  font-style: italic;
+  var(--text-muted-color);
+  margin: 10px 0;
+}

@@ -46,11 +46,11 @@ INSTALLED_APPS = [
 
     'app',
     'core',
-    'user',
     'info',
     'marketing',
     'discover',
     'gameday',
+    'persona',
 ]
 
 
@@ -67,6 +67,7 @@ MIDDLEWARE = [
 
 ]
 
+AUTH_USER_MODEL = 'accounts.Account'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DATABASES = {
     'default': {

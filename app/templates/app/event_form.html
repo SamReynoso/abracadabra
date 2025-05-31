@@ -1,0 +1,26 @@
+<details class="event-card hidden" id="hiddenTemplate">
+  <summary>
+    {{ form.name.value | default:"New Event" }}
+  </summary>
+  <div class="row center wrap gap-2 m-1">
+    <form
+      class="app-form"
+      method="post"
+      hx-post="{% url 'event_form' %}"
+      hx-target="#newEventForm"
+      hx-swap="outerHTML"
+      >
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn">Submit</button>
+    </form>
+    <div class="app-card__poster-preview">
+      <img
+        src=""
+        alt="Event Poster Preview"
+        class="app-card__poster"
+        >
+      <p>hello</p>
+    </div>
+  </div>
+</details>

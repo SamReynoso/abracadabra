@@ -1,11 +1,56 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 import random
+from models.models import Event, Organization, Membership, Role
+from .forms import EventForm, NewOrganizationForm
 
 
-def index(request):
-    return render(request, "app/index.html")
+def director(request):
+    memberships =  Membership.objects.filter(user=request.user, role=Role.DIRECTOR)
+    organizations = []
+    organization = None
 
+    if memberships.exists():
+        organizations = [membership.organization for membership in memberships]
+        primary_membership = memberships.filter(primary=True).first()
+        assert primary_membership is not None, "Primary membership should exist"
+        organization = primary_membership.organization 
+    context = {
+            'organization': organization, 
+            'organizations': organizations,
+            }
+
+    if request.method == "POST":
+        form = NewOrganizationForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            organization = Organization.objects.create(name=data['name'])
+            organization.save()
+            organization.set_primary()
+            membership = Membership.objects.create(
+                user=request.user,
+                organization=organization,
+                role=Role.DIRECTOR
+            )
+            membership.save()
+            membership.set_primary()
+            context['organization'] = organization
+            context['organizations'].append(organization)
+        else:
+            context['form'] = form
+            context['errors'] = form.errors
+    else:
+        context['form'] = NewOrganizationForm()
+
+    return render(request, "app/director.html", context)
+
+
+COUNT = 0
+def event_form(request):
+    global COUNT
+    context = {
+        "id": COUNT,
+    }
+    return render(request, "app/event_fragment.html", context)
 
 
 COUNT = 0
@@ -77,4 +122,4 @@ def day_card(request):
             "time_slots": time_slots[:5],
         }
         COUNT += 1
-    return render(request, "core/day_card.html", context)
+    return render(request, "app/day_card.html", context)

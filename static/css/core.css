@@ -52,6 +52,10 @@ nav.navigations {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
   padding: 0 1rem;
   height: var(--nav-height);
   border-bottom: 1px solid var(--border-color);
@@ -148,8 +152,9 @@ div.navbar__dropdown__section {
 
 main {
   min-height: calc(80vh - var(--nav-height));
-  margin-top: var(--nav-height - 1px);
+  margin-top: calc(var(--nav-height) - 1px);
   margin-left: calc(var(--sidebar-width) - 1px);
+  min-height: calc(100vh - var(--nav-height) - 1px);
   align-items: center;
   transition: margin 0.3s ease;
 }
@@ -178,7 +183,6 @@ aside.sidebar {
 .sidebar__section h2 {
   display: flex;
   align-items: center;
-  font-size: 1.2rem;
   height: 3rem;
   padding-left: 50px;
   cursor: pointer;
@@ -209,10 +213,28 @@ button.max-media {
   visibility: hidden;
 }
 
+aside.sidebar.slide-in {
+  transform: translateX(0%);
+}
+
+ul {
+  list-style: none;
+}
+
+.nav-logo {
+  display: inline-block;
+  width: 20rem;
+  height: calc(var(--nav-height) - 1rem);
+}
+
+.full-width-container {
+  max-width: 180ch;
+  margin: 2rem auto;
+}
+
 @media (max-width: 900px) {
-  button.max-media {
-    display: inline-block;
-    visibility: visible;
+  .max-media {
+    display: block;
   }
 
   aside.sidebar {
@@ -243,16 +265,3 @@ aside.sidebar.slide-in {
 ul {
   list-style: none;
 }
-
-.nav-logo {
-  display: inline-block;
-  width: 20rem;
-  height: calc(var(--nav-height) - 1rem);
-}
-
-.full-width-container {
-  width: 100%;
-  max-width: 180ch;
-  margin: 2rem auto;
-}
-

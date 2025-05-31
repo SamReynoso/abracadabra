@@ -1,0 +1,284 @@
+{% extends 'app/base.html' %}
+{% block controls %}
+
+
+{% include 'app/event_form.html' with form=form  id='hiddenTemplate' %}
+
+
+<header class="page-header">
+  {% if organization %}
+
+  <div class="placeholder-animation">
+    <img class="org-thumbnail" src="{{ organization.logo.url }}" alt="{{ organization.name }} Logo" class="page-header__logo">
+    <div>
+      <h1 class="page-header__title">{{ organization.name }}</h1>
+    </div>
+  </div>
+  <p>Search for organization events, teams, or games</p>
+  <form>
+    <div class="inline-search">
+      <input class="search-input" type="text" placeholder="Search" aria-label="Search/Create">
+      <button>search</button>
+    <div>
+  </form>
+  {% else %}
+
+  <div class="placeholder-animation">
+    <canvas id="placeholderAnimation" width="100" height="100"></canvas>
+    <div>
+      <h2 class="placeholder-title">Start an organization</h2>
+      <p>
+        To manage events, you need to create an organization. This will allow you to create and manage events, teams, and more.
+      </p>
+    </div>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="inline-search">
+      <input 
+        class="search-input"
+        type="text"
+        placeholder="Start An Org to manage events"
+        aria-label="Start An Org to manage events"
+        name="name"
+        >
+        <button>Start</button>
+    </div>
+  </form>
+  {% endif %}
+</header>
+
+
+{% endblock controls %}
+
+
+{% block content %}
+
+  <!-- Organization Details Card -->
+  <section class="details-card">
+    <div class="row gap-1">
+
+      <div id="orgImageForm">
+        <img class="org-thumbnail" src="{{ organization.logo.url }}" alt="{{ organization.name }} Logo" class="details-card__logo">
+      </div>
+
+      <div>
+        {{ organization.name }} Events
+        <p class="details-card__description">{{ organization.short_description }}</p>
+        <details>
+          <summary class="event-summary">Summary</summary>
+          <p>Full Description:{{ organization.description }}</p>
+          <p>Founded: {{ organization.founded }}</p>
+          <p>Location: {{ organization.location }}</p>
+          <p>Contact: {{ organization.contact_email }}</p>
+          <p>Website: <a href="{{ organization.website }}" target="_blank">{{ organization.website }}</a></p>
+          <p>Social Media: <a href="{{ organization.social_media }}" target="_blank">{{ organization.social_media }}</a></p>
+          <p>Created: {{ organization.created_at }}</p>
+          <p>Last Updated: {{ organization.updated_at }}</p>
+
+          <button class="btn">Edit</button>
+        </details>
+        <details>
+          <summary>Other Organizations</summary>
+          <ul>
+            {% for org in organizations %}
+              <li>
+                <a href="">{{ org.name }}</a>
+              </li>
+            {% endfor %}
+            {% if not organizations %}
+              <li>No other organizations found.</li>
+            {% endif %}
+          </ul>
+        </details>
+      </div>
+  </section>
+
+
+  <!-- New Event Form Template -->
+  <div class="app-card-container" id="days">
+    <div style="display: inline-block; width: 100%;">
+      <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Add Event</button>
+    </div>
+    <h2>New Events</h2>
+
+  </div>
+
+  <!-- Upcoming Events -->
+  <h2>Upcoming Events</h2>
+  <div class="app-card-container">
+    {% for event in upcoming_events %}
+      <div class="app-card">
+        <h3>{{ event.name }}</h3>
+        <p>{{ event.date }}</p>
+        <p>{{ event.description }}</p>
+        <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Edit</button>
+      </div>
+    {% endfor %}
+    {% if not upcoming_events %}
+      <p>No upcoming events.</p>
+    {% endif %}
+  </div>
+
+  <!-- Past Events -->
+  <h2>Past Events</h2>
+  <div class="app-card-container">
+    {% for event in past_events %}
+      <div class="app-card">
+        <h3>{{ event.name }}</h3>
+        <p>{{ event.date }}</p>
+        <p>{{ event.description }}</p>
+        <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Edit</button>
+      </div>
+    {% endfor %}
+    {% if not past_events %}
+      <p>No past events.</p>
+    {% endif %}
+  </div>
+{% endblock %}
+
+
+{% block sidebar %}
+
+  <div class="sidebar__section">
+    <h2 id="sidebarEvents" aria-controls="sidebarEvents" aria-expanded="true" aria-label="Events section" tabindex="0">Events</h2>
+    <ul class="sidebar__list active">
+      <li><a href="/app/"> Calender</a></li>
+      <li><a href="#">Registration</a></li>
+      <li><a href="#">Archive</a></li>
+    </ul>
+  </div>
+
+  <div class="sidebar__section">
+    <h2 id="sidebarGames" aria-controls="sidebarGames" aria-expanded="true" aria-label="Games section" tabindex="0">Games</h2>
+    <ul class="sidebar__list active" aria-labelledby="sidebarGames">
+      <li><a href="#">Schedule</a></li>
+      <li><a href="#">Brackets</a></li>
+      <li><a href="#">Records</a></li>
+    </ul>
+  </div>
+
+  <div class="sidebar__section">
+    <h2 id="sidebarTeams" aria-controls="sidebarTeams" aria-expanded="true" aria-label="Teams section" tabindex="0">Teams</h2>
+    <ul class="sidebar__list active" aria-labelledby="sidebarTeams">
+      <li><a href="#">Contacts</a></li>
+      <li><a href="#">Divisions</a></li>
+      <li><a href="#">Status</a></li>
+    </ul>
+  </div>
+
+  <div class="sidebar__section">
+    <h2 id="sidebarOps" aria-controls="sidebarOps" aria-expanded="true" aria-label="Ops section" tabindex="0">Ops</h2>
+    <ul class="sidebar__list active" aria-labelledby="sidebarOps">
+      <li><a href="#">Venues</a></li>
+      <li><a href="#">Refs</a></li>
+      <li><a href="#">Clock</a></li>
+      <li><a href="#">Stats</a></li>
+      <li><a href="#">Contacts</a></li>
+    </ul>
+  </div>
+{% endblock %}
+
+{% block script %}
+{% if not organization %}
+<script type="text/javascript" src="https://unpkg.com/paper"></script>
+<script>
+const canvas = document.getElementById('placeholderAnimation');
+paper.setup(canvas);
+const { Point, Path, view } = paper;
+const NODE_COUNT = 12;
+const RADIUS = 0;
+const SPRING_LENGTH = 65;
+const SPRING_STRENGTH = 0.01;
+const DAMPING = 0.9;
+
+let nodes = [];
+let springs = [];
+
+function createNode(pos) {
+  return {
+    pos: pos,
+    vel: new Point(0, 0),
+    shape: new Path.Circle({ center: pos, radius: RADIUS, fillColor: '#39ff88' })
+  };
+}
+
+for (let i = 0; i < NODE_COUNT; i++) {
+  let angle = (2 * Math.PI / NODE_COUNT) * i;
+  let x = view.center.x + 6 * Math.cos(angle);
+  let y = view.center.y + 6 * Math.sin(angle);
+  nodes.push(createNode(new Point(x, y)));
+}
+
+for (let i = 0; i < NODE_COUNT; i++) {
+  for (let j = i + 1; j < NODE_COUNT; j++) {
+    springs.push({
+      a: nodes[i],
+      b: nodes[j],
+      path: new Path.Line({ strokeColor: '#0bdb9c40', from: nodes[i].pos, to: nodes[j].pos })
+    });
+  }
+}
+
+function applySpring(spring) {
+  let delta = spring.b.pos.subtract(spring.a.pos);
+  let dist = delta.length;
+  let force = delta.normalize().multiply((dist - SPRING_LENGTH) * SPRING_STRENGTH);
+
+  spring.a.vel = spring.a.vel.add(force);
+  spring.b.vel = spring.b.vel.subtract(force);
+}
+
+view.onFrame = function () {
+  for (let spring of springs) {
+    applySpring(spring);
+  }
+
+  for (let node of nodes) {
+    node.vel = node.vel.multiply(DAMPING);
+    node.pos = node.pos.add(node.vel);
+    node.shape.position = node.pos;
+  }
+
+  for (let spring of springs) {
+    spring.path.segments[0].point = spring.a.pos;
+    spring.path.segments[1].point = spring.b.pos;
+  }
+}
+</script>
+
+{% endif %}
+<script>
+
+function cloneNodeOnClickForHTMX(srcId, targetId) {
+  if (document.getElementById('newEventForm')) { return; }
+
+  const srcElement = document.getElementById(srcId);
+  const targetElement = document.getElementById(targetId);
+  const node = srcElement.cloneNode(true);
+  node.classList.remove('hidden');
+  node.id = 'newEventForm';
+  htmx.process(node);
+  targetElement.appendChild(node);
+}
+
+function writeInputToSummary(event) {
+  const targetElement = event.target.closest('details').querySelector('summary');
+  if (targetElement) {
+    targetElement.textContent = event.target.value || "New Event";
+  } else {
+    console.error("No summary element found in the details context.");
+  }
+}
+
+document.body.addEventListener('htmx:afterSwap', function(event) {
+  const newNode = event.detail.target;
+  htmx.process(newNode);
+  if (newNode.tagName.toLowerCase() === 'details') {
+    setTimeout(() => {}, 100); // Allow time for the details to render
+    newNode.open = true; // Open the details element after processing
+  }
+})
+</script>
+{% endblock %}

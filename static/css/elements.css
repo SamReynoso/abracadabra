@@ -9,3 +9,22 @@ img.search-poster {
   height: 30rem;
   object-fit: cover;
 }
+
+img.org-thumbnail {
+  width: 5rem;
+  height: 5rem;
+}
+
+.placeholder-animation {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem;
+}
+
+.placeholder-title {
+  color: var(--text-color);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+

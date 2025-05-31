@@ -1,12 +1,8 @@
 {% extends "core/base.html" %}
-{% block title %}Director Dashboard{% endblock %}
-    <!--
-    <link rel="stylesheet" href="/static/css/layouts/app.css">
-    <link rel="stylesheet" href="/static/css/layouts/footer.css">
-    <link rel="stylesheet" href="/static/css/btns.css">
-    -->
+{% block title %}AbracaDashboard{% endblock %}
 {% block extra_head %}
     <link rel="stylesheet" href="/static/css/themes/cold.css">
+    <link rel="stylesheet" href="/static/css/layouts/app.css">
 {% endblock %}
 
 {% block nav_links %}
@@ -15,53 +11,17 @@
 {% endblock %}
 
 {% block main %}
+
+  <section class="top-controller">
+    {% block controls %}
+    <button class="btn">Add Button</button>
+    {% endblock %}
+  </section>
+
   <div class="full-width-container">
-    <section class="top-controller">
-      <button hx-get="{% url 'day_card' %}" hx-target="#days" hx-swap="beforeend" class="btn">Add Day</button>
+    <section class="app__section">
+    {% block content %}{% endblock %}
     </section>
-
-    <div class="app-card-container" id="days"><!--Dynamic content will be loaded here --></div>
-  </div>
-{% endblock %}
-
-{% block sidebar %}
-
-  <div class="sidebar__section">
-    <h2 id="sidebarEvents" aria-controls="sidebarEvents" aria-expanded="true" aria-label="Events section" tabindex="0">Events</h2>
-    <ul class="sidebar__list active">
-      <li><a href="/app/"> Calender</a></li>
-      <li><a href="#">Registration</a></li>
-      <li><a href="#">Archive</a></li>
-    </ul>
-  </div>
-
-  <div class="sidebar__section">
-    <h2 id="sidebarGames" aria-controls="sidebarGames" aria-expanded="true" aria-label="Games section" tabindex="0">Games</h2>
-    <ul class="sidebar__list active" aria-labelledby="sidebarGames">
-      <li><a href="#">Schedule</a></li>
-      <li><a href="#">Brackets</a></li>
-      <li><a href="#">Records</a></li>
-    </ul>
-  </div>
-
-  <div class="sidebar__section">
-    <h2 id="sidebarTeams" aria-controls="sidebarTeams" aria-expanded="true" aria-label="Teams section" tabindex="0">Teams</h2>
-    <ul class="sidebar__list active" aria-labelledby="sidebarTeams">
-      <li><a href="#">Contacts</a></li>
-      <li><a href="#">Divisions</a></li>
-      <li><a href="#">Status</a></li>
-    </ul>
-  </div>
-
-  <div class="sidebar__section">
-    <h2 id="sidebarOps" aria-controls="sidebarOps" aria-expanded="true" aria-label="Ops section" tabindex="0">Ops</h2>
-    <ul class="sidebar__list active" aria-labelledby="sidebarOps">
-      <li><a href="#">Venues</a></li>
-      <li><a href="#">Refs</a></li>
-      <li><a href="#">Clock</a></li>
-      <li><a href="#">Stats</a></li>
-      <li><a href="#">Contacts</a></li>
-    </ul>
   </div>
 {% endblock %}
 

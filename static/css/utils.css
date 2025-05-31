@@ -1,0 +1,40 @@
+
+.gap-1 {
+  gap: 1rem;
+}
+
+.gap-2 {
+  gap: 2rem;
+}
+
+.m-1 {
+  margin: 1rem;
+}
+
+.m-2 {
+  margin: 2rem;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  }
+
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+.center {
+  align-items: center;
+  justify-content: center;
+}
+
+.around {
+  justify-content: space-around;
+}
+
+
+.hidden {
+  display: none;
+}

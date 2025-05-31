@@ -5,6 +5,8 @@ from .forms import EventForm, NewOrganizationForm
 
 
 def director(request):
+    if request.user.is_authenticated is False:
+        return render(request, "app/director.html")
     memberships =  Membership.objects.filter(user=request.user, role=Role.DIRECTOR)
     organizations = []
     organization = None

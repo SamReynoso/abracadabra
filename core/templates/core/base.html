@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+
+<head>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/static/css/core.css">
+    <link rel="stylesheet" href="/static/css/text.css">
+    <link rel="stylesheet" href="/static/css/elements.css">
+    <link rel="stylesheet" href="/static/css/btn.css">
+    <link rel="stylesheet" href="/static/css/forms.css">
+    <link rel="stylesheet" href="/static/css/utils.css">
+
+    <link rel="stylesheet" href="/static/css/layouts/core.css">
+    <link rel="stylesheet" href="/static/css/forms/sidebar-search.css">
+
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    {% block extra_head %}
+    {% endblock %}
+
+    <title>{% block title %}Abracadabra Sports{% endblock %}</title>
+
+</head>
+
+
+<body>
+
+<nav class="navigations">
+  <div class="nav__section">
+    <button id="sidebarToggle" class="btn icon max-media">Sidebar</button>
+    <button id="logo" class="btn icon">Logo</button>
+    {% block nav_links %}
+    {% endblock %}
+  </div>
+
+  <section class="nav__section">
+    <button class="btn wrapper" id="navbarDropdowToggle">THE USERS NAME</button>
+
+    <!-- Menu -->
+    <div class="navbar__dropdown" id="navbarDropdown">
+      <h2>THE USERS NAME</h2>
+      <h3>Account & Settings</h3>
+      <div class="navbar__dropdown__section">
+        <ul>
+          <li><a href="/user/profile/">General</a></li>
+          <li><a href="/user/profile/">Security</a></li>
+          <li><a href="/user/profile/">Notifications</a></li>
+          <li><a href="/user/profile/">Settings</a></li>
+          <li><a href="/user/profile/">Preferences</a></li>
+        </ul>
+        <ul>
+          <li><a href="/user/profile/">Plans</a></li>
+          <li><a href="/user/profile/">Invoices</a></li>
+          <li><a href="/user/profile/">Payment Methods</a></li>
+          <li><a href="/user/accounts/logout/">Logout</a></li>
+        </ul>
+      </div>
+
+      <h3>Roles</h3>
+      <div class="navbar__dropdown__section">
+      <ul>
+        <li><a href="#">Director</a></li>
+        <li><a href="#">Coach</a></li>
+        <li><a href="#">Spectator</a></li>
+      </ul>
+      </div>
+    </div>
+  </section>
+</nav>
+
+
+<main>
+
+  {% block main %}
+  {% endblock %}
+
+</main>
+
+
+<footer class="page-footer">
+  {% block footer %}
+  {% endblock %}
+</footer>
+
+<!-- This is the muted overlay that covers the main content when the sidebar is open -->
+<div class="muted-overlay" id="mutedOverlay"></div>
+
+
+<aside class="sidebar" id="sidebar">
+  {% block sidebar %}
+  {% endblock %}
+</aside>
+
+<script>
+function toggleOrRemoveClass(element, toggleElement, className, event, overlay=null) {
+  if (toggleElement.contains(event.target)) {
+    element.classList.toggle(className);
+    if (overlay) {
+      overlay.classList.toggle('active');
+    }
+  } else if (!element.contains(event.target)) {
+    element.classList.remove(className);
+    if (overlay) {
+      overlay.classList.remove('active');
+    }
+  } else {
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('sidebar');
+  const navbarDropdownToggle = document.getElementById('navbarDropdowToggle');
+  const navbarDropdown = document.getElementById('navbarDropdown');
+  const mutedOverlay = document.getElementById('mutedOverlay');
+
+  document.addEventListener('click', (event) => {
+    toggleOrRemoveClass(sidebar, sidebarToggle, 'slide-in', event, mutedOverlay);
+    toggleOrRemoveClass(navbarDropdown, navbarDropdownToggle, 'show', event);
+  });
+
+});
+
+</script>
+
+{% block script %}
+{% endblock %}
+  
+
+</body>
+
+</html>

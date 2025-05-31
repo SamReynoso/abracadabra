@@ -1,214 +1,27 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en" class="dark">
-
-
-<head>
-
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typical Website</title>
-
-    <link rel="stylesheet" href="/static/css/hero.css">
-    <link rel="stylesheet" href="/static/css/layouts/app.css">
-    <link rel="stylesheet" href="/static/css/layouts/footer.css">
+{% extends "core/base.html" %}
+{% block title %}AbracaDashboard{% endblock %}
+{% block extra_head %}
     <link rel="stylesheet" href="/static/css/themes/cold.css">
-    <link rel="stylesheet" href="/static/css/btns.css">
-    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <link rel="stylesheet" href="/static/css/layouts/app.css">
+{% endblock %}
 
+{% block nav_links %}
+  <a href="/">home</a>
+  <a href="/discover">Discover</a>
+{% endblock %}
 
-</head>
+{% block main %}
 
+  <section class="top-controller">
+    {% block controls %}
+    <button class="btn">Add Button</button>
+    {% endblock %}
+  </section>
 
-<body>
-
-
-<!--<header class="optional-header"></header>-->
-
-<nav id="appNav" class="app-nav">
-
-  <div>
-    <img class="nav-logo invert" src="assets/hambergar.svg" alt="Sidebar Toggle" id="sidebar-toggle">
-    <img class="nav-logo invert" src="assets/logo.svg" alt="Logo">
-    <a href="/">home</a>
+  <div class="full-width-container">
+    <section class="app__section">
+    {% block content %}{% endblock %}
+    </section>
   </div>
+{% endblock %}
 
-  <div>
-    <ul class="nav-list">
-      <button class="nav-btn" id="nav-toggle">
-        <img src="assets/arrow.svg" alt="Toggle Navigation">
-        {% if user.is_authenticated %}
-          <span class="nav-btn-text">Menu</span>
-        {% else %}
-          <span class="nav-btn-text">Login</span>
-        {% endif %}
-      </button>
-    </ul>
-  </div>
-
-  <div class="nav-bar-manu active">
-    <ul>
-      <li><a href="/user/profile">Profile</a></li>
-      <li><a href="/user/account">Account</a></li>
-      <li><a href="/user/accounts/logout">Logout</a></li>
-    </ul>
-  </div>
-
-</nav>
-
-
-<main>
-
-  {% block main %}
-  {% endblock %}
-
-</main>
-
-
-<aside class="sidebar" id="sidebar">
-
-  <div class="sidebar-section active">
-
-    <div class="sidebar-title">
-      <h2>Events</h2>
-    </div>
-
-    <ul class="sidebar-list">
-      <li>
-        <a class="sidebar-item" href=""> Calender</a>
-      </li>
-      <li> 
-        <a class="sidebar-item" href="">Registration</a>
-      </li>
-      <li>
-        <a class="sidebar-item" href="">Archive</a>
-      </li>
-    </ul>
-
-  </div>
-
-  <div class="sidebar-section active">
-
-    <div class="sidebar-title">
-      <h2>Games</h2>
-    </div>
-
-    <ul class="sidebar-list">
-      <li>
-        <a class="sidebar-item" href="">Schedule</a>
-      </li>
-      <li> 
-        <a class="sidebar-item" href="">Brackets</a>
-      </li>
-      <li>
-        <a class="sidebar-item" href="">Records</a>
-      </li>
-    </ul>
-
-  </div>
-
-  <div class="sidebar-section active">
-    <div class="sidebar-title">
-      <h2>Teams</h2>
-    </div>
-
-    <ul class="sidebar-list">
-      <li>
-        <a class="sidebar-item" href="">Contacts</a>
-      </li>
-      <li> 
-        <a class="sidebar-item" href="">Divisions</a>
-      </li>
-      <li>
-        <a class="sidebar-item" href="">Status</a>
-      </li>
-    </ul>
-
-  </div>
-
-  <div class="sidebar-section active">
-    <div class="sidebar-title">
-      <h2>Ops</h2>
-    </div>
-
-    <ul class="sidebar-list">
-      <li>
-        <a class="sidebar-item" href="">Venues</a>
-      </li>
-      <li> 
-        <a class="sidebar-item" href="">Refs</a>
-      </li>
-      <li>
-        <a class="sidebar-item" href="">Clock</a>
-      </li>
-      <li>
-        <a class="sidebar-item" href="">Stats</a>
-      </li>
-      <li>
-        <a class="sidebar-item" href="">Contacts</a>
-      </li>
-    </ul>
-
-
-  </div>
-
-</aside>
-
-
-<footer class="cor-footer">
-
-  <div class="footer-columns">
-    <div class="footer-column">
-      <h4>Product</h4>
-      <a href="#">Features</a>
-      <a href="#">Pricing</a>
-      <a href="#">Integrations</a>
-      <a href="#">API</a>
-    </div>
-    <div class="footer-column">
-      <h4>Company</h4>
-      <a href="#">About Us</a>
-      <a href="#">Careers</a>
-      <a href="#">Leadership</a>
-      <a href="#">Press</a>
-    </div>
-    <div class="footer-column">
-      <h4>Resources</h4>
-      <a href="#">Blog</a>
-      <a href="#">Events</a>
-      <a href="#">Guides</a>
-      <a href="#">Webinars</a>
-    </div>
-    <div class="footer-column">
-      <h4>Support</h4>
-      <a href="#">Help Center</a>
-      <a href="#">Community</a>
-      <a href="#">System Status</a>
-      <a href="#">Contact Support</a>
-    </div>
-    <div class="footer-column">
-      <h4>Legal</h4>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Cookie Policy</a>
-      <a href="#">Accessibility</a>
-    </div>
-    <div class="footer-column">
-      <h4>Departments</h4>
-      <a href="#">HR Portal</a>
-      <a href="#">IT Services</a>
-      <a href="#">Facilities</a>
-      <a href="#">Finance</a>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>© 2025 Abracadabra Sports. All rights reserved.</p>
-  </div>
-
-</footer>
-
-</body>
-
-</html>

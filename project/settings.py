@@ -18,7 +18,7 @@ SECRET_KEY =  os.getenv("DJANGO_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
-SITE_ID = 2
+SITE_ID = 3
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_URLCONF = 'project.urls'
@@ -44,13 +44,16 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
+    'crispy_forms',
+
+    'persona',
     'app',
     'core',
-    'info',
-    'marketing',
     'discover',
     'gameday',
-    'persona',
+    'info',
+    'marketing',
+    'models',
 ]
 
 
@@ -67,14 +70,25 @@ MIDDLEWARE = [
 
 ]
 
-AUTH_USER_MODEL = 'accounts.Account'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'models.User'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / '../db.sqlite3',
+        }
     }
-}
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'abs_db',
+#        'USER': os.getenv("DB_USER", "abs_admin"),
+#        'PASSWORD': os.getenv("DB_PASSWORD", "password"),
+#        'HOST': os.getenv("DB_HOST", "localhost"),
+#        'PORT': os.getenv("DB_PORT", ""),
+#    }
+#}
 
 TEMPLATES = [
     {

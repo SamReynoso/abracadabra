@@ -1,16 +1,5 @@
-{% extends "core/base.html" %}
+{% extends "discover/base.html" %}
 {% block title %}Abracadabra Sports{% endblock %}
-
-{% block extra_head %}
-<link rel="stylesheet" href="/static/css/themes/discover.css">
-{% endblock %}
-
-
-{% block nav_links %}
-<a href="/persona/accounts/login/" class="btn">Login</a>
-<a href="/persona/accounts/signup/" class="btn">Sign Up</a>
-{% endblock %}
-
 
 {% block main %}
 <header class="page-header">
@@ -35,8 +24,4 @@
     </div>
   </section>
 </div>
-{% endblock %}
-
-{% block sidebar %}
-{% include "core/includes/sidebar/discover-base.html" %}
 {% endblock %}

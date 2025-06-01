@@ -38,12 +38,12 @@ body {
   overflow-x: hidden;
 }
 
-button.hamberger {
-  background-color: transparent;
-  background-image: url('/assets/menu.svg');
-  background-repeat: no-repeat;
-  border: none;
-  cursor: pointer;
+p {
+  max-width: 50ch;
+}
+
+ul {
+  list-style: none;
 }
 
 nav.navigations { 
@@ -59,6 +59,12 @@ nav.navigations {
   padding: 0 1rem;
   height: var(--nav-height);
   border-bottom: 1px solid var(--border-color);
+}
+
+.nav-icon {
+  display: inline-block;
+  width: 20rem;
+  height: calc(var(--nav-height) - 1rem);
 }
 
 div.nav__section a {
@@ -179,13 +185,11 @@ aside.sidebar {
   z-index: 9999;
 }
 
-
 .sidebar__section h2 {
   display: flex;
   align-items: center;
   height: 3rem;
   padding-left: 50px;
-  cursor: pointer;
 }
 
 .sidebar__list {
@@ -215,16 +219,6 @@ button.max-media {
 
 aside.sidebar.slide-in {
   transform: translateX(0%);
-}
-
-ul {
-  list-style: none;
-}
-
-.nav-logo {
-  display: inline-block;
-  width: 20rem;
-  height: calc(var(--nav-height) - 1rem);
 }
 
 .full-width-container {
@@ -260,8 +254,4 @@ ul {
 
 aside.sidebar.slide-in {
   transform: translateX(0%);
-}
-
-ul {
-  list-style: none;
 }

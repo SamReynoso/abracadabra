@@ -3,105 +3,28 @@
 {% block title %}<title>Abracadabra Sports - Marketplace</title>{% endblock %}
 
 {% block main %}
-<main>
-<div class="container">
-    <div class="banner">
-      <h1>Gabby Hoops</h1>
-      <p>"Developing youth through competitive sports"</p>
-    </div>
+<div class="full-width-container">
+  <div class="max-width-container">
+    <section class="discover__section">
+      <p>Organization {{ organization.name }}</p>
+      <p>Directore {{ director.user }}</p>
+      <!-- <a href="/discover/persona/{{ director.user.safe_slug }}/">View Director Profile</a> -->
+      <a href="{% url 'discover_persona' director.user.safe_slug %}">View Director Profile</a>
+      <h3>Members</h3>
+      {% for member in memberships %}
+      <p>{{ member.user }} - {{ member.role }}</p>
+      {% endfor %}
 
-    <!-- Organization Info Section -->
-    <section class="section-row bbottom">
-      <div class="org-info">
-        <img class="org-thumbnail" src="org-thumbnail.jpg" alt="Organization Thumbnail" />
-        <ul>
-          <li><p>Location: Denver, CO, USA</p></li>
-          <li><p>Members: 1234</p></li>
-          <li><p>Organized by: <a href="/discover/persona">Gabby</a></p></li>
-          <li>
-        <div class="share-links">
-          Share: <a href="#">Facebook</a> <a href="#">Twitter</a> <a href="#">LinkedIn</a>
-        </div>
-          </li>
-      </div>
-
-      <div>
-        <div class="section">
-          <h2>About this Organization</h2>
-          <p>Gabby Hoops is dedicated to youth development through well-organized basketball tournaments and training camps. We value fair play, growth, and community.</p>
-        </div>
-
-
-        <div class="section">
-          <h2>About our Members</h2>
-          <div class="metrics">
-            <div class="metric">
-              <strong>16</strong>
-              <p>In your division</p>
-            </div>
-            <div class="metric">
-              <strong>3</strong>
-              <p>Recently joined</p>
-            </div>
-            <div class="metric">
-              <strong>32</strong>
-              <p>At last event</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% for event in events %}
+      <h3>{{ event.name }}</h3>
+      <p>Date: {{ event.date }}</p>
+      <p>Description: {{ event.description }}</p>
+      {% endfor %}
+      {% if not events %}
+      <p>No events found for this organization.</p>
+      {% endif %}
     </section>
-
-    <!-- Upcoming and Past Events Section -->
-    <section class="section-row">
-      <div class="section">
-        <h2>Upcoming Events</h2>
-        <ul class="event-list">
-          <li class="event-item">Summer Slam - July 10, 2025 - Elite youth competition</li>
-          <li class="event-item">3v3 City Classic - August 15, 2025 - Community-focused one-day event</li>
-        </ul>
-      </div>
-      <div class="section">
-        <h2>Past Events</h2>
-        <ul class="event-list">
-          <li class="event-item">Spring Shootout - May 2025 - 16 teams competed</li>
-          <li class="event-item">Winter Invitational - Feb 2025 - Snow couldn’t stop us</li>
-        </ul>
-      </div>
-    </section>
-
-
-    <section class="section-row">
-      <div class="section">
-        <h2>Ratings and Reviews</h2>
-        <div class="rating">★★★★☆ (4.5/5)</div>
-        <p>Based on 123 reviews</p>
-        <ul class="review-list">
-          <li class="review-item">"Great organization, very professional!" - User A</li>
-          <li class="review-item">"Loved the events they organized!" - User B</li>
-          <li class="review-item">"Highly recommend joining!" - User C</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>Leave a Review</h2>
-        <form>
-          <label for="review">Your Review:</label><br />
-          <textarea id="review" rows="4" cols="50"></textarea><br />
-          <label for="rating">Rating:</label>
-          <select id="rating">
-            <option value="5">★★★★★</option>
-            <option value="4">★★★★☆</option>
-            <option value="3">★★★☆☆</option>
-            <option value="2">★★☆☆☆</option>
-            <option value="1">★☆☆☆☆</option>
-          </select><br /><br />
-          <button type="submit">Submit Review</button>
-        </form>
-      </div>
-    </section>
-
   </div>
-</main>
+</div>
 {% endblock %}
 

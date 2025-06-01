@@ -1,13 +1,4 @@
-{% extends "core/base.html" %}
-{% block title %}Discover Basketball{% endblock %}
-
-{% block extra_head %}
-<link rel="stylesheet" href="/static/css/themes/discover.css">
-{% endblock %}
-
-{% block sidebar %}
-{% include "core/includes/sidebar/discover-base.html" %}
-{% endblock %}
+{% extends "discover/base.html" %}
 
 {% block main %}
 <header class="page-header">
@@ -20,19 +11,19 @@
     </form>
 </header>
 
-<div class="search-results__container" id="searchResults">
+<div class="row wrap gap-1" id="searchResults">
   <!-- Initial empty or initial results go here -->
 
-<div
-  id="loadMore"
-  hx-get="/discover/basketball/load-more/?page=3242342341"
-  hx-trigger="revealed"
-  hx-target="#loadMore"
-  hx-swap="outerHTML"
-  hx-cache
-  >
-  Loading more....
-</div>
+  <div
+    id="loadMore"
+    hx-get="/discover/basketball/load-more/?page=3242342341"
+    hx-trigger="revealed"
+    hx-target="#loadMore"
+    hx-swap="outerHTML"
+    hx-cache
+    >
+    Loading more....
+  </div>
 
 </div>
 {% endblock %}

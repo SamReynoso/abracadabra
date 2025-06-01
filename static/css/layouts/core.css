@@ -6,16 +6,9 @@ div.content-column {
   margin: 0 auto;
 }
 
-details.app-card {
-  padding: .5rem;
-}
-
-details.app-card * {
-  font-size: .8rem;
-}
-
 details.app-card summary {
-  background-color: black;
+  background-color: var(--menu-background-color);
+  width: 100%;
   padding: .25rem;
   font-size: 1.2rem;
   border-radius: 3px;

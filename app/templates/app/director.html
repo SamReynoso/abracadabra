@@ -1,105 +1,94 @@
 {% extends 'app/base.html' %}
+
 {% block controls %}
 
-
-<details id='hiddenTemplate' class="event-card2 hidden">
+<details  class="app-card hidden"id='hiddenTemplate'>
   <summary class="event-summary">New Event</summary>
   <p>
     this is the thing
   </p>
 </details>
 
-
-
 <header class="page-header">
   {% if organization %}
 
-  <div class="placeholder-animation">
-    <img class="org-thumbnail" src="{{ organization.logo.url }}" alt="{{ organization.name }} Logo" class="page-header__logo">
-    <div>
-      <h1 class="page-header__title">{{ organization.name }}</h1>
-    </div>
-  </div>
+    <!-- Organization Details Card -->
+    <section class="details-card">
+      <div class="row gap-1">
+        <div id="orgImageForm">
+          <img class="org-thumbnail" src="{{ organization.logo.url }}" alt="{{ organization.name }} Logo" class="details-card__logo">
+        </div>
+
+        <div>
+          {{ organization.name }} Events
+          <p class="details-card__description">{{ organization.short_description }}</p>
+          <details>
+            <summary class="event-summary">Summary</summary>
+            <p>Full Description:{{ organization.description }}</p>
+            <p>Founded: {{ organization.founded }}</p>
+            <p>Location: {{ organization.location }}</p>
+            <p>Contact: {{ organization.contact_email }}</p>
+            <p>Website: <a href="{{ organization.website }}" target="_blank">{{ organization.website }}</a></p>
+            <p>Social Media: <a href="{{ organization.social_media }}" target="_blank">{{ organization.social_media }}</a></p>
+            <p>Created: {{ organization.created_at }}</p>
+            <p>Last Updated: {{ organization.updated_at }}</p>
+
+            <button class="btn">Edit</button>
+          </details>
+          <details>
+            <summary>Other Organizations</summary>
+            <ul>
+              {% for org in organizations %}
+                <li>
+                  <a href="">{{ org.name }}</a>
+                </li>
+              {% endfor %}
+              {% if not organizations %}
+                <li>No other organizations found.</li>
+              {% endif %}
+            </ul>
+          </details>
+        </div>
+      </div>
+    </section>
   <p>Search for organization events, teams, or games</p>
-  <form>
-    <div class="inline-search">
+  <form class="inline-input-form">
       <input class="search-input" type="text" placeholder="Search" aria-label="Search/Create">
       <button>search</button>
-    <div>
   </form>
   {% else %}
 
-  <div class="placeholder-animation">
-    <canvas id="placeholderAnimation" width="100" height="100"></canvas>
-    <div>
-      <h2 class="placeholder-title">Start an organization</h2>
-      <p>
-        To manage events, you need to create an organization. This will allow you to create and manage events, teams, and more.
-      </p>
+    <div class="placeholder-animation">
+      <canvas id="placeholderAnimation" width="100" height="100"></canvas>
+      <div>
+        <h2 class="placeholder-title">Start an organization</h2>
+        <p>
+          To manage events, you need to create an organization. This will allow you to create and manage events, teams, and more.
+        </p>
+      </div>
     </div>
-  </div>
 
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="inline-search">
-      <input 
-        class="search-input"
-        type="text"
-        placeholder="Start An Org to manage events"
-        aria-label="Start An Org to manage events"
-        name="name"
-        >
-        <button>Start</button>
-    </div>
-  </form>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="inline-search">
+        <input 
+          class="search-input"
+          type="text"
+          placeholder="Start An Org to manage events"
+          aria-label="Start An Org to manage events"
+          name="name"
+          >
+          <button>Start</button>
+      </div>
+    </form>
   {% endif %}
 </header>
 
 
 {% endblock controls %}
-
-
 {% block content %}
 
-  <!-- Organization Details Card -->
-  <section class="details-card">
-    <div class="row gap-1">
 
-      <div id="orgImageForm">
-        <img class="org-thumbnail" src="{{ organization.logo.url }}" alt="{{ organization.name }} Logo" class="details-card__logo">
-      </div>
-
-      <div>
-        {{ organization.name }} Events
-        <p class="details-card__description">{{ organization.short_description }}</p>
-        <details>
-          <summary class="event-summary">Summary</summary>
-          <p>Full Description:{{ organization.description }}</p>
-          <p>Founded: {{ organization.founded }}</p>
-          <p>Location: {{ organization.location }}</p>
-          <p>Contact: {{ organization.contact_email }}</p>
-          <p>Website: <a href="{{ organization.website }}" target="_blank">{{ organization.website }}</a></p>
-          <p>Social Media: <a href="{{ organization.social_media }}" target="_blank">{{ organization.social_media }}</a></p>
-          <p>Created: {{ organization.created_at }}</p>
-          <p>Last Updated: {{ organization.updated_at }}</p>
-
-          <button class="btn">Edit</button>
-        </details>
-        <details>
-          <summary>Other Organizations</summary>
-          <ul>
-            {% for org in organizations %}
-              <li>
-                <a href="">{{ org.name }}</a>
-              </li>
-            {% endfor %}
-            {% if not organizations %}
-              <li>No other organizations found.</li>
-            {% endif %}
-          </ul>
-        </details>
-      </div>
-  </section>
 
 
   <!-- New Event Form Template -->

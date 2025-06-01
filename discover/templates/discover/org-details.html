@@ -1,6 +1,6 @@
 {% extends 'discover/base.html' %}
 
-{% block title %}<title>Abracadabra Sports - Marketplace</title>{% endblock %}
+{% block title %}Org Profile{% endblock %}
 
 {% block main %}
 <div class="full-width-container">
@@ -8,8 +8,8 @@
     <section class="discover__section">
       <p>Organization {{ organization.name }}</p>
       <p>Directore {{ director.user }}</p>
-      <!-- <a href="/discover/persona/{{ director.user.safe_slug }}/">View Director Profile</a> -->
       <a href="{% url 'discover_persona' director.user.safe_slug %}">View Director Profile</a>
+
       <h3>Members</h3>
       {% for member in memberships %}
       <p>{{ member.user }} - {{ member.role }}</p>

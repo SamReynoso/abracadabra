@@ -7,18 +7,19 @@
   --content-background-color: green;
   --menu-background-color: red;
   --nav-background-color: blue;
-  --border-color: purple;
-  --menu-link-hover-background-color: #00000026;
+  --page-header-background-color: orange; 
+
+  --list-header-background-color: black;
+  --list-hover-background-color: #00000026;
 
   --nav-height: 3.5rem;
   --sidebar-width: 14.5rem;
   --main-gap: 4rem;
 
-  --border-radius: 0.25rem;
+  --border-color: purple;
+  --border-radius: 3px;
   --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
-  --page-header-background-color: orange; 
-  --list-header-background-color: black;
 }
 
 html * {
@@ -192,7 +193,7 @@ aside.sidebar {
 }
 
 .sidebar__list {
-  margin-bottom: 1.5rem;
+  margin: 1.5rem 0;
 }
 
 .sidebar__list a {
@@ -200,7 +201,8 @@ aside.sidebar {
   font-weight: 650;
   text-decoration: none;
   display: block;
-  padding: 0.25rem 50px;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
   width: 100%;
   height: 100%;
   transition: background-color 0.3s ease;
@@ -208,7 +210,8 @@ aside.sidebar {
 }
 
 .sidebar__list a:hover {
-  background-color: var(--menu-link-hover-background-color);
+  background-color: var(--list-hover-background-color);
+  text-decoration: none;
 }
 
 button.max-media {
@@ -223,6 +226,11 @@ aside.sidebar.slide-in {
 .full-width-container {
   max-width: 180ch;
   margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.top-controller {
+  padding: 1rem;
 }
 
 @media (max-width: 900px) {

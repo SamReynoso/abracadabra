@@ -6,7 +6,6 @@ form.inline-input-form {
   justify-content: center;
   border-radius: 0.25rem;
   max-width: 80ch;
-  gap: 0rem;
 }
 
 .inline-input-form input {
@@ -22,17 +21,21 @@ form.inline-input-form {
 }
 
 form.app-form {
-  background-color: #1e2630;
   color: #cbd3dc;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  padding: 2rem;
   justify-content: space-between;
   width: fit-content;
-  height: 43.25rem;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
   overflow: hidden;
+}
+
+.form-fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 form.app-form p {
@@ -118,17 +121,14 @@ form.app-form button[type="submit"]:hover {
 }
 
 .registration-form h3 {
-  margin-top: 2rem;
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
 }
 
 .form-group label {
   display: block;
   font-weight: bold;
-  margin-bottom: 0.5rem;
 }
 
 input[type="text"],
@@ -143,12 +143,10 @@ fieldset {
   border: 1px solid #ccc;
   padding: 1rem;
   border-radius: 6px;
-  margin-bottom: 1.25rem;
 }
 
 legend {
   font-weight: bold;
-  margin-bottom: 0.5rem;
 }
 
 .btn-submit {
@@ -165,5 +163,4 @@ legend {
 }
 
 .confirm {
-  margin-top: 1rem;
 }

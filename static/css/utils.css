@@ -7,12 +7,28 @@
   gap: 2rem;
 }
 
+.pad-1 {
+  padding: 1rem;
+}
+
+.pad-2 {
+  padding: 2rem;
+}
+
 .m-1 {
   margin: 1rem;
 }
 
 .m-2 {
   margin: 2rem;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+.mb-2 {
+  margin-bottom: 2rem;
 }
 
 .row {
@@ -37,4 +53,9 @@
 
 .hidden {
   display: none;
+}
+
+.fit {
+  width: fit-content;
+  height: fit-content;
 }

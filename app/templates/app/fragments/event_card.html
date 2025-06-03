@@ -1,0 +1,87 @@
+<details class="app-card" id="{{ card_id }}" data-card-id="{{ card_id }}">
+  <summary class="app-card__summary">
+    New Event
+    <ul class="collapse-navigation-list"
+      <li>
+
+        <button
+          class="btn-link"
+          data-card-id="{{ card_id }}"
+          hx-get="/app/event-form/"
+          hx-target="#{{ card_id }}Content"
+          hx-swap="outerHTML"
+          >
+          Info
+        </button>
+
+      </li>
+      <li>
+        <a class="btn-link" href="{% url 'event_manage' event.safe_slug %}">Lifecycle</a>
+      </li>
+      <li>
+        <a class="btn-link" href="{% url 'event_details' event.safe_slug %}">Page</a>
+      </li>
+    </ul>
+  </summary>
+
+  <div class="pad-1" id="{{ card_id }}Content">
+
+    <dl class="app-card__details fit">
+      <dt><strong>Lifecycle Status</strong></dt>
+      <dd>
+        In Progress
+      </dd>
+    </dl>
+
+    <div class="row wrap gap-2" style="align-items: center;">
+      <div class="row wrap gap-1 pad-1">
+        <img class="poster-preview" src="/assets/defaults/event.png" alt="Event Thumbnail">
+        <dl class="app-card__details">
+          <dt>Title</dt>
+          <dd>Event Name</dd>
+          <dt>Type</dt>
+          <dd>Event Type</dd>
+          <dt>Start</dt>
+          <dd>2023-10-01 10:00</dd>
+          <dt>End</dt>
+          <dd>2023-10-01 12:00</dd>
+          <dt>Location</dt>
+          <dd>Event Location</dd>
+          <dt>Price</dt>
+          <dd>$240.00</dd>
+          <dt>Location</dt>
+          <dd
+            <address>
+              <strong>Venue Name</strong><br>
+              1234 Event St.<br>
+              City, State, Zip<br>
+              Country
+            </address>
+          </dd>
+          <dt>Link</dt>
+          <dd>
+            <a href="https://example.com/event-link" target="_blank" rel="noopener noreferrer">Event Site</a>
+          <dd>
+        </dl>
+      </div>
+
+      <dl>
+        <dt><strong>Short Description</strong></dt>
+        <dd class="pad-1">
+          <p>
+          This will be a fun event for all to go to and enjoy.
+          </p>
+        </dd>
+        <dt><strong>Description</strong></dt>
+        <dd class="pad-1">
+          <p>
+            This is a really log description of the event that will be displayed in the event details page on the discover app. it will not show up in search result but is searchable.
+            This is a really log description of the event that will be displayed in the event details page on the discover app. it will not show up in search result but is searchable.
+          </p>
+        </dd>
+      </dl>
+    </div>
+
+  </div>
+</details>
+

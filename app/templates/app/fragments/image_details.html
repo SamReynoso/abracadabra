@@ -1,0 +1,19 @@
+<div class="modal" id="imageDetailsContent">
+  <form method="dialog mb-1">
+    <button class="btn mb-1">Close</button>
+  </form>
+
+  <form method="POST" action="{% url 'update_image' image.id %}" enctype="multipart/form-data" id="updateForm" >
+    {% csrf_token %}
+    <div class="large-image mb-1">
+      <img id="preview" class="image-upload-preview" src="{{ image.image.url }}" alt="Image preview" />
+    </div>
+    <input class="form-control mb-1" name="caption" type="text" placeholder="Image caption" value="{{ image.caption }}" />
+    <label>
+      <input class="form-control mb-2" name="is_profile_picture" type="checkbox" {% if image.is_profile_picture %}checked{% endif %} />
+      Set as profile picture
+    </label><br>
+    <button class="btn btn-primary" type="submit" id="uploadButton" form="updateForm" >Update</button>
+    <button class="btn btn-danger" type="button" id="deleteButton" >Delete</button>
+  </form>
+</div>

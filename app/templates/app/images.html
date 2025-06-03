@@ -1,0 +1,94 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<button class="button" id="uploadButton" onclick="document.getElementById('uploadDialog').showModal()">
+  <span class="icon icon-upload"></span>
+  Upload Image
+</button>
+
+<section class="image-gallery" aria-label="Image preview">
+
+  {% for image in images %}
+  <div 
+    hx-get="{% url 'image_details' image.id %}"
+    hx-target="#imageDetailsContent"
+    hx-swap="innerHTML"
+    onclick="console.log('hello mo'); document.getElementById('imageDetails').showModal()"
+    >
+      <img src="{{ image.image.url }}" alt="{{ image.caption }}" class="image-preview" />
+  </div>
+
+  {% endfor %}
+
+
+</section>
+
+<dialog class="modal" id="imageDetails">
+  <div id="imageDetailsContent">
+  </div>
+</dialog>
+
+<dialog class="modal" id="uploadDialog">
+  <form method="dialog">
+    <button class="btn">Close</button>
+  </form>
+
+  <form method="POST" action="{% url 'upload_image' %}" enctype="multipart/form-data" id="uploadForm" >
+    {% csrf_token %}
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click();">
+      <img id="preview" class="image-upload-preview" />
+      <p class="image-drop-prompt" id="dropPrompt"> Click or drag a file here to upload </p>
+    </div>
+
+    <input style="display: none;" name="image" type="file" accept="image/*" id="fileInput" />
+    <input class="form-control mb-2" name="caption" type="text" placeholder="Image caption" />
+    <button class="btn btn-primary" type="submit" id="uploadButton" form="uploadForm" >Upload</button>
+  </form>
+</dialog>
+
+{% endblock content %}
+
+
+{% block script %}
+<script>
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const preview = document.getElementById('preview');
+  const dropPrompt = document.getElementById('dropPrompt');
+
+  function handleFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      dropPrompt.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  fileInput.addEventListener('change', () => {
+    handleFile(fileInput.files[0]);
+  });
+
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('dragover');
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+      fileInput.files = e.dataTransfer.files;
+      handleFile(e.dataTransfer.files[0]);
+    }
+  });
+</script>
+{% endblock script %}
+

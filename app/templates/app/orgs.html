@@ -2,13 +2,6 @@
 
 {% block controls %}
 
-<details  class="app-card hidden"id='hiddenTemplate'>
-  <summary class="event-summary">New Event</summary>
-  <p>
-    this is the thing
-  </p>
-</details>
-
 <header class="page-header">
   {% if organization %}
 
@@ -20,7 +13,7 @@
         </div>
 
         <div>
-          {{ organization.name }} Events
+          <h1>{{ organization.name }}</h1>
           <p class="details-card__description">{{ organization.short_description }}</p>
           <details>
             <summary class="event-summary">Summary</summary>
@@ -39,9 +32,10 @@
             <summary>Other Organizations</summary>
             <ul>
               {% for org in organizations %}
-                <li>
-                  <a href="">{{ org.name }}</a>
-                </li>
+              <form action="{% url 'set_organization' org.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn-link">{{ org.name }}</button>
+              </form>
               {% endfor %}
               {% if not organizations %}
                 <li>No other organizations found.</li>
@@ -51,11 +45,6 @@
         </div>
       </div>
     </section>
-  <p>Search for organization events, teams, or games</p>
-  <form class="inline-input-form">
-      <input class="search-input" type="text" placeholder="Search" aria-label="Search/Create">
-      <button>search</button>
-  </form>
   {% else %}
 
     <div class="placeholder-animation">
@@ -88,94 +77,62 @@
 {% endblock controls %}
 {% block content %}
 
+<div style="display: inline-block; width: 100%;">
+  <button 
+    class="btn"
+    hx-get="{% url 'new_event_card' %}"
+    hx-target="#days"
+    hx-swap="beforeend"
+    data-frag-id="newEvent"
+    >Add Event</button>
+</div>
 
+<!-- New Event Form Template -->
+<div class="app-card-container" id="days">
+  <h2>In Progress</h2>
+  {% for event in in_progress %}
+    {% include 'app/event_card.html' with event=event %}
+  {% endfor %}
 
+</div>
 
-  <!-- New Event Form Template -->
-  <div class="app-card-container" id="days">
-    <div style="display: inline-block; width: 100%;">
-      <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Add Event</button>
+<!-- Upcoming Events -->
+<h2>Upcoming Events</h2>
+<div class="app-card-container">
+  {% for event in upcoming_events %}
+    <div class="app-card">
+      <h3>{{ event.name }}</h3>
+      <p>{{ event.date }}</p>
+      <p>{{ event.description }}</p>
+      <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Edit</button>
     </div>
-    <h2>New Events</h2>
+  {% endfor %}
+  {% if not upcoming_events %}
+    <p>No upcoming events.</p>
+  {% endif %}
+</div>
 
-  </div>
+<!-- Past Events -->
+<h2>Past Events</h2>
+<div class="app-card-container">
+  {% for event in past_events %}
+    <div class="app-card">
+      <h3>{{ event.name }}</h3>
+      <p>{{ event.date }}</p>
+      <p>{{ event.description }}</p>
+      <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Edit</button>
+    </div>
+  {% endfor %}
+  {% if not past_events %}
+    <p>No past events.</p>
+  {% endif %}
+</div>
 
-  <!-- Upcoming Events -->
-  <h2>Upcoming Events</h2>
-  <div class="app-card-container">
-    {% for event in upcoming_events %}
-      <div class="app-card">
-        <h3>{{ event.name }}</h3>
-        <p>{{ event.date }}</p>
-        <p>{{ event.description }}</p>
-        <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Edit</button>
-      </div>
-    {% endfor %}
-    {% if not upcoming_events %}
-      <p>No upcoming events.</p>
-    {% endif %}
-  </div>
-
-  <!-- Past Events -->
-  <h2>Past Events</h2>
-  <div class="app-card-container">
-    {% for event in past_events %}
-      <div class="app-card">
-        <h3>{{ event.name }}</h3>
-        <p>{{ event.date }}</p>
-        <p>{{ event.description }}</p>
-        <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Edit</button>
-      </div>
-    {% endfor %}
-    {% if not past_events %}
-      <p>No past events.</p>
-    {% endif %}
-  </div>
 {% endblock %}
 
-
-{% block sidebar %}
-
-  <div class="sidebar__section">
-    <h2 id="sidebarEvents" aria-controls="sidebarEvents" aria-expanded="true" aria-label="Events section" tabindex="0">Events</h2>
-    <ul class="sidebar__list active">
-      <li><a href="/app/"> Calender</a></li>
-      <li><a href="#">Registration</a></li>
-      <li><a href="#">Archive</a></li>
-    </ul>
-  </div>
-
-  <div class="sidebar__section">
-    <h2 id="sidebarGames" aria-controls="sidebarGames" aria-expanded="true" aria-label="Games section" tabindex="0">Games</h2>
-    <ul class="sidebar__list active" aria-labelledby="sidebarGames">
-      <li><a href="#">Schedule</a></li>
-      <li><a href="#">Brackets</a></li>
-      <li><a href="#">Records</a></li>
-    </ul>
-  </div>
-
-  <div class="sidebar__section">
-    <h2 id="sidebarTeams" aria-controls="sidebarTeams" aria-expanded="true" aria-label="Teams section" tabindex="0">Teams</h2>
-    <ul class="sidebar__list active" aria-labelledby="sidebarTeams">
-      <li><a href="#">Contacts</a></li>
-      <li><a href="#">Divisions</a></li>
-      <li><a href="#">Status</a></li>
-    </ul>
-  </div>
-
-  <div class="sidebar__section">
-    <h2 id="sidebarOps" aria-controls="sidebarOps" aria-expanded="true" aria-label="Ops section" tabindex="0">Ops</h2>
-    <ul class="sidebar__list active" aria-labelledby="sidebarOps">
-      <li><a href="#">Venues</a></li>
-      <li><a href="#">Refs</a></li>
-      <li><a href="#">Clock</a></li>
-      <li><a href="#">Stats</a></li>
-      <li><a href="#">Contacts</a></li>
-    </ul>
-  </div>
-{% endblock %}
 
 {% block script %}
+
 {% if not organization %}
 <script type="text/javascript" src="https://unpkg.com/paper"></script>
 <script>
@@ -246,18 +203,6 @@ view.onFrame = function () {
 {% endif %}
 <script>
 
-function cloneNodeOnClickForHTMX(srcId, targetId) {
-  if (document.getElementById('newEventForm')) { return; }
-
-  const srcElement = document.getElementById(srcId);
-  const targetElement = document.getElementById(targetId);
-  const node = srcElement.cloneNode(true);
-  node.classList.remove('hidden');
-  node.id = 'newEventForm';
-  htmx.process(node);
-  targetElement.appendChild(node);
-}
-
 function writeInputToSummary(event) {
   const targetElement = event.target.closest('details').querySelector('summary');
   if (targetElement) {
@@ -267,12 +212,32 @@ function writeInputToSummary(event) {
   }
 }
 
+document.addEventListener("htmx:beforeRequest", function (event) {
+  const fragId = event.target.dataset.fragId;
+  if (fragId === 'newEvent' && document.getElementById('newEvent')) {
+    console.log("Preventing HTMX call");
+    event.preventDefault();
+  }
+  const cardId = event.target.dataset.cardId;
+  if (cardId) {
+    const detailsCard = document.getElementById(cardId);
+    if (detailsCard) {
+      console.log("Setting details card open state");
+      detailsCard.open = true;
+      detailsCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    }
+  }
+});
+
 document.body.addEventListener('htmx:afterSwap', function(event) {
   const newNode = event.detail.target;
   htmx.process(newNode);
+
+  // This is not working ATM
   if (newNode.tagName.toLowerCase() === 'details') {
-    setTimeout(() => {}, 100); // Allow time for the details to render
-    newNode.open = true; // Open the details element after processing
+    setTimeout(() => {}, 100);
+    newNode.open = true;
   }
 })
 </script>

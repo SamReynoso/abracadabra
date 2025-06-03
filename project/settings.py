@@ -23,6 +23,8 @@ SITE_ID = 3
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_URLCONF = 'project.urls'
 STATIC_URL = 'static/'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 ACCOUNT_SIGNUP_REDIRECT_URL = '/user/profile/'
 LOGIN_REDIRECT_URL = '/user/profile/'

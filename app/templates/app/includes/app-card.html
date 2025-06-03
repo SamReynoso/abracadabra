@@ -1,0 +1,12 @@
+<details class="app-card" id="{{ card_id }}" data-card-id="{{ card_id }}">
+  <summary class="app-card__summary">
+    {% block summary %}
+    {% endblock %}
+  </summary>
+
+  <div class="pad-1" id="{{ card_id }}Content">
+    {% block content%}
+    {% endblock %}
+  </div>
+</details>
+

@@ -15,13 +15,11 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = [
             'name',
-            'description',
             'event_type',
-            'organization',
             'start_date',
             'end_date',
             'price',
-            'location',
+            'description',
         ]
 
         widgets = {

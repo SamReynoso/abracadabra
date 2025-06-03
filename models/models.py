@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.db import models, transaction
 
 
 class Role(models.TextChoices):
@@ -20,6 +20,7 @@ class EventType(models.TextChoices):
 
 
 class EventStatus(models.TextChoices):
+    CREATED = 'created', 'Created'
     UPCOMING = 'upcoming', 'Upcoming'
     ONGOING = 'ongoing', 'Ongoing'
     COMPLETED = 'completed', 'Completed'
@@ -43,6 +44,8 @@ class ABSClass(models.Model):
 
     @property
     def safe_slug(self) -> str:
+        if self.pk is None:
+            return "not-found"
         return str(self.pk)
 
     @classmethod
@@ -63,6 +66,12 @@ class ABSClass(models.Model):
 
 
 class User(AbstractUser):
+    profile_picture = models.ImageField(
+            upload_to='profile_pictures/',
+            blank=True,
+            null=True
+            )
+
     @property
     def safe_slug(self) -> str:
         return f"{self.first_name}-{self.last_name}-{self.pk}"
@@ -76,16 +85,19 @@ class User(AbstractUser):
             raise ValueError(f"User with slug '{slug}' does not exist.")
 
 
-
-
-
-
-
-
-
-
-
-
+class Images(ABSClass):
+    user = models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            related_name='images',
+            on_delete=models.CASCADE,
+            blank=True,
+            null=True
+            )
+    image = models.ImageField(
+            upload_to='user_images/',
+            )
+    caption = models.CharField(max_length=255, blank=True)
+    is_profile_picture = models.BooleanField(default=False)
 
 
 class Organization(ABSClass):
@@ -93,8 +105,17 @@ class Organization(ABSClass):
     description = models.TextField(blank=True, null=True)
     short_description = models.CharField(max_length=255, blank=True, null=True)
     website = models.URLField(blank=True, null=True)
-    poster = models.ImageField(
-            upload_to='organization_posters/',
+    logo = models.ForeignKey(
+            Images,
+            related_name='organizations',
+            on_delete=models.SET_NULL,
+            blank=True,
+            null=True
+            )
+    banner = models.ForeignKey(
+            Images,
+            related_name='organization_banners',
+            on_delete=models.SET_NULL,
             blank=True,
             null=True
             )
@@ -124,15 +145,17 @@ class Membership(ABSClass):
 
     def set_primary(self):
         """
-        Set this membership as primary and unset others.
+        Atomically set this membership as primary and unset others.
         """
-        Membership.objects.filter(
+        with transaction.atomic():
+            Membership.objects.filter(
                 user=self.user,
                 organization=self.organization,
                 role=self.role
-                ).update(primary=False)
-        self.primary = True
-        self.save()
+            ).exclude(pk=self.pk).update(primary=False)
+
+            self.primary = True
+            self.save()
 
     class Meta: # type: ignore
         unique_together = ('user', 'organization')
@@ -141,16 +164,39 @@ class Membership(ABSClass):
         return f"{self.user.username} - {self.organization.name} ({self.role})"
 
 
+class Address(ABSClass):
+    street = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    state = models.CharField(max_length=100, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
+    user = models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            related_name='addresses',
+            on_delete=models.CASCADE,
+            blank=True,
+            )
+    def __str__(self):
+        return f"{self.street}, {self.city}, {self.state}, {self.country}"
+
+
+
 class Event(ABSClass):
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    short_description = models.CharField(max_length=255, blank=True, null=True)
-    event_type = models.CharField(max_length=20, choices=EventType.choices)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    location = models.CharField(max_length=255, blank=True, null=True)
-    poster = models.ImageField(
-            upload_to='event_posters/',
+    event_type = models.CharField(
+            max_length=20,
+            choices=EventType.choices,
+            default=EventType.PICKUP
+            )
+    start_date = models.DateTimeField(null=True)
+    end_date = models.DateTimeField(null=True)
+    short_description = models.CharField(max_length=80, blank=True)
+    description = models.TextField(max_length=255, blank=True)
+
+    poster = models.ForeignKey(
+            Images,
+            related_name='event_posters',
+            on_delete=models.SET_NULL,
             blank=True,
             null=True
             )
@@ -162,7 +208,7 @@ class Event(ABSClass):
     status = models.CharField(
             max_length=20,
             choices=EventStatus.choices,
-            default=EventStatus.UPCOMING
+            default=EventStatus.CREATED
             )
     organization = models.ForeignKey(
             Organization,
@@ -173,6 +219,52 @@ class Event(ABSClass):
     def __str__(self):
         return str(self.name)
 
+
+class Location(ABSClass):
+    name = models.CharField(max_length=255)
+    address = models.ForeignKey(
+            Address,
+            related_name='locations',
+            on_delete=models.CASCADE,
+            blank=True,
+            null=True
+            )
+    event = models.ForeignKey(
+            Event,
+            related_name='locations',
+            on_delete=models.CASCADE,
+            blank=True,
+            null=True
+            )
+    def __str__(self):
+        return f"{self.name} - {self.address}"
+
+
+#class Team(ABSClass):
+#    name = models.CharField(max_length=255)
+#    short_name = models.CharField(max_length=50, blank=True, null=True)
+#    description = models.TextField(blank=True, null=True)
+#    logo = models.ForeignKey(
+#            Images,
+#            related_name='team_logos',
+#            on_delete=models.SET_NULL,
+#            blank=True,
+#            null=True
+#            )
+#    organization = models.ForeignKey(
+#            Organization,
+#            related_name='teams',
+#            on_delete=models.CASCADE
+#            )
+#    members = models.ManyToManyField(
+#            settings.AUTH_USER_MODEL,
+#            related_name='teams',
+#            through='Membership'
+#            )
+#
+#    def __str__(self):
+#        return str(self.name)
+#
 
 class Registration(ABSClass):
     first_name = models.CharField(max_length=255)
@@ -191,6 +283,7 @@ class Registration(ABSClass):
             )
     user = models.ForeignKey(
             settings.AUTH_USER_MODEL,
+            related_name='registrations',
             on_delete=models.DO_NOTHING,
             blank=True,
             null=True
@@ -216,10 +309,4 @@ class Registration(ABSClass):
         return f"{self.first_name} {self.last_name} - {self.event.name}"
 
 
-def user_has_role(user: User, org: Organization, role: Role | str) -> bool:
-    return Membership.objects.filter(
-            user=user,
-            organization=org,
-            role=role
-            ).exists()
 

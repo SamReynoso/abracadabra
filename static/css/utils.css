@@ -41,6 +41,10 @@
   flex-wrap: wrap;
 }
 
+.wrap.reverse {
+  flex-wrap: wrap-reverse;
+}
+
 .center {
   align-items: center;
   justify-content: center;

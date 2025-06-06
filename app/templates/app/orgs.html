@@ -9,7 +9,7 @@
     <section class="details-card">
       <div class="row gap-1">
         <div id="orgImageForm">
-          <img class="org-thumbnail" src="{{ organization.logo.url }}" alt="{{ organization.name }} Logo" class="details-card__logo">
+          <img class="org-thumbnail" src="{{ organization.logo.url }}" alt="{{ organization.name }} Logo">
         </div>
 
         <div>
@@ -57,30 +57,62 @@
       </div>
     </div>
 
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div class="inline-search">
-        <input 
-          class="search-input"
-          type="text"
-          placeholder="Start An Org to manage events"
-          aria-label="Start An Org to manage events"
-          name="name"
-          >
-          <button>Start</button>
-      </div>
-    </form>
   {% endif %}
 </header>
 
-
 {% endblock controls %}
+
+
+{% block search %}
+
+{% if organization %}
+<form class="inline-input-form">
+  <input
+    class="search-input"
+    type="text"
+    placeholder="Search for organization events, teams, or games"
+    aria-label="Search/Create"
+    >
+  <button>search</button>
+</form>
+{% else %}
+    <h1>Create an Organization</h1>
+    <form class="inline-input-form" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input
+        class="search-input"
+        name="name"
+        type="text"
+        placeholder="Start An Org to manage events"
+        aria-label="Start An Org to manage events"
+          >
+      <button>Start</button>
+    </form>
+    {% if form.errors %}
+      <div class="form-errors">
+        <p>Please correct the errors below:</p>
+        <ul>
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+{% endif %}
+{% endblock search %}
+
 {% block content %}
+{% if organization %}
 
 <div style="display: inline-block; width: 100%;">
   <button 
     class="btn"
-    hx-get="{% url 'new_event_card' %}"
+    hx-get="{% url 'api_new_event' %}"
     hx-target="#days"
     hx-swap="beforeend"
     data-frag-id="newEvent"
@@ -91,14 +123,14 @@
 <div class="app-card-container" id="days">
   <h2>In Progress</h2>
   {% for event in in_progress %}
-    {% include 'app/event_card.html' with event=event %}
+    {% include 'app/fragments/event_card.html' with event=event %}
   {% endfor %}
 
 </div>
 
 <!-- Upcoming Events -->
-<h2>Upcoming Events</h2>
 <div class="app-card-container">
+  <h2>Upcoming Events</h2>
   {% for event in upcoming_events %}
     <div class="app-card">
       <h3>{{ event.name }}</h3>
@@ -107,14 +139,11 @@
       <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Edit</button>
     </div>
   {% endfor %}
-  {% if not upcoming_events %}
-    <p>No upcoming events.</p>
-  {% endif %}
 </div>
 
 <!-- Past Events -->
-<h2>Past Events</h2>
 <div class="app-card-container">
+  <h2>Past Events</h2>
   {% for event in past_events %}
     <div class="app-card">
       <h3>{{ event.name }}</h3>
@@ -123,15 +152,25 @@
       <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Edit</button>
     </div>
   {% endfor %}
-  {% if not past_events %}
-    <p>No past events.</p>
-  {% endif %}
 </div>
+{% endif %}
+
+<dialog class="modal" id="imageDetails">
+  <form method="dialog">
+    <button class="btn">Close</button>
+  </form>
+  <div id="imageDetailsContent">
+    <!-- Image details will be loaded here -->
+  </div>
+</dialog>
+
 
 {% endblock %}
 
 
 {% block script %}
+
+
 
 {% if not organization %}
 <script type="text/javascript" src="https://unpkg.com/paper"></script>
@@ -203,42 +242,109 @@ view.onFrame = function () {
 {% endif %}
 <script>
 
-function writeInputToSummary(event) {
-  const targetElement = event.target.closest('details').querySelector('summary');
-  if (targetElement) {
-    targetElement.textContent = event.target.value || "New Event";
-  } else {
-    console.error("No summary element found in the details context.");
-  }
-}
-
-document.addEventListener("htmx:beforeRequest", function (event) {
-  const fragId = event.target.dataset.fragId;
-  if (fragId === 'newEvent' && document.getElementById('newEvent')) {
-    console.log("Preventing HTMX call");
-    event.preventDefault();
-  }
-  const cardId = event.target.dataset.cardId;
-  if (cardId) {
-    const detailsCard = document.getElementById(cardId);
-    if (detailsCard) {
-      console.log("Setting details card open state");
-      detailsCard.open = true;
-      detailsCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    }
-  }
-});
-
 document.body.addEventListener('htmx:afterSwap', function(event) {
   const newNode = event.detail.target;
   htmx.process(newNode);
-
-  // This is not working ATM
-  if (newNode.tagName.toLowerCase() === 'details') {
-    setTimeout(() => {}, 100);
-    newNode.open = true;
+  const details = newNode.closest('details');
+  if (details && !details.open) {
+    details.open = true;
   }
+  const rect = newNode.getBoundingClientRect();
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  window.scrollTo({
+    top: rect.top + scrollTop - ( 7 * 16 ), // Adjust the offset as needed
+    behavior: 'smooth'
+  });
+//  newNode.scrollIntoView({
+//    behavior: 'smooth',
+//    block: 'start'
+//  });
+
 })
 </script>
+
+
+
+<script>
+
+function searchAddress(el) {
+  const query = el.value.trim();
+  const container = el.closest(".form-container");
+  const suggestions = container.querySelector(".suggestions");
+
+  if (!query) {
+    suggestions.innerHTML = "";
+    return;
+  }
+
+  fetch("https://photon.komoot.io/api/?q=" + encodeURIComponent(query) + "&limit=5")
+    .then(response => response.json())
+    .then(data => {
+      suggestions.innerHTML = "";
+
+      data.features.forEach(feature => {
+        const item = document.createElement("li");
+        item.textContent = feature.properties.name + ", " + (feature.properties.city || "");
+
+        item.addEventListener("click", function () {
+          container.querySelector(".street").value = feature.properties.name || "";
+          container.querySelector(".city").value = feature.properties.city || "";
+          container.querySelector(".state").value = feature.properties.state || "";
+          container.querySelector(".postal_code").value = feature.properties.postcode || "";
+          container.querySelector(".country").value = feature.properties.country || "";
+          container.querySelector(".lat").value = feature.geometry.coordinates[1];
+          container.querySelector(".lon").value = feature.geometry.coordinates[0];
+
+          el.value = item.textContent;
+          suggestions.innerHTML = "";
+        });
+
+        suggestions.appendChild(item);
+      });
+    });
+}
+</script>
+
+<script>
+
+function openAppDropdown(event) {
+  event.preventDefault();
+  const dropdown = document.getElementById(event.target.dataset.toggle);
+  if (dropdown) {
+    const openDropdown = document.querySelector('.collapse-navigation-list.open');
+    if (openDropdown && openDropdown !== dropdown) {
+      console.log("Closing other dropdowns");
+      openDropdown.classList.remove('open');
+    }
+    dropdown.classList.toggle('open');
+  } else {
+    console.error("Dropdown with ID " + event.target.dataset.toggle + " not found.");
+  }
+}
+
+window.addEventListener('click', function(event) {
+  if (event.target.dataset.toggle) {
+    return;
+  }
+  const openDropdown = document.querySelector('.collapse-navigation-list.open');
+  if (openDropdown && !openDropdown.contains(event.target)) {
+    openDropdown.classList.remove('open');
+  }
+});
+
+window.addEventListener('toggle', function(event) {
+  const details = event.target;
+
+  if (details.tagName === 'DETAILS' && details.open) {
+    const summary = details.querySelector('summary');
+    if (summary) {
+      summary.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }
+});
+</script>
+
 {% endblock %}

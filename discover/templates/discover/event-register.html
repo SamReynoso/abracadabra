@@ -1,32 +1,31 @@
-{% extends 'core/base.html' %}
+{% extends 'discover/base.html' %}
 
 {% block title %}
-<title>Abracadabra Sports - Event Registration</title>
+Event Registration
 {% endblock %}
 
 {% block main %}
-<main style="padding: 10px;">
-  <h1>Event Registration</h1>
+<h1>Event Registration</h1>
 
-  <div class="registration-form-container">
+<div class="full-width-container">
+  <div class="registration-form-container pad-1">
     <div>
-      <img class="event-image" src="/assets/event.png" alt="Event Poster" >
+      <img class="poster-preview" src="{{ event.poster_url }}" alt="Event Poster" >
 
       <section class="event-pricing">
-        <h2>Price: $99.99</h2>
+        <h2>Price: {{ event.formatted_price }}</h2>
         <h3>Per Division</h3>
       </section>
 
 
       <section class="event-details">
-        <h2>Event Title</h2>
+        <h2>{{ event.name }}</h2>
         <p>
-          This is a brief description of the event or organization. It provides an overview of what the event is about, 
-          its significance, and any other relevant details that might interest potential attendees.
+        {{ event.description }}
         </p>
         <ul class="event-meta">
-          <li><strong>Date:</strong> [MM/DD/YYYY]</li>
-          <li><strong>Location:</strong> [Venue Name, City, State]</li>
+          <li><strong>Date:</strong> {{ event.start_date }}</li>
+          <li><strong>Location:</strong> {{ event.locations.first.address }}</li>
           <li><strong>Contact:</strong> [email@example.com]</li>
         </ul>
       </section>
@@ -40,23 +39,31 @@
 
       <form method="POST" action="/register" enctype="multipart/form-data">
         {% csrf_token %}
+        <input type="hidden" name="event_id" value="{{ event.id }}">
+        {% if user.is_authenticated %}
+          <!-- <input type="hidden" name="user_id" value="{{ user.id }}"> -->
+        {% endif %} 
 
         <div class="form-group">
           <label for="team_name">Team Name</label>
           <input type="text" id="team_name" name="team_name" required>
         </div>
 
-        <div class="form-group">
+
+        <div class="form-group mb-1">
+          <label for="coach_name">Coach First Name</label>
+          <input type="text" id="coach_first_name" name="first_name" required>
+          <label for="coach_name">Coach Last Name</label>
+          <input type="text" id="coach_last_name" name="last_name" required>
+
           <label for="email">Contact Email</label>
           <input type="email" id="email" name="email" required>
+
+          <label for="phone">Contact Phone</label>
+          <input type="tel" id="phone" name="phone" required>
         </div>
 
-        <div class="form-group">
-          <label for="logo">Team Logo (Optional)</label>
-          <input type="file" id="logo" name="logo" accept="image/*">
-        </div>
-
-        <fieldset class="form-group">
+        <fieldset class="form-group mb-1">
           <legend>Select Division(s)</legend>
           <label><input type="checkbox" name="divisions" value="u10"> Under 10 (U10)</label><br>
           <label><input type="checkbox" name="divisions" value="u12"> Under 12 (U12)</label><br>
@@ -65,13 +72,74 @@
           <label><input type="checkbox" name="divisions" value="open"> Open Division</label>
         </fieldset>
 
-        <div class="form-group confirm">
-          <label><input type="checkbox" required> I confirm the above information is correct</label>
-        </div>
+        <fieldset class="form-group row gap-1 mb-1">
+          <legend>Use Other Division(s)</legend>
+          <label><select>
+              <option value="none">gender</option>
+              <option value="m">male</option>
+              <option value="f">female</option>
+            </select></label>
+            <label>
+              <select>
+                <option value="none">Age</option>
+                <option value="Open">Open</option>
+                <option value="u1">U1</option> <option value="u2">U2</option> <option value="u3">U3</option> <option value="u4">U4</option>
+                <option value="u5">U5</option> <option value="u6">U6</option> <option value="u7">U7</option> <option value="u8">U8</option>
+                <option value="u9">U9</option>
+                <option value="u10">U10</option> <option value="u11">U11</option> <option value="u12">U12</option> <option value="u13">U13</option>
+                <option value="u14">U14</option> <option value="u15">U15</option> <option value="u16">U16</option> <option value="u17">U17</option>
+                <option value="u18">U18</option> <option value="O30">O30</option> <option value="O31">O31</option> <option value="O32">O32</option>
+                <option value="O33">O33</option> <option value="O34">O34</option> <option value="O35">O35</option> <option value="O36">O36</option>
+                <option value="O37">O37</option> <option value="O38">O38</option> <option value="O39">O39</option> <option value="O40">O40</option>
+                <option value="O41">O41</option> <option value="O42">O42</option> <option value="O43">O43</option> <option value="O44">O44</option>
+                <option value="O45">O45</option> <option value="O46">O46</option> <option value="O47">O47</option> <option value="O48">O48</option>
+                <option value="O49">O49</option> <option value="O50">O50</option> <option value="O51">O51</option> <option value="O52">O52</option>
+                <option value="O53">O53</option> <option value="O54">O54</option> <option value="O55">O55</option> <option value="O56">O56</option>
+                <option value="O57">O57</option> <option value="O58">O58</option> <option value="O59">O59</option> <option value="O60">O60</option>
+                <option value="O61">O61</option> <option value="O62">O62</option> <option value="O63">O63</option> <option value="O64">O64</option>
+                <option value="O65">O65</option> <option value="O66">O66</option> <option value="O67">O67</option> <option value="O68">O68</option>
+                <option value="O69">O69</option> <option value="O70">O70</option> <option value="O71">O71</option> <option value="O72">O72</option>
+                <option value="O73">O73</option> <option value="O74">O74</option> <option value="O75">O75</option> <option value="O76">O76</option>
+                <option value="O77">O77</option> <option value="O78">O78</option> <option value="O79">O79</option> <option value="O80">O80</option>
+                <option value="O81">O81</option> <option value="O82">O82</option> <option value="O83">O83</option> <option value="O84">O84</option>
+                <option value="O85">O85</option> <option value="O86">O86</option> <option value="O87">O87</option> <option value="O88">O88</option>
+                <option value="O89">O89</option> <option value="O90">O90</option> <option value="O91">O91</option> <option value="O92">O92</option>
+                <option value="O93">O93</option> <option value="O94">O94</option> <option value="O95">O95</option> <option value="O96">O96</option>
+                <option value="O97">O97</option> <option value="O98">O98</option> <option value="O99">O99</option>
+                <option value="O100">O100</option> <option value="O101">O101</option> <option value="O102">O102</option>
+                <option value="O103">O103</option> <option value="O104">O104</option>
+              </select>
+            </label>
+            <label>
+              <select>
+                <option value="none">Level</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+                <option value="elite">Elite</option>
+                <option value="bronze">Bronze</option>
+                <option value="silver">Silver</option>
+                <option value="gold">Gold</option>
+                <option value="platinum">Platinum</option>
+                <option value="jv">JV</option>
+                <option value="varsity">Varsity</option>
+                <option value="club">Club</option>
+              </select>
+            </label>
+
+        </fieldset>
 
         <button class="btn-submit" type="submit">Submit Registration</button>
       </form>
     </section>
   </div>
-</main>
+
+</div>
+
+{{ quest_uuid }}
+
+<script>
+  localStorage.setItem('guest_uuid', '{{ guest_uuid}}');
+  console.log('Guest UUID set in localStorage:', '{{ guest_uuid }}');
+</script>
 {% endblock %}

@@ -1,87 +1,79 @@
-<details class="app-card" id="{{ card_id }}" data-card-id="{{ card_id }}">
-  <summary class="app-card__summary">
-    New Event
-    <ul class="collapse-navigation-list"
-      <li>
+<!-- Event details card for event: {{ event.name }}-->
+<div class="relative">
+  <ul class="collapse-navigation-list" id="collapse{{ event.safe_slug }}" data-collapse-id="collapse{{ event.safe_slug }}">
+        <li>
+          <button
+            class="btn-link"
+            hx-get="{% url 'event_form_fragment' event.safe_slug %}"
+            hx-target="#content{{ event.safe_slug }}"
+            hx-swap="innerHTML"
+            >
+            Info
+          </button>
+        </li>
 
-        <button
-          class="btn-link"
-          data-card-id="{{ card_id }}"
-          hx-get="/app/event-form/"
-          hx-target="#{{ card_id }}Content"
-          hx-swap="outerHTML"
-          >
-          Info
-        </button>
+        <li>
+          <button
+            class="btn-link"
+            hx-get="{% url 'event_location_fragment' event.safe_slug %}"
+            hx-target="#content{{ event.safe_slug }}"
+            hx-swap="innerHTML"
+            >
+            Locations
+          </button>
+        </li>
 
-      </li>
-      <li>
-        <a class="btn-link" href="{% url 'event_manage' event.safe_slug %}">Lifecycle</a>
-      </li>
-      <li>
-        <a class="btn-link" href="{% url 'event_details' event.safe_slug %}">Page</a>
-      </li>
-    </ul>
-  </summary>
+        <li>
+          <button
+            class="btn-link"
+            hx-get="{% url 'event_images_fragment' event.safe_slug %}"
+            hx-target="#content{{ event.safe_slug }}"
+            hx-swap="innerHTML"
+            >
+            Poster
+          </button>
+        </li>
 
-  <div class="pad-1" id="{{ card_id }}Content">
+        <li>
+          <button
+            class="btn-link"
+            hx-get="{% url 'event_lifecycle_fragment' event.safe_slug %}"
+            hx-target="#content{{ event.safe_slug }}"
+            hx-swap="innerHTML"
+            >
+            Lifecycle
+          </button>
+        </li>
+        <li>
+          <a class="btn-link" href="{% url 'event_details' event.safe_slug %}">Page</a>
+        </li>
+      </ul>
 
-    <dl class="app-card__details fit">
-      <dt><strong>Lifecycle Status</strong></dt>
-      <dd>
-        In Progress
-      </dd>
-    </dl>
+  <details class="app-card" id="details{{ event.safe_slug}}" data-card-id="details{{ event.safe_slug }}">
+    <summary class="app-card__summary" data-original-text="{{ event.name }}">
+      <button 
+        hx-get="{% url 'event_details_fragment' event.safe_slug %}"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        class="btn-link">{{ event.name }}</button>
 
-    <div class="row wrap gap-2" style="align-items: center;">
-      <div class="row wrap gap-1 pad-1">
-        <img class="poster-preview" src="/assets/defaults/event.png" alt="Event Thumbnail">
-        <dl class="app-card__details">
-          <dt>Title</dt>
-          <dd>Event Name</dd>
-          <dt>Type</dt>
-          <dd>Event Type</dd>
-          <dt>Start</dt>
-          <dd>2023-10-01 10:00</dd>
-          <dt>End</dt>
-          <dd>2023-10-01 12:00</dd>
-          <dt>Location</dt>
-          <dd>Event Location</dd>
-          <dt>Price</dt>
-          <dd>$240.00</dd>
-          <dt>Location</dt>
-          <dd
-            <address>
-              <strong>Venue Name</strong><br>
-              1234 Event St.<br>
-              City, State, Zip<br>
-              Country
-            </address>
-          </dd>
-          <dt>Link</dt>
-          <dd>
-            <a href="https://example.com/event-link" target="_blank" rel="noopener noreferrer">Event Site</a>
-          <dd>
-        </dl>
-      </div>
+      <button
+        class="ellipsis-button"
+        src="/assets/menu.svg"
+        onclick="openAppDropdown(event)"
+        alt="Menu icon for event details"
+        data-toggle="collapse{{ event.safe_slug }}"
+        >
+        ...
+      </button>
+    </summary>
 
-      <dl>
-        <dt><strong>Short Description</strong></dt>
-        <dd class="pad-1">
-          <p>
-          This will be a fun event for all to go to and enjoy.
-          </p>
-        </dd>
-        <dt><strong>Description</strong></dt>
-        <dd class="pad-1">
-          <p>
-            This is a really log description of the event that will be displayed in the event details page on the discover app. it will not show up in search result but is searchable.
-            This is a really log description of the event that will be displayed in the event details page on the discover app. it will not show up in search result but is searchable.
-          </p>
-        </dd>
-      </dl>
+    <div
+      class="pad-1"
+      id="content{{ event.safe_slug }}"
+      >
+      {% include 'app/fragments/event_details.html' with event=event %}
     </div>
-
-  </div>
-</details>
+  </details>
+</div>
 

@@ -3,6 +3,11 @@
 {% block extra_head %}
     <link rel="stylesheet" href="/static/css/themes/cold.css">
     <link rel="stylesheet" href="/static/css/layouts/app.css">
+
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
 {% endblock %}
 
 {% block nav_links %}
@@ -32,13 +37,17 @@
       </header>
     {% endblock %}
 
+    {% block search %}
     <form class="inline-input-form">
-        <input class="search-input" type="text"
-          placeholder="Search for organization events, teams, or games"
-          aria-label="Search/Create"
-          >
-        <button>search</button>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search for organization events, teams, or games"
+        aria-label="Search/Create"
+        >
+      <button>search</button>
     </form>
+    {% endblock %}
   </section>
 
   <div class="full-width-container">
@@ -53,11 +62,12 @@
   <div class="sidebar__section">
     <ul class="sidebar__list active" aria-label="Main Navigation">
       <li><a href="{% url 'app_on_deck' %}">On Deck</a></li>
-      <li><a href="{% url 'app_images' %}">Images</a></li>
       <li><a href="{% url 'app_memberships' %}">Memberships</a></li>
       <li><a href="{% url 'app_following' %}">Following</a></li>
       <li><a href="{% url 'app_orgs' %}">Orgs</a></li>
       <li><a href="{% url 'app_teams' %}">Teams</a></li>
+      <li><a href="{% url 'app_images' %}">Images</a></li>
+      <li><a href="{% url 'app_images' %}">Locations</a></li>
     </ul>
   </div>
 {% endblock %}

@@ -80,9 +80,32 @@ img.sport-icon:hover {
 .btn.icon {
   background-color: transparent;
   margin-right: 8px;
+  line-height: 1;
   padding: 0.2rem;
   height: 3rem;
   width: 3rem;
+}
+
+.ellipsis-button {
+  background: none;
+  color: var( --btn-primary-background-color);
+  line-height: 1;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.ellipsis-button:hover {
+  background-color: var(--btn-primary-background-color);
+  color: var(--btn-primary-color);
 }
 
 .btn:hover {

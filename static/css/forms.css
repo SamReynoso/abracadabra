@@ -164,3 +164,9 @@ legend {
 
 .confirm {
 }
+
+.form-errors {
+  color: rgba(255, 116, 116, 1);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}

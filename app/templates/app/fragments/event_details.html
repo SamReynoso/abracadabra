@@ -1,0 +1,62 @@
+<dl class="app-card__details fit">
+  <dt><strong>Lifecycle Status</strong></dt>
+  <dd>
+    {{ event.status }}
+  </dd>
+</dl>
+
+<div class="row wrap gap-2" style="align-items: center;">
+  <div class="row wrap gap-1 pad-1">
+
+    <img class="poster-preview" src="{{ event.poster_url }}" alt="Event Poster" width="100" height="150">
+    <dl class="app-card__details">
+      <dt>Name</dt>
+      <dd>{{ event.name }}</dd>
+      <dt>Type</dt>
+      <dd>{{ event.event_type }}</dd>
+      <dt>Start</dt>
+      <dd>{{ event.start_date }}</dd>
+      <dt>End</dt>
+      <dd>{{ event.end_date }}</dd>
+      <dt>Price</dt>
+      <dd>{{ event.formatted_price }}</dd>
+      <dt>Location</dt>
+      <dd
+        {% if event.locations.count == 1 %}
+
+          <address>
+            <span>{{ event.locations.first.name }} - {{ event.locations.first.street}}, {{ event.locations.first.city }}, {{ event.locations.first.state }} {{ event.locations.first.zip }}</span>
+          </address>
+
+        {% else %}
+          <address>
+            {% for location in event.locations.all %}
+            <span>{{ location.name}} -  {{ location.address.street }} {{ location.address.street2 }} {{ location.address.city }}, {{ location.address.state }} {{ location.address.postal_code}}</span></br>
+            {% endfor %}
+          </address>
+          
+        {% endif %}
+      </dd>
+      <dt>Link</dt>
+      <dd>
+        <a href="https://example.com/event-link" target="_blank" rel="noopener noreferrer">Event Site</a>
+      <dd>
+    </dl>
+  </div>
+
+  <dl>
+    <dt><strong>Short Description</strong></dt>
+    <dd class="pad-1">
+      <p>
+        {{ event.short_description }}
+      </p>
+    </dd>
+    <dt><strong>Description</strong></dt>
+    <dd class="pad-1">
+      <p>
+        {{ event.description }}
+      </p>
+    </dd>
+  </dl>
+</div>
+

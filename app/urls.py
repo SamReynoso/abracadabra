@@ -14,11 +14,17 @@ urlpatterns = [
     path("update-image/<id>/", views.update_image, name="update_image"),
 
     path("image-details/<id>/", views.image_details, name="image_details"),
-    path("day-card/", views.day_card, name="day_card"),
-    path("event-form/", views.event_form, name="event_form"),
+
     path("new-event/", views.new_event_card, name="new_event_card"),
     path("event-card/<pk>", views.event_card, name="event_card"),
-    path("event/<safe_slug>", views.event_manage, name="event_manage"),
+
+
+    path("event-details/<safe_slug>", views.event_details, name="event_details_fragment"),
+    path("event-location/<safe_slug>", views.event_location, name="event_location_fragment"),
+    path("event-images/<safe_slug>", views.event_images, name="event_images_fragment"),
+    path("event-image-accept/<event_slug>/<image_slug>", views.event_image_accept, name="event_image_accept_fragment"),
+    path("event-form/<safe_slug>", views.event_form, name="event_form_fragment"),
+    path("event-lifecycle/<safe_slug>", views.event_lifecycle, name="event_lifecycle_fragment"),
 
     path("set-organization/<safe_slug>", views.set_org, name="set_organization"),
 ]

@@ -1,29 +1,48 @@
 <form
   class="app-form"
   method="post"
-  hx-post="{% url 'event_form' %}"
+  hx-post="{% url 'event_form_fragment' event.safe_slug %}"
   hx-target="#newEventForm"
   hx-swap="outerHTML"
   >
 
-  <img
-    src=""
-    alt="Event Poster Preview"
-    class="thumbnail pad-1"
+  <div 
+    hx-get="{% url 'event_images_fragment' event.safe_slug %}"
+    hx-target="#imageDetailsContent"
+    hx-swap="innerHTML"
+    onclick="document.getElementById('imageDetails').showModal()"
     >
+    <img 
+      class="poster-preview"
+      src="{{ event.poster_url }}" 
+      alt="Event Poster Preview"
+      class="thumbnail pad-1"
+      >
+  </div>
 
   {% csrf_token %}
   <div class="form-fields">
     {{ form.as_p }}
   </div>
+
   <div class="row gap-1 pad-1">
-    <button type="submit" class="btn">Submit</button>
+
+    <button
+      type="submit"
+      class="btn"
+      hx-post="{% url 'event_form_fragment' event.safe_slug %}"
+      hx-target="#content{{ event.safe_slug }}"
+      hx-swap="innerHTML"
+      >
+      Submit
+    </button>
+
     <button
       type="button"
       class="btn"
-      hx-get="{% url 'new_event_card' %}"
-      hx-target="{{ card_id }}"
-      hx-swap="outerHTML"
+      hx-get="{% url 'event_details_fragment' event.safe_slug %}"
+      hx-target="#content{{ event.safe_slug }}"
+      hx-swap="innerHTML"
       >
       Cancel
     </button>

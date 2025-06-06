@@ -1,0 +1,28 @@
+{% for event in events %}
+  <section class="search-result" onclick="location.href='{% url 'event_details' event.safe_slug %}'">
+    <h3>{{ event.organization.name }}</h3>
+    <div class="event-poster">
+      <img class="search-poster" src="{{ event.poster_url}}" alt="Event Poster">
+    </div>
+    <h2>{{ event.name }} ({{ event.start_date }})</h2>
+    <p class="event-description">
+      {{ event.short_description }}
+    </p>
+    <p class="event-description">
+      {{ event.description }}
+    </p>
+  </section>
+{% endfor %}
+
+
+{% if next_page %}
+  <div
+    id="loadMore"
+    hx-get="{% url 'basketball_spotlight' page_number=next_page %}"
+    hx-trigger="revealed"
+    hx-target="#loadMore"
+    hx-swap="outerHTML"
+    >
+    Loading more....
+  </div>
+{% endif %}

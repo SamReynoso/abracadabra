@@ -1,0 +1,26 @@
+{% extends "discover/base.html" %}
+{% block title %}Abracadabra Sports{% endblock %}
+
+{% block main %}
+<header class="page-header">
+  <h1>Guest Workspace</h1>
+  <ul>
+    <li><strong>Drafts:</strong> ({{ registrations|length }})</li>
+    <li><strong>Submitted:</strong> (0)</li>
+    <li><strong>Confirmed:</strong> (0)</li>
+  </ul>
+</header>
+<div class="full-width-container">
+
+
+{% include "discover/fragments/contact_info.html" with guest=guest %}
+
+<section 
+  hx-get="{% url  'teams' %}"
+  hx-target="#teamAndDivisionSection"
+  hx-swap="outerHTML"
+  hx-trigger="load"
+  id="teamAndDivisionSection"
+  ></section>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+<form method="post" action="{% url 'contact_info' %}" id="contactInfoForm">
+  {% csrf_token %}
+  <input type="hidden" name="guest_uuid" value="{{ guest.uuid }}">
+  <fieldset id="contact-info" class="mb-1">
+    <legend>Contact Information</legend>
+      <label for="first-name">First Name:</label>
+      <input type="text" id="first-name" name="first_name" value="{{ guest.first_name }}"> 
+
+      <label for="last-name">Last Name:</label>
+      <input type="text" id="last-name" name="last_name" value=" {{guest.last_name}} ">
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" value="{{ guest.email }}">
+
+      <label for="phone">Phone:</label>
+      <input type="tel" id="phone" name="phone" value="{{ guest.phone }}">
+  <button
+    class="btn"
+    hx-post="{% url 'contact_info_form' %}"
+    hx-target="#contactInfoForm"
+    >Save Contact Info</button>
+  <button
+    class="btn"
+    hx-get="{% url 'contact_info' %}"
+    hx-target="#contactInfoForm"
+    hx-swap="outerHTML"
+    >
+    Cancel
+  </button>
+  </fieldset>
+</form>

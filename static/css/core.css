@@ -59,6 +59,7 @@ nav.navigations {
   padding: 0 1rem;
   height: var(--nav-height);
   border-bottom: 1px solid var(--border-color);
+  z-index: 9999;
 }
 
 .nav-icon {
@@ -80,24 +81,24 @@ div.nav__section a:hover {
   color: var(--text-muted-color);
 }
 
-
 div.navbar__dropdown {
   background-color: var(--menu-background-color);
-  display: flex;
   flex-direction: column;
-  position: absolute;
+  position: fixed;
   padding: 1rem 1.625rem;
   top: calc(var(--nav-height) - .625rem);
   right: 0;
   box-shadow: var(--box-shadow);
 
+  display: flex;
+  z-index: -1;
   opacity: 0;
   width: 8rem;
   height: 10.5rem;
   transition: 
     opacity 0.3s ease,
     width 0.3s ease,
-    height 0.3s ease,
+    height 0.3s ease;
 }
 
 div.navbar__dropdown * {
@@ -107,6 +108,7 @@ div.navbar__dropdown * {
 
 
 div.navbar__dropdown.show {
+  z-index: 9998;
   opacity: 1;
   width: 18.625rem;
   height: 26.625rem;
@@ -232,6 +234,7 @@ aside.sidebar.slide-in {
 .top-controller {
   padding: 1rem;
 }
+
 
 @media (max-width: 900px) {
   .max-media {

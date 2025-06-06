@@ -1,7 +1,9 @@
+import time
 from django.shortcuts import redirect, render
-import random
 from models.models import (
+        Address,
         Event,
+        Location,
         Organization,
         Membership,
         Role,
@@ -10,7 +12,7 @@ from models.models import (
         Images,
 
         )
-from .forms import EventForm, NewOrganizationForm
+from .forms import EventForm, LifeCycleForm, NewOrganizationForm
 
 
 def set_profile_picture(request, context):
@@ -61,13 +63,6 @@ def update_image(request, id):
     if request.method == "POST":
         caption = request.POST.get('caption', '')
         is_profile_picture = request.POST.get('is_profile_picture', 'off') == 'on'
-        print(f'''
-
-
-              {is_profile_picture}
-
-
-              ''')
         if is_profile_picture:
             Images.objects.filter(user=request.user, is_profile_picture=True).update(is_profile_picture=False)
         image.is_profile_picture = is_profile_picture
@@ -136,8 +131,9 @@ def set_org(request, safe_slug: str):
 
 def orgs(request):
     memberships =  Membership.objects.filter(user=request.user, role=Role.DIRECTOR)
-    organizations = []
     organization = None
+    organizations = Organization.objects.none()
+    events = Event.objects.none()  # Default to empty queryset if no memberships
 
     if memberships.exists():
         organizations = [membership.organization for membership in memberships]
@@ -146,10 +142,15 @@ def orgs(request):
         primary_membership = primary.first() if primary.exists() else None
         assert primary_membership is not None, "Primary membership should exist"
         organization = primary_membership.organization 
+        events = organization.events.all().order_by('-created_at')
+
     context = {
             'organization': organization, 
             'organizations': organizations,
+            'in_progress': events.filter(status=EventStatus.CREATED),
             }
+
+
 
     if request.method == "POST":
         form = NewOrganizationForm(request.POST)
@@ -177,146 +178,139 @@ def orgs(request):
 
 
 
-def event_manage(request, safe_slug: str | None):
-    if safe_slug is None:
-        return render(request, "app/event_not_found.html", {"safe_slug": safe_slug})
-    try:
-        event = Event.from_slug(safe_slug)
-    except Event.DoesNotExist:
-        return render(request, "app/event_not_found.html", {"safe_slug": safe_slug})
-
-    context = {
-        'event': event,
-    }
-    return render(request, "app/event_details.html", context)
-
-
-def event_card(request, pk):
-    try:
-        event = Event.objects.get(pk=pk)
-    except Event.DoesNotExist:
-        return render(request, "app/event_not_found.html", {"pk": pk})
-
-    context = {
-        'event': event,
-        'card_id': event.pk,
-    }
-    return render(request, "app/event_card.html", context)
-
-
 def new_event_card(request):
     user = request.user
     org = user.memberships.filter(role=Role.DIRECTOR, primary=True).first()
-    card_id = "newEvent"
+    assert org is not None, "User must have a primary organization with director role"
     event = Event.objects.create(
-        organization=org.organization if org else None,
+        organization=org.organization,
         name="New Event",
         status=EventStatus.CREATED,
     )
     context = {
-        'card_id': card_id,
         'event': event,
     }
-    return render(request, "app/event_card.html", context)
+    return render(request, "app/fragments/event_card.html", context)
 
 
+def event_card(request, safe_slug: str):
+    context = { 'event': Event.from_slug(safe_slug) }
+    return render(request, "app/fragments/event_card.html", context)
 
-def event_form(request):
+
+def event_details(request, safe_slug: str):
+    context = { 'event': Event.from_slug(safe_slug) }
+    return render(request, "app/fragments/event_details.html", context)
+
+
+def event_location(request, safe_slug: str):
+    event = Event.from_slug(safe_slug)
+    assert event is not None, "Event must exist for the given slug"
     if request.method == "POST":
-        form = EventForm(request.POST)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.save()
-            context = {
-                "event": event,
-                "card_id": event.pk,
-            }
-            return render(request, "app/event_card.html", context)
+        address_id = request.POST.get('address', '')
+        if address_id:
+            address  = Address.objects.get(id=address_id, user=request.user)
+            location = Location.objects.create(
+                event=event,
+                address=address,
+            )
+            location.save()
         else:
-            context = {
-                "form": form,
-                "card_id": "newEvent",
+            print("Creating new address for event location")
+            address = Address.objects.create(
+                user=request.user,
+                name=request.POST.get('name', ''),
+                street=request.POST.get('street', ''),
+                city=request.POST.get('city', ''),
+                state=request.POST.get('state', ''),
+                postal_code=request.POST.get('postal_code', ''),
+            )
+            address.save()
+            location = Location.objects.create(
+                event=event,
+                address=address,
+            )
+            location.save()
+
+    addresses = Address.objects.filter(user=request.user).order_by('-created_at')
+    context = {
+            "event": event,
+            "addresses": addresses,
             }
+    return render(request, "app/fragments/event_location.html", context)
+
+
+def event_image_accept(request, event_slug: str, image_slug: str):
+    event = Event.from_slug(event_slug)
+    image = Images.from_slug(image_slug)
+    assert event is not None, "Event must exist for the given slug"
+    assert image is not None, "Image must exist for the given slug"
+
+    if request.method == "POST":
+            event.poster = image
+            event.save()
+            return render(
+                    request,
+                    "app/fragments/event_details.html",
+                    {
+                        "event": event
+                        }
+                    )
+
+    context = {
+            "event": event,
+            "image": image,
+            }
+    return render(request, "app/fragments/event_image_accept.html", context)
+
+
+def event_images(request, safe_slug: str):
+    images = list(Images.objects.filter(user=request.user).order_by('-created_at'))
+
+    context = {
+            "event": Event.from_slug(safe_slug),
+            "images": images * 5,  # For demonstration, repeat images to fill space
+            }
+    return render(request, "app/fragments/event_images.html", context)
+
+def event_form(request, safe_slug: str):
+    event = Event.from_slug(safe_slug)
+    assert event is not None, "Event must exist for the given slug"
+    if request.method == "POST":
+        form = EventForm(request.POST, instance=event)
+        print("Form data:", request.POST)
+        if form.is_valid():
+            form.save()
+            context = { "event": event }
+            return render(request, "app/fragments/event_details.html", context)
+        else:
+            print("form errors:", form.errors)
+            context = { "event": event, "form": form, }
     else:
-        form = EventForm()
+        form = EventForm(instance=event)
         context = {
-            "card_id": "newEvent",
+            "event": event,
             "form": form,
         }
-    return render(request, "app/event_form.html", context)
+    return render(request, "app/fragments/event_form.html", context)
 
 
-
-COUNT = 0
-def day_card(request):
-    play_areas = [
-            { "label": "Play Area 1", "id": 1 },
-            { "label": "Play Area 2", "id": 2 },
-            { "label": "Play Area 3", "id": 3 },
-            { "label": "Play Area 4", "id": 4 },
-            { "label": "Play Area 5", "id": 5 },
-            { "label": "Play Area 6", "id": 6 },
-            { "label": "Play Area 7", "id": 7 },
-            { "label": "Play Area 8", "id": 8 },
-            { "label": "Play Area 9", "id": 9 },
-            { "label": "Play Area 10", "id": 10 },
-            { "label": "Play Area 11", "id": 11 },
-            { "label": "Play Area 12", "id": 12 },
-            { "label": "Play Area 13", "id": 13 },
-            { "label": "Play Area 14", "id": 14 },
-            { "label": "Play Area 15", "id": 15 },
-            { "label": "Play Area 16", "id": 16 },
-            { "label": "Play Area 17", "id": 17 },
-            { "label": "Play Area 18", "id": 18 },
-            { "label": "Play Area 19", "id": 19 },
-            { "label": "Play Area 20", "id": 20 },
-            ]
-
-    time_slots = [
-            { "label": "5:00 AM", "id": 1 },
-            { "label": "6:00 AM", "id": 1 },
-            { "label": "7:00 AM", "id": 1 },
-            { "label": "8:00 AM", "id": 1 },
-            { "label": "9:00 AM", "id": 1 },
-            { "label": "10:00 AM", "id": 2 },
-            { "label": "11:00 AM", "id": 3 },
-            { "label": "12:00 PM", "id": 4 },
-            { "label": "1:00 PM", "id": 5 },
-            { "label": "2:00 PM", "id": 6 },
-            { "label": "3:00 PM", "id": 7 },
-            { "label": "4:00 PM", "id": 8 },
-            { "label": "5:00 PM", "id": 9 },
-            { "label": "6:00 PM", "id": 10 },
-            { "label": "7:00 PM", "id": 11 },
-            { "label": "8:00 PM", "id": 12 },
-            { "label": "9:00 PM", "id": 13 },
-            { "label": "10:00 PM", "id": 14 },
-            { "label": "11:00 PM", "id": 15 },
-            { "label": "12:00 AM", "id": 16 },
-            { "label": "1:00 AM", "id": 17 },
-            { "label": "2:00 AM", "id": 18 },
-            { "label": "3:00 AM", "id": 19 },
-            { "label": "4:00 AM", "id": 20 },
-        ]
-
-    global COUNT
-    if COUNT == 0:
-        context = {
-            "day_number": random.randint(1, 100),
-            "label": "Auto-generated Day",
-            "play_areas": play_areas,
-            "time_slots": time_slots,
-        }
-        COUNT += 1
+def event_lifecycle(request, safe_slug: str):
+    event = Event.from_slug(safe_slug)
+    assert event is not None, "Event must exist for the given slug"
+    if request.method == "POST":
+        form = LifeCycleForm(request.POST, instance=event)
+        if form.is_valid():
+            form.save()
+            context = { "event": event }
     else:
-        context = {
-            "day_number": COUNT,
-            "label": f"Day {COUNT}",
-            "play_areas": play_areas[:5],
-            "time_slots": time_slots[:5],
-        }
-        COUNT += 1
-    return render(request, "app/day_card.html", context)
+        form = LifeCycleForm(instance=event)
+    context = {
+        "event": event,
+        "form": form,
+    }
+    return render(request, "app/fragments/event_lifecycle.html", context)
+
 
 
 

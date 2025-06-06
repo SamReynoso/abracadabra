@@ -1,0 +1,71 @@
+
+<div class="form-container">
+    <h1>Event Locations</h1>
+    {% for location in event.locations.all %}
+    <div class="row gap-1 center mb-2">
+      <address class="pad-1">
+        <span>{{ location.name}}</span><br>
+        <span>{{ location.address.street }} {{ location.address.street2 }}</span><br>
+        <span>{{ location.address.city }}, {{ location.address.state }} {{ location.address.postal_code}}</span><br>
+        <span>{{ location.address.country }}</span><br>
+      </address>
+      <button
+        class="btn"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        <!-- hx-get=" url 'event_location_delete' location.id %}" -->
+        Remove
+      </button>
+    </div>
+    {% endfor %}
+
+    <label>Search Address</label>
+    <input type="text"  placeholder="Start typing..." oninput="searchAddress(this)" autocomplete="off" />
+    <ul class="suggestions"></ul>
+
+  <form
+    class="app-form"
+    method="POST"
+    hx-post="{% url 'event_location_fragment' event.safe_slug %}"
+    hx-target="#content{{ event.safe_slug }}"
+    hx-swap="innerHTML"
+    >
+    {% csrf_token %}
+
+    <div class="inline-input-form">
+    </div>
+
+    <p>Add a location from your address book.</p>
+    <select class="mb-2" name="address" id="address-select">
+    {% for address in addresses %}
+      <option value="{{ address.id }}" >
+      {{ address.name }} - {{ address.street }} {{ address.street2 }}, {{ address.city }}, {{ address.state }} {{ address.postal_code}}, {{ address.country }} 
+      </option>
+    {% endfor %}
+    </select>
+
+
+    <p>Or create a new one.</p>
+    <input class="mb-1" type="text" name="name" class="name" placeholder="Add Name">
+
+    <input type="text" name="street" class="street" placeholder="Street Address">
+    <input type="text" name="city" class="city" placeholder="City">
+    <input type="text" name="state" class="state" placeholder="State/Province">
+    <input type="text" name="postal_code" class="postal_code" placeholder="Postal Code">
+    <input class="mb-2" type="text" name="country" class="country" placeholder="Country">
+    <input type="hidden" name="lat" class="lat" placeholder="Latitude">
+    <input type="hidden" name="lon" class="lon" placeholder="Longitude">
+    <div>
+      <button
+        type="button"
+        class="btn"
+        hx-post="{% url 'event_location_fragment' event.safe_slug %}"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Add Location
+      </button>
+    </div>
+  </form>
+</div>

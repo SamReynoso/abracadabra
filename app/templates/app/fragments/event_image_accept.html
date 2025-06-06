@@ -1,0 +1,29 @@
+<form class="app-form" method="POST" enctype="multipart/form-data" id="imageDetailsContent">
+  {% csrf_token %}
+  <input type="hidden" name="event_slug" value="{{ event.safe_slug }}" />
+  <input type="hidden" name="image_slug" value="{{ image.safe_slug }}" />
+  <img src="{{ image.image.url }}" alt="{{ image.caption }}" class="large-image" />
+  <p><strong>Caption:</strong> {{ image.caption }}</p>
+  <div class="row gap-1 pad-1">
+    <div>
+      <button
+        type="submit"
+        class="btn"
+        hx-post="{% url 'event_image_accept_fragment' event.safe_slug image.safe_slug %}"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Accept
+      </button>
+      <button
+        type="button"
+        class="btn"
+        hx-get="{% url 'event_images_fragment' event.safe_slug %}"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Cancel
+      </button>
+    </div>
+  </div>
+</form>

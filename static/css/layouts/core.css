@@ -57,6 +57,7 @@ section.search-result {
   padding: 0.75rem;
   border-radius: 3px;
   transition: background-color 0.2s ease;
+  cursor: pointer;
 }
 
 section.search-result:hover {
@@ -64,14 +65,22 @@ section.search-result:hover {
   font-weight: bold;
 }
 
+.details-page {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap-reverse;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  align-items: center;
+}
+
 .details-page__col {
   display: flex;
-
   flex-direction: column;
   gap: 1rem;
-  width: 60ch;
+  width: 50ch;
   overflow: hidden;
-  flex: 1;
 }
 
 .location-section {

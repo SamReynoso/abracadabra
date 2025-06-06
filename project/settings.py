@@ -23,6 +23,7 @@ SITE_ID = 3
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_URLCONF = 'project.urls'
 STATIC_URL = 'static/'
+STATIC_ROOT = 'static/'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

@@ -1,0 +1,22 @@
+<div class="event-poster-selection">
+  <div class="upload-image-icon">
+    <img
+      src="/assets/upload.svg"
+      alt="Add an image."
+      style="filter: invert(1);"
+      />
+  </div>
+  {% for image in images %}
+  <div 
+    hx-get="{% url 'event_image_accept_fragment' event.safe_slug image.safe_slug %}"
+    hx-target="#content{{ event.safe_slug }}"
+    hx-swap="innerHTML"
+    >
+
+    <img
+      src="{{ image.image.url }}"
+      alt="{{ image.caption }}"
+      />
+  </div>
+  {% endfor %}
+</div>

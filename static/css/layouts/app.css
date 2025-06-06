@@ -4,6 +4,7 @@
   gap: 1rem;
   padding: 1rem;
 }
+
 .image-gallery div {
   background-color: var(--nav-background-color);
   display: flex;
@@ -26,6 +27,47 @@
   margin: 0;
 
 }
+
+.event-poster-selection {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .event-poster-selection {
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+    gap: 3px;
+  }
+}
+
+.event-poster-selection div {
+  background-color: black;
+  padding: 3px;
+  display: flex;
+  align-items: center;    
+  transition: background-color 0.3s ease;
+}
+
+.event-poster-selection div.upload-image-icon {
+  padding: 2rem;
+  background-color: transparent;
+}
+
+.event-poster-selection div:hover {
+  background-color: var(--btn-primary-background-color);
+}
+.event-poster-selection img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  height: auto;
+  image-rendering: pixelated;
+}
+
 
 .image-gallery img {
   display: block;
@@ -86,6 +128,7 @@
 }
 
 .app-card {
+  border-bottom: 1px solid var(--border-color);
 }
 
 dl.app-card__details {
@@ -109,13 +152,10 @@ dl.app-card__details dd {
 summary.app-card__summary {
   background-color: var(--menu-background-color);
   display: flex;
-  flex-direction: row;
-  align-items: center;
   justify-content: space-between;
+
   width: 100%;
-  padding: .25rem;
   font-size: 1.2rem;
-  border-radius: 3px;
   cursor: pointer;
   font-weight: bold;
 }

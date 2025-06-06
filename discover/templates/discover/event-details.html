@@ -1,29 +1,20 @@
-{% extends 'core/base.html' %}
+{% extends 'discover/base.html' %}
 
-{% block title %}<title>Abracadabra Sports - Marketplace</title>{% endblock %}
+{% block title %}Event Details{% endblock %}
 
 {% block main %}
-<main>
-  <div class="details-page">
 
-    <div class="large-poster">
-      <img class="large-poster" src="/assets/event.png" alt="Event Poster">
-    </div>
+<div class="details-page pad-2 m-2">
 
-    <div class="details-page">
       <div class="details-page__col">
-        <h2>Event title</h2>
+        <h2>{{ event.name }}</h2>
         <p>
-          This is a brief description of the event or organization. It provides an overview of what the event is about, 
-          its significance, and any other relevant details that might interest potential attendees.
+          {{ event.description }}
         </p>
         <hr>
-        <h3>This Event's Organization Name</h3>
-        <a href="/discover/org">view</a>
-        <p>
-          This is a short blurb about the organization hosting the event. It gives insight into the organization's 
-          mission, values, and activities, helping attendees understand who is behind the event.
-        </p>
+        <h3>{{ event.organization.name }}</h3>
+        <a href="{% url "org_details" event.organization.safe_slug %}">view</a>
+        <p>{{ event.organization.description }}</p>
         <hr>
         <h3>About this Event</h3>
         <ul>
@@ -34,29 +25,34 @@
         </ul>
       </div>
 
-
-
-      <div class="details-page__col bordered">
-        <h2>price {$$$.$$}</h2>
+      <div class="details-page__col">
+        <h2>{{ event.formatted_price }}</h2>
         <h3>Per person or group</h3>
         <h3>About this Event</h3>
         <hr>
         <ul>
-          <li><a href="/discover/register/">Register</a></li>
-          <li><button>add to list</a></li>
+          <li>
+            <form class="mb-1" method="POST" action="{% url 'event_register' event.safe_slug %}" enctype="multipart/form-data">
+              {% csrf_token %}
+              <button type="submit" class="btn mb-1">Register As Guest</button>
+            </form>
+          </li>
+          <li><a class="btn" href="{% url 'event_register' event.safe_slug %}">Create an account</a></li>
+          <li><button class="btn">add to list</a></li>
         </ul>
         <hr>
         <p>Dev note: or the tournament is live/over. We have to show something here.</p>
         <ul>
           <li><a href="/gameday/">gameday</a></li>
         </ul>
-
       </div>
 
+    <div class="large-poster">
+      <img class="large-poster" src="{{ event.poster_url }}" alt="Event Poster">
     </div>
 
-  </div>
 
-</main>
+
+</div>
 {% endblock %}
 

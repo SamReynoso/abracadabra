@@ -40,30 +40,32 @@
 
   <section class="nav__section">
     <button class="btn wrapper" id="navbarDropdowToggle">THE USERS NAME</button>
-
-    <!-- Menu -->
-    <div class="navbar__dropdown" id="navbarDropdown">
-      <h2>THE USERS NAME</h2>
-      <h3>Account & Settings</h3>
-      <div class="navbar__dropdown__section">
-        <ul>
-          <li>Setting Stuff</a></li>
-        </ul>
-        <ul>
-          <li>Account Stuff</li>
-        </ul>
-      </div>
-
-      <h3>Abracadashboard</h3>
-      <div class="navbar__dropdown__section">
-      <ul>
-        <li><a href="{% url 'app_on_deck' %}">Abracadashboard</a></li>
-      </ul>
-      </div>
-    </div>
   </section>
 </nav>
 
+<!-- Menu -->
+<div class="navbar__dropdown" id="navbarDropdown">
+  <h2>THE USERS NAME</h2>
+  <h3>Account & Settings</h3>
+  <div class="navbar__dropdown__section">
+    <ul>
+      <li>Setting Stuff</a></li>
+    </ul>
+    <ul>
+      <li>Account Stuff</li>
+    </ul>
+  </div>
+
+  <h3>Abracadashboard</h3>
+  <div class="navbar__dropdown__section">
+  <ul>
+    <li><a href="{% url 'app_on_deck' %}">Abracadashboard</a></li>
+  </ul>
+  <ul>
+    <li><a href="{% url 'workspace' %}">(temp) Guest Workspace</a></li>
+  </ul>
+  </div>
+</div>
 
 <main>
 
@@ -90,10 +92,6 @@
 <script>
   document.body.addEventListener('htmx:configRequest', function (event) {
     event.detail.headers['Cache-Control'] = 'no-cache';
-  });
-
-  document.body.addEventListener("htmx:beforeRequest", function (e) {
-    console.log("HTMX request:", e);
   });
 </script>
 

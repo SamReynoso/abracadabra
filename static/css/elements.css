@@ -1,3 +1,20 @@
+img.icon {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  align-self: center;
+  justify-self: center;
+}
+
+:root {
+  --invert: 0;
+}
+
+.invert {
+  filter: invert(var(--invert));
+}
+
 img.image-upload-preview {
   width: auto;
   height: auto;
@@ -82,12 +99,28 @@ a:hover {
   text-decoration: underline;
 }
 
+div.relative {
+  position: relative;
+}
+
 ul.collapse-navigation-list {
-  display: flex;
-  flex-direction: row;
+  background-color: var(--nav-background-color);
   list-style: none;
-  padding: 0;
-  margin: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(-2px, 2.5rem);
+  padding: 1rem;
+  width: 15rem;
+  box-shadow: var(--box-shadow);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease,
+}
+ul.collapse-navigation-list.open {
+  display: block;
+  z-index: 9998;
+  opacity: 1;
 }
 
 img.thumbnail {
@@ -119,18 +152,20 @@ button.hamberger {
   background-color: #f0f0f0;
   min-width: 40ch;
   height: 60ch;
+  object-fit: contain;
 }
 
-.poster-preview {
+img.poster-preview {
   background-color: #f0f0f0;
   min-width: 9rem;
   height: 16rem;
+  object-fit: cover;
 }
 
 .large-poster {
   background-color: #f0f0f0;
-  width: 90ch;
-  height: 120ch;
+  width: 50ch;
+  height: 66.6ch;
 }
 
 .placeholder-animation {

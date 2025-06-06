@@ -1,5 +1,4 @@
 import numpy as np
-import uuid
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
@@ -30,7 +29,6 @@ class EventStatus(models.TextChoices):
 
 
 class RegistrationStatus(models.TextChoices):
-    DRAFT = 'draft', 'Draft'
     PENDING = 'pending', 'Pending'
     CANCELLED = 'cancelled', 'Cancelled'
     REGISTERED = 'registered', 'Registered'
@@ -282,6 +280,32 @@ class Location(ABSClass):
         return f"{self.event.name} - {self.address.name}"
 
 
+#class Team(ABSClass):
+#    name = models.CharField(max_length=255)
+#    short_name = models.CharField(max_length=50, blank=True, null=True)
+#    description = models.TextField(blank=True, null=True)
+#    logo = models.ForeignKey(
+#            Images,
+#            related_name='team_logos',
+#            on_delete=models.SET_NULL,
+#            blank=True,
+#            null=True
+#            )
+#    organization = models.ForeignKey(
+#            Organization,
+#            related_name='teams',
+#            on_delete=models.CASCADE
+#            )
+#    members = models.ManyToManyField(
+#            settings.AUTH_USER_MODEL,
+#            related_name='teams',
+#            through='Membership'
+#            )
+#
+#    def __str__(self):
+#        return str(self.name)
+
+
 class DivisionGender(models.TextChoices):
     MALE = 'male', 'Male'
     FEMALE = 'female', 'Female'
@@ -300,7 +324,7 @@ class DivisionLevel(models.TextChoices):
     CLUB = 'club', 'Club'
 
 
-class DivisionInfo(models.Model):
+class OrgDivision(ABSClass):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=50, blank=True, null=True)
     gender  = models.CharField(
@@ -331,115 +355,15 @@ class EventDivision(ABSClass):
             related_name='divisions',
             on_delete=models.CASCADE
             )
-    info = models.ForeignKey(
-            DivisionInfo,
+    division = models.ForeignKey(
+            OrgDivision,
             related_name='event_divisions',
-            on_delete=models.CASCADE,
-            blank=True,
-            null=True
+            on_delete=models.CASCADE
             )
 
-class Guest(ABSClass):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField()
-    phone = models.CharField(max_length=20, blank=True, null=True)
-    uuid = models.UUIDField(
-            default=uuid.uuid4,
-            #editable=False,
-            #unique=True,
-            #help_text='Unique identifier for the registration'
-            )
 
-class Contanct(ABSClass):
-    contact_of = models.ForeignKey(
-            settings.AUTH_USER_MODEL,
-            related_name='contacts',
-            on_delete=models.CASCADE,
-            blank=True,
-            null=True
-            )
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField()
-    phone = models.CharField(max_length=20, blank=True, null=True)
-
-
-class Owner(ABSClass):
-    auth_user = models.OneToOneField(
-            settings.AUTH_USER_MODEL,
-            related_name='owner',
-            on_delete=models.DO_NOTHING,
-            default=None,
-            blank=True,
-            null=True
-            )
-    guest = models.OneToOneField(
-            Guest,
-            related_name='owner',
-            on_delete=models.DO_NOTHING,
-            default=None,
-            blank=True,
-            null=True
-            )
-    contact = models.OneToOneField(
-            Contanct,
-            related_name='owner',
-            on_delete=models.DO_NOTHING,
-            default=None,
-            blank=True,
-            null=True
-            )
-
-    @property
-    def is_authenticated(self) -> bool:
-        return self.auth_user is not None
-
-    @property
-    def info(self):
-        if self.auth_user:
-            return self.auth_user
-        elif self.guest:
-            return self.guest
-        elif self.contact:
-            return self.contact
-        raise ValueError("Owner must have either an auth_user, guest, or contact associated.")
-
-    def save(self, *args, **kwargs):
-        if not self.auth_user and not self.guest and not self.contact:
-            raise ValueError("Owner must have either an auth_user, guest, or contact associated.")
-        super().save(*args, **kwargs)
-
-
-class Team(ABSClass):
-    name = models.CharField(max_length=255)
-    short_name = models.CharField(max_length=50, blank=True, null=True)
-    logo = models.ForeignKey(
-            Images,
-            related_name='team_logos',
-            on_delete=models.SET_NULL,
-            blank=True,
-            null=True
-            )
-    owner = models.ForeignKey(
-            Owner,
-            related_name='teams',
-            on_delete=models.CASCADE,
-            blank=True,
-            null=True
-            )
-
-    @property
-    def team_logo_url(self):
-        if self.logo:
-            return self.logo.image.url
-        return "/assets/defaults/team-logo.png"
-
-    def __str__(self):
-        return str(self.name)
-
-
-class TeamDivision(ABSClass):
+class Registration(ABSClass):
+    team_name = models.CharField(max_length=255, blank=True, null=True)
     gender  = models.CharField(
             max_length=20,
             choices=DivisionGender.choices,
@@ -453,15 +377,11 @@ class TeamDivision(ABSClass):
             default=0,
             help_text='Age of participants in this division'
             )
-    team = models.ForeignKey(
-            Team,
-            related_name='divisions',
-            on_delete=models.CASCADE,
-            )
 
-
-
-class Registration(ABSClass):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)
     registration_date = models.DateTimeField(auto_now_add=True)
     notes = models.TextField(blank=True, null=True)
     payment_status = models.BooleanField(default=False)
@@ -469,53 +389,38 @@ class Registration(ABSClass):
     status = models.CharField(
             max_length=20,
             choices=RegistrationStatus.choices,
-            default=RegistrationStatus.DRAFT
+            default=RegistrationStatus.PENDING
+            )
+    user = models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            related_name='registrations',
+            on_delete=models.DO_NOTHING,
+            blank=True,
+            null=True
             )
     event = models.ForeignKey(
             Event, 
             related_name='registrations',
-            on_delete=models.CASCADE
-            )
-    owner = models.ForeignKey(
-            Owner,
-            related_name='registrations',
-            on_delete=models.CASCADE,
-            blank=True,
-            null=True
-            )
+            on_delete=models.CASCADE)
 
+    @staticmethod
+    def from_user(user: User, **kwargs):
+        """
+        Create a Registration instance from a User instance.
+        """
+        return Registration(
+            first_name=user.first_name,
+            last_name=user.last_name,
+            email=user.email,
+            user=user,
+            **kwargs
+        )
 
-class RegistrationEntryStatus(models.TextChoices):
-    PENDING = 'pending', 'Pending'
-    CONFIRMED = 'confirmed', 'Confirmed'
-    CANCELLED = 'cancelled', 'Cancelled'
-    REJECTED = 'rejected', 'Rejected'
-    ASSIGNED = 'assigned', 'Assigned'
+    class Meta: # type: ignore
+        unique_together = ('user', 'event')
 
-
-class RegistrationEntry(ABSClass):
-    registration = models.ForeignKey(
-            Registration,
-            related_name='entries',
-            on_delete=models.CASCADE
-            )
-    reported_division = models.ForeignKey(
-            TeamDivision,
-            related_name='registration_entries',
-            on_delete=models.CASCADE,
-            )
-    assigned_division = models.ForeignKey(
-            EventDivision,
-            related_name='registration_entries',
-            on_delete=models.SET_NULL,
-            blank=True,
-            null=True
-            )
-    status = models.CharField(
-            max_length=20,
-            choices=RegistrationEntryStatus.choices,
-            default=RegistrationEntryStatus.PENDING
-            )
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.event.name}"
 
 
 

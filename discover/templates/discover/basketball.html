@@ -9,6 +9,7 @@
         <button type="submit">Search</button>
       </div>
     </form>
+    This is  the header
 </header>
 
 <div class="row wrap gap-1" id="searchResults">
@@ -16,11 +17,10 @@
 
   <div
     id="loadMore"
-    hx-get="/discover/basketball/load-more/?page=3242342341"
+    hx-get="{% url 'basketball_spotlight' page_number=1%}"
     hx-trigger="revealed"
     hx-target="#loadMore"
     hx-swap="outerHTML"
-    hx-cache
     >
     Loading more....
   </div>

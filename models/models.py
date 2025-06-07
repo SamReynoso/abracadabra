@@ -300,7 +300,7 @@ class DivisionLevel(models.TextChoices):
     CLUB = 'club', 'Club'
 
 
-class DivisionInfo(models.Model):
+class DivisionInfo(ABSClass):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=50, blank=True, null=True)
     gender  = models.CharField(
@@ -516,6 +516,8 @@ class RegistrationEntry(ABSClass):
             choices=RegistrationEntryStatus.choices,
             default=RegistrationEntryStatus.PENDING
             )
+    confirmed = models.BooleanField(default=False)
+    assigned = models.BooleanField(default=False)
 
 
 

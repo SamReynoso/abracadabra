@@ -72,6 +72,7 @@ p.image-drop-prompt {
 }
 
 dialog.modal {
+  color: var(--text-color);
   border: none;
   position: fixed;
   top: 50%;

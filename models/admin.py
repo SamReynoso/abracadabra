@@ -13,6 +13,8 @@ from .models import (
         Guest,
         Team,
         TeamDivision,
+        DivisionInfo,
+        EventDivision,
 )
 
 
@@ -87,6 +89,13 @@ class RegistrationEntryAdmin(admin.ModelAdmin):
 admin.site.register(RegistrationEntry, RegistrationEntryAdmin)
 
 
+class DivisionInfoAdmin(admin.ModelAdmin):
+    list_display = ('gender', 'age', 'level', 'organization', 'created_at')
+    list_filter = ('created_at',)
+admin.site.register(DivisionInfo, DivisionInfoAdmin)
 
 
-
+class EventDivisionAdmin(admin.ModelAdmin):
+    list_display = ('event', 'info', 'created_at')
+    list_filter = ('created_at',)
+admin.site.register(EventDivision, EventDivisionAdmin)

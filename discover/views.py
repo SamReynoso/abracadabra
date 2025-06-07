@@ -98,7 +98,6 @@ def guest_registration_helper(request, event):
     if guest is None:
         guest = create_guest()
     Registration.objects.create(event=event, owner=guest.owner)
-    print(f"Guest {guest.uuid} registered for event {event.name}")
     res = redirect('workspace')
     res.set_cookie('guest_uuid', guest.uuid, max_age=60*60*24*30)
     return res
@@ -173,17 +172,13 @@ def division_form(request):
 def handle_teams_post(request):
     division_ids = request.POST.getlist('divisions', [])
     registration_ids = request.POST.getlist('registration_ids', [])
-    print("[POST request] division_ids:", division_ids, " registration_ids:", registration_ids)
     for reg_id in registration_ids:
         registration = Registration.objects.get(id=reg_id)
         if request.POST.get(f'registration-{ reg_id }', '') == 'yes':
-            print("Registration selected for ID:", reg_id)
             at_least_one = False
             for div_id in division_ids:
                 key = f"{ reg_id }-{ div_id }"
-                print(f"Checking division {div_id} for registration {reg_id}: {request.POST.get(key, '')}")
                 if request.POST.get(key, '') == 'yes':
-                    print(f"Assigning division {div_id} to registration {reg_id}")
                     division = TeamDivision.objects.get(id=div_id)
                     RegistrationEntry.objects.create(
                         registration=registration,
@@ -191,22 +186,16 @@ def handle_teams_post(request):
                         assigned_division=None,
                         status=RegistrationEntryStatus.PENDING,
                     )
+                    print(f"Created registration entry for registration {reg_id} and division {div_id}")
                     at_least_one = True
-                else:
-                    print(f"Division {div_id} not selected for registration {reg_id}")
             if at_least_one:
                 registration.status = RegistrationStatus.PENDING
                 registration.save()
-        else:
-            print(f"Registration {reg_id} not selected, skipping division assignment.")
 
 
 def teams(request):
-    print("Received request for teams.")
     if request.method == 'POST':
         handle_teams_post(request)
-    else:
-        print("GET request received for teams, no action taken.")
 
     guest = get_guest(request)
     context = {
@@ -214,7 +203,6 @@ def teams(request):
         'teams': Team.objects.filter(owner=guest.owner),
         'registrations': Registration.objects.filter(owner=guest.owner),
     }
-    print("Rendering teams with context:", context)
     return render(request, 'discover/fragments/teams.html', context)
 
 

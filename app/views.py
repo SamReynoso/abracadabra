@@ -2,10 +2,15 @@ import time
 from django.shortcuts import redirect, render
 from models.models import (
         Address,
+        DivisionInfo,
         Event,
+        EventDivision,
         Location,
         Organization,
         Membership,
+        RegistrationEntry,
+        RegistrationEntryStatus,
+        RegistrationStatus,
         Role,
         EventType,
         EventStatus,
@@ -15,15 +20,16 @@ from models.models import (
 from .forms import EventForm, LifeCycleForm, NewOrganizationForm
 
 
-def set_profile_picture(request, context):
-    profile_picture = Images.objects.filter(
-        user=request.user, is_profile_picture=True
-    ).first()
-    if profile_picture:
-        profile_picture_url = profile_picture.image.url
-    else:
-        profile_picture_url = None
-    context['profile_picture_url'] = profile_picture_url
+# def set_profile_picture(request, context):
+#     profile_picture = Images.objects.filter(
+#         user=request.user, is_profile_picture=True
+#     ).first()
+#     if profile_picture:
+#         profile_picture_url = profile_picture.image.url
+#     else:
+#         profile_picture_url = None
+#     context['profile_picture_url'] = profile_picture_url
+
 
 def on_deck(request):
     context = {
@@ -75,6 +81,7 @@ def update_image(request, id):
     set_profile_picture(request, context)
     return render(request, "app/images.html", context)
 
+
 def upload_image(request):
     if request.method == "POST":
         image = request.FILES.get('image')
@@ -90,10 +97,12 @@ def upload_image(request):
             return render(request, "app/upload_error.html", {"error": "No image provided."})
     return render(request, "app/upload_image.html", {})
 
+
 def memberships(request):
     context = {}
     set_profile_picture(request, context)
     return render(request, "app/memberships.html", context)
+
 
 def following(request):
     context = {}
@@ -150,8 +159,6 @@ def orgs(request):
             'in_progress': events.filter(status=EventStatus.CREATED),
             }
 
-
-
     if request.method == "POST":
         form = NewOrganizationForm(request.POST)
         if form.is_valid():
@@ -175,7 +182,6 @@ def orgs(request):
 
     set_profile_picture(request, context)
     return render(request, "app/orgs.html", context)
-
 
 
 def new_event_card(request):
@@ -273,6 +279,7 @@ def event_images(request, safe_slug: str):
             }
     return render(request, "app/fragments/event_images.html", context)
 
+
 def event_form(request, safe_slug: str):
     event = Event.from_slug(safe_slug)
     assert event is not None, "Event must exist for the given slug"
@@ -312,5 +319,82 @@ def event_lifecycle(request, safe_slug: str):
     return render(request, "app/fragments/event_lifecycle.html", context)
 
 
+def event_manage(request, safe_slug: str):
+    event = Event.from_slug(safe_slug)
+    registrations = event.registrations.exclude(status=RegistrationStatus.DRAFT).order_by('-created_at')
+    assert event is not None, "Event must exist for the given slug"
+    context = {
+        "event": event,
+        "registrations": registrations,
+    }
+    return render(request, "app/event_manage.html", context)
+
+
+def pending_confirmed(request, safe_slug: str):
+    event = Event.from_slug(safe_slug)
+    registrations = event.registrations.exclude(status=RegistrationStatus.DRAFT).order_by('-created_at')
+    context = {
+        "event": event,
+        "registrations": registrations,
+    }
+    return render(request, "app/fragments/pending_confirmed.html", context)
+
+
+def create_org_division(request, safe_slug: str):
+    entry = RegistrationEntry.from_slug(safe_slug)
+    assert entry is not None, "Event entry must exist for the given slug"
+    if request.method == "POST":
+        DivisionInfo.objects.create(
+                organization=entry.registration.event.organization,
+                level=request.POST.get('level', ''),
+                age=request.POST.get('age', ''),
+                gender=request.POST.get('gender', ''),
+                )
+    return redirect('assign_entry', safe_slug=safe_slug)
+
+
+def confirm_entry(request, safe_slug: str):
+    entry = RegistrationEntry.from_slug(safe_slug)
+    assert entry is not None, "Event entry must exist for the given slug"
+    if request.method == "POST":
+        print("Confirming entry:", entry)
+        entry.status = RegistrationEntryStatus.CONFIRMED
+        entry.save()
+        return redirect('pending_confirmed', safe_slug=entry.registration.event.safe_slug)
+    return redirect('event_manage', safe_slug=entry.registration.event.safe_slug)
+
+
+def reject_entry(request, safe_slug: str):
+    entry = RegistrationEntry.from_slug(safe_slug)
+    assert entry is not None, "Event entry must exist for the given slug"
+    if request.method == "POST":
+        print("Rejecting entry:", entry)
+        entry.status = RegistrationEntryStatus.REJECTED
+        entry.save()
+        return redirect('pending_confirmed', safe_slug=entry.registration.event.safe_slug)
+    return redirect('event_manage', safe_slug=entry.registration.event.safe_slug)
+
+
+def assign_entry(request, safe_slug: str):
+    entry = RegistrationEntry.from_slug(safe_slug)
+    assert entry is not None, "Event entry must exist for the given slug"
+    if request.method == "POST":
+        division_id = request.POST.get('division', '')
+        assert division_id, "Division ID must be provided"
+        event_division, _ = EventDivision.objects.get_or_create(
+            event=entry.registration.event,
+            info=DivisionInfo.objects.get(id=division_id),
+        )
+        entry.assigned_division = event_division
+        entry.assigned = True
+        entry.save()
+        return redirect('event_manage', safe_slug=entry.registration.event.safe_slug)
+    event = entry.registration.event
+    divisions = event.organization.divisions.all()
+    context = {
+        "entry": entry,
+        "divisions": divisions,
+    }
+    return render(request, "app/fragments/assign_entry.html", context)
 
 

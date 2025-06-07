@@ -96,6 +96,49 @@
 </script>
 
 <script>
+
+function openAppDropdown(event) {
+  event.preventDefault();
+  const dropdown = document.getElementById(event.target.dataset.toggle);
+  if (dropdown) {
+    const openDropdown = document.querySelector('.collapse-navigation-list.open');
+    if (openDropdown && openDropdown !== dropdown) {
+      console.log("Closing other dropdowns");
+      openDropdown.classList.remove('open');
+    }
+    dropdown.classList.toggle('open');
+  } else {
+    console.error("Dropdown with ID " + event.target.dataset.toggle + " not found.");
+  }
+}
+
+window.addEventListener('click', function(event) {
+  if (event.target.dataset.toggle) {
+    return;
+  }
+  const openDropdown = document.querySelector('.collapse-navigation-list.open');
+  if (openDropdown && !openDropdown.contains(event.target)) {
+    openDropdown.classList.remove('open');
+  }
+});
+
+window.addEventListener('toggle', function(event) {
+  const details = event.target;
+
+  if (details.tagName === 'DETAILS' && details.open) {
+    const summary = details.querySelector('summary');
+    if (summary) {
+      summary.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }
+});
+</script>
+
+
+<script>
 function toggleOrRemoveClass(element, toggleElement, className, event, overlay=null) {
   if (toggleElement.contains(event.target)) {
     element.classList.toggle(className);
@@ -110,6 +153,7 @@ function toggleOrRemoveClass(element, toggleElement, className, event, overlay=n
   } else {
   }
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const sidebarToggle = document.getElementById('sidebarToggle');

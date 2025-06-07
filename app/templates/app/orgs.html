@@ -17,7 +17,7 @@
           <p class="details-card__description">{{ organization.short_description }}</p>
           <details>
             <summary class="event-summary">Summary</summary>
-            <p>Full Description:{{ organization.description }}</p>
+            <p>Full Description:{{ organization.description }}<p>
             <p>Founded: {{ organization.founded }}</p>
             <p>Location: {{ organization.location }}</p>
             <p>Contact: {{ organization.contact_email }}</p>
@@ -303,48 +303,6 @@ function searchAddress(el) {
       });
     });
 }
-</script>
-
-<script>
-
-function openAppDropdown(event) {
-  event.preventDefault();
-  const dropdown = document.getElementById(event.target.dataset.toggle);
-  if (dropdown) {
-    const openDropdown = document.querySelector('.collapse-navigation-list.open');
-    if (openDropdown && openDropdown !== dropdown) {
-      console.log("Closing other dropdowns");
-      openDropdown.classList.remove('open');
-    }
-    dropdown.classList.toggle('open');
-  } else {
-    console.error("Dropdown with ID " + event.target.dataset.toggle + " not found.");
-  }
-}
-
-window.addEventListener('click', function(event) {
-  if (event.target.dataset.toggle) {
-    return;
-  }
-  const openDropdown = document.querySelector('.collapse-navigation-list.open');
-  if (openDropdown && !openDropdown.contains(event.target)) {
-    openDropdown.classList.remove('open');
-  }
-});
-
-window.addEventListener('toggle', function(event) {
-  const details = event.target;
-
-  if (details.tagName === 'DETAILS' && details.open) {
-    const summary = details.querySelector('summary');
-    if (summary) {
-      summary.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  }
-});
 </script>
 
 {% endblock %}

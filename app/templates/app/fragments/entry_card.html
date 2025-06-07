@@ -1,0 +1,71 @@
+<div class="relative">
+  <ul class="collapse-navigation-list" id="collapse{{ event.safe_slug }}" data-collapse-id="collapse{{ event.safe_slug }}">
+    <li>
+      <button
+        class="btn-link"
+        hx-get="{% url 'assign_entry' entry.safe_slug %}"
+        hx-target="#modalContent"
+        hx-swap="innerHTML"
+        onclick="document.getElementById('assignModal').showModal();"
+        >
+        Assign
+      </button>
+    </li>
+
+    <li>
+      <form>
+        {% csrf_token %}
+        <button
+          class="btn-link"
+          hx-post="{% url 'confirm_entry' entry.safe_slug %}"
+          hx-target="#pendingAndConfirmed"
+          hx-swap="innerHTML"
+          >
+          Confirm
+        </button>
+      </form>
+    </li>
+
+    <li>
+      <form>
+        {% csrf_token %}
+        <button
+          class="btn-link"
+          hx-post="{% url 'reject_entry' entry.safe_slug %}"
+          hx-target="#pendingAndConfirmed"
+          hx-swap="innerHTML"
+          >
+          Reject
+        </button>
+      </form>
+    </li>
+  </ul>
+
+  <details class="app-card">
+
+    <summary class="app-card__summary">
+      {{ entry.reported_division.team.name }} - {{ entry.reported_division.gender }} (O/U){{ entry.reported_division.age }} [{{ entry.reported_division.level }}]
+      {% if entry.assigned %} 
+        <span class="assigned">Assigned</span>
+      {% else %}
+        <span class="unassigned">Unassigned</span>
+      {% endif %}
+      <button
+        class="ellipsis-button"
+        src="/assets/menu.svg"
+        onclick="openAppDropdown(event)"
+        alt="Menu icon for event details"
+        data-toggle="collapse{{ event.safe_slug }}"
+        >
+        ...
+      </button>
+    </summary>
+
+    <ul class="pad-1">
+      <li><strong>Name:</strong> {{ registration.owner.info.first_name}} {{ registration.owner.info.last_name }}</li>
+      <li><strong>Email:</strong> {{ registration.owner.info.email }}</li>
+      <li><strong>Phone:</strong> {{ registration.owner.info.phone }}</li>
+    </ul>
+
+  </details>
+</div>

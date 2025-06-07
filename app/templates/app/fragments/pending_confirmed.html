@@ -1,0 +1,33 @@
+
+<div class="app-card-container" id="days">
+    <h2>Pending Registrations:</h2>
+    {% for registration in registrations %}
+      {% for entry in registration.entries.all %}
+      {% if entry.status == 'pending' %}
+        {% include 'app/fragments/entry_card.html' with entry=entry registration=registration event=event %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+</div>
+
+<div class="app-card-container" id="days">
+    <h2>Confirmed Registrations:</h2>
+    {% for registration in registrations %}
+      {% for entry in registration.entries.all %}
+      {% if entry.status == 'confirmed' %}
+        {% include 'app/fragments/entry_card.html' with entry=entry registration=registration event=event %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+</div>
+
+<div class="app-card-container" id="days">
+    <h2>Rejected Registrations:</h2>
+    {% for registration in registrations %}
+      {% for entry in registration.entries.all %}
+      {% if entry.status == 'rejected' %}
+        {% include 'app/fragments/entry_card.html' with entry=entry registration=registration event=event %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+</div>

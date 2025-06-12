@@ -1,23 +1,82 @@
-{% extends "discover/base.html" %}
+{% extends "core/base.html" %}
 
 {% block main %}
-<header class="page-header">
-    <form action="/search" method="get">
-      <img loading="lazy" class="thumbnail" src="/assets/sport-icons/basketball-1.png" alt="Basketball Icon" class="icon"><br>
-      <div class="inline-search">
-        <input type="text" name="query" placeholder="Search for Organizations, Events, or Teams...">
-        <button type="submit">Search</button>
-      </div>
-    </form>
-    This is  the header
+<header class="page-header mb-1">
+    <img loading="lazy" src="/assets/sport-icons/basketball.webp" alt="Basketball Icon" class="icon"><br>
 </header>
 
-<div class="row wrap gap-1" id="searchResults">
-  <!-- Initial empty or initial results go here -->
+
+<div class="results-container mb-1">
+
+{% for event in top_events %}
+  <section class="card-section result">
+
+    <div class="result-description">
+      <div>
+        <img class="poster medium" src="{{ event.poster_url }}" alt="{{ event.name }} Poster" class="icon"><br>
+      </div>
+      <h3>Date: {{ event.start_date|date:"F j, Y" }}</h3>
+      <h3>Price: {{ event.formatted_price }}</h3>
+      <h4 class="mb-1">{{ event.display_location }}</h4>
+      <form action="/api/event" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="event_id" value="1">
+        <button class="btn" type="submit" class="btn">Join Event</button>
+      </form>
+
+    </div>
+
+    <div>
+      <a href="{% url 'event_details' event.id %}" class="event-link mb-1"><h2>{{ event.name }}</h2></a>
+      <p>{{ event.description }}</p>
+
+      <h4>Event Details</h4>
+      <dl class="grid mb-1">
+        <dt>Start Date</dt>
+        <dd>{{ event.start_date|date:"F j, Y" }}</dd>
+        <dt>End Data</dt>
+        <dd>{{ event.end_date|date:"F j, Y" }}</dd>
+        <dt>Format</dt>
+        <dd>{{ event.event_type }}</li>
+      </dl>
+
+      <div class="mb-1">
+        <h4>Host</h4>
+        <div class="row wrap gap-1">
+          <img class="thumbnail" src="{{ event.organization.logo_url }}" alt="{{ event.organization }} Logo" class="icon"><br>
+          <dl class="grid">
+            <dt>Organization</dt>
+            <dd>{{ event.organization.name }}</dd>
+            <dt>Description</dt>
+            <dd>{{ event.organization.description }}</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="">
+        <h4>Director</h4>
+        <div class="row wrap gap-1">
+          <img class="thumbnail" src="{{ event.director.profile_picture_url }}" alt="{{ event.director }} Profile Picture" class="icon"><br>
+          <dl class="grid">
+            <dt>Director</dt>
+            <dd>{{ event.director.name }}</dd>
+            <dt>Bio</dt>
+            <dd>{{ event.director.bio }}</dd>
+          </dl>
+      </div>
+
+    </div>
+  </section>
+
+{% endfor %}
+</div>
+
+
+<div class="results-container wide">
 
   <div
     id="loadMore"
-    hx-get="{% url 'basketball_spotlight' page_number=1%}"
+    hx-get="{% url 'basketball_spotlight' page_number=2%}"
     hx-trigger="revealed"
     hx-target="#loadMore"
     hx-swap="outerHTML"

@@ -30,15 +30,20 @@ def marketplace(request):
 
 
 def basketball(request):
-    return render(request, 'discover/basketball.html')
+    context = {"top_events": Event.objects.filter(
+    ).order_by('-created_at')[:3]
+               }
+    return render(request, 'discover/basketball.html', context)
 
 
 def basketball_spotlight(request, page_number: str):
     page = int(page_number)
     events = Event.objects.all()
-    print(f"Events for basketball spotlight: {events}")
-    paginator = Paginator(events, 1)
-    page_obj = paginator.get_page(page_number)
+    paginator = Paginator(events, 3)
+    if page < 1 or page > paginator.num_pages:
+        page_obj = None
+    else:
+        page_obj = paginator.get_page(page_number)
     context = {
         'events': page_obj,
         'next_page': page + 1 if int(page) < paginator.num_pages else None,
@@ -49,6 +54,7 @@ def basketball_spotlight(request, page_number: str):
 def event_details(request, event_slug):
     event = Event.from_slug(event_slug)
     return render(request, 'discover/event-details.html', { 'event': event })
+
 
 def clear_cookie(request):
     res = redirect(request, 'marketplace')
@@ -97,7 +103,7 @@ def guest_registration_helper(request, event):
     guest = get_guest(request)
     if guest is None:
         guest = create_guest()
-    Registration.objects.create(event=event, owner=guest.owner)
+    Registration.objects.get_or_create(event=event, owner=guest.owner)
     res = redirect('workspace')
     res.set_cookie('guest_uuid', guest.uuid, max_age=60*60*24*30)
     return res
@@ -151,7 +157,7 @@ def team_form(request):
     if request.method == 'POST' and guest:
         name = request.POST.get('name', '')
         Team.objects.create(name=name, owner=guest.owner)
-    return render(request, 'discover/fragments/teams.html', {'guest': guest})
+    return redirect('teams')
 
 
 def division_form(request):
@@ -166,6 +172,32 @@ def division_form(request):
                     age=request.POST.get('age', ''),
                     level=request.POST.get('level', ''),
                     )
+    return redirect('teams')
+
+
+def division_delete(request, division_id):
+    if request.method == 'POST':
+        guest = get_guest(request)
+        if guest:
+            division = TeamDivision.objects.filter(id=division_id, team__owner=guest.owner).first()
+            if division:
+                division.delete()
+                print(f"Deleted division with ID {division_id} for guest {guest.uuid}")
+            else:
+                print(f"No division found with ID {division_id} for guest {guest.uuid}")
+    return redirect('teams')
+
+
+def team_delete(request, team_id):
+    if request.method == 'POST':
+        guest = get_guest(request)
+        if guest:
+            team = Team.objects.filter(id=team_id, owner=guest.owner).first()
+            if team:
+                team.delete()
+                print(f"Deleted team with ID {team_id} for guest {guest.uuid}")
+            else:
+                print(f"No team found with ID {team_id} for guest {guest.uuid}")
     return redirect('teams')
 
 
@@ -209,13 +241,14 @@ def teams(request):
 def workspace(request):
     guest = get_guest(request)
     if guest is None:
-        print("No guest found, creating a new guest.")
         guest = create_guest()
-        print("New guest created with UUID:", guest.uuid)
+        return render(request, 'discover/workspace.html', {'guest': guest})
     
     context = {
         'guest': guest,
-        'registrations': Registration.objects.filter(owner=guest.owner),
+        'drafts': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.DRAFT),
+        'pending': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.PENDING),
+        'registered': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.REGISTERED),
         'teams': Team.objects.filter(owner=guest.owner),
     }
     return render(request, 'discover/workspace.html', context)

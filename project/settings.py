@@ -49,14 +49,15 @@ INSTALLED_APPS = [
 
     'crispy_forms',
 
+    'models',
+    'core',
+
     'persona',
     'app',
-    'core',
     'discover',
-    'gameday',
-    'info',
-    'marketing',
-    'models',
+#    'gameday',
+#    'info',
+#    'marketing',
 ]
 
 

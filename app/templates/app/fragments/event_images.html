@@ -1,11 +1,13 @@
 <div class="event-poster-selection">
   <div class="upload-image-icon">
     <img
-      src="/assets/upload.svg"
+      src="/assets/icons/upload.svg"
       alt="Add an image."
       style="filter: invert(1);"
+      onclick="document.getElementById('uploadDialog').showModal()"
       />
   </div>
+
   {% for image in images %}
   <div 
     hx-get="{% url 'event_image_accept_fragment' event.safe_slug image.safe_slug %}"

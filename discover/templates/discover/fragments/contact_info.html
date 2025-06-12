@@ -1,6 +1,6 @@
-<fieldset id="contactInfo" class="mb-1">
+<fieldset id="contactInfo" class="mb-1 pad-1">
   <legend>Contact Information</legend>
-  <dl>
+  <dl class="grid mb-1">
     <dt>First Name:</dt>
     <dd>{{ guest.first_name }}</dd>
     <dt>Last Name:</dt>
@@ -10,14 +10,14 @@
     <dt>Phone:</dt>
     <dd>{{ guest.phone }}</dd>
   </dl>
-  <p class="mb-2">You can update your contact information at any time.</p>
+
   <button 
     class="btn"
     hx-get="{% url 'contact_info_form' %}"
     hx-target="#contactInfo"
     hx-swap="outerHTML"
     >
-    Edit Contact Info
+    Edit
   </button>
 
 </fieldset>

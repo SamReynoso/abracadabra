@@ -56,8 +56,8 @@ class EventForm(forms.ModelForm):
                 'placeholder': 'Event Name',
                 'oninput': "writeInputToSummary(event)",
                 }),
-            'short_description': forms.TextInput(attrs={'placeholder': 'Event Description'}),
-            'description': forms.Textarea(attrs={'placeholder': 'Short Description'}),
+            'short_description': forms.TextInput(attrs={'placeholder': 'Short Description'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Event Description'}),
         }
 
 

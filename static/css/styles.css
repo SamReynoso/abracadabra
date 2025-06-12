@@ -1,0 +1,15 @@
+img.sport-icon {
+  background-color: white;
+  aspect-ratio: 1;
+  object-fit: cover;
+  transition: background-color 0.3s ease;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+
+a:hover img.sport-icon {
+  background-color: var(--background-color);
+        
+}
+

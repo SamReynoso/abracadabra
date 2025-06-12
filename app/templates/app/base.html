@@ -1,73 +1,71 @@
 {% extends "core/base.html" %}
 {% block title %}AbracaDashboard{% endblock %}
 {% block extra_head %}
-    <link rel="stylesheet" href="/static/css/themes/cold.css">
-    <link rel="stylesheet" href="/static/css/layouts/app.css">
+    <link rel="stylesheet" href="/static/css/themes/app.css">
+    <link rel="stylesheet" href="/static/css/app.css">
 
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-
+    <link rel="stylesheet" href="/static/css/dep/leaflet.css" />
+    <link rel="stylesheet" href="/static/css/dep/leaflet-control.css" />
 {% endblock %}
 
-{% block nav_links %}
-  <a href="/">home</a>
-  <a href="/discover">Discover</a>
-{% endblock %}
+{% block header%}
+  <h1 class="page-title">AbracaDashboard</h1>
 
-{% block main %}
+  <div class="row gap-1 pad-1">
+    <img
+      loading="lazy"
+      src="{{ request.user.profile_picture_url }}"
+      alt="User Profile Picture"
+      class="profile-picture"
+      >
 
-  <section class="top-controller">
+      <dl class="grid">
+        <dt>User Name:</dt>
+        <dd>{{ request.user.username }}</dd>
+        <dt>Display Name:</dt>
+        <dd>{{ request.user.display_name }}</dd>
+        <dt>Email:</dt>
+        <dd>{{ request.user.email }}</dd>
+        <dt>Member Since:</dt>
+        <dd>{{ request.user.date_joined|date:"F j, Y" }}</dd>
+        <dt>Last Login:</dt>
+        <dd>{{ request.user.last_login|date:"F j, Y, g:i A" }}</dd>
+        <dt>Memberships:</dt>
+        <dd>
 
-    {% block controls %}
-      <header class="top-controller">
-        <h1>On Deck</h1>
-          <section class="details-card">
-            <div class="row gap-1">
-              <div id="orgImageForm">
-                <img class="thumbnail" src="{{ profile_picture_url }}" alt="{{ user.username }} Profile Picture" class="details-card__logo">
-              </div>
-
-              <div>
-                {{ user.username }}
-                <p class="details-card__description">{{ user.short_description }}</p>
-              </div>
-            </div>
-          </section>
-      </header>
-    {% endblock %}
-
-    {% block search %}
-    <form class="inline-input-form">
-      <input
-        class="search-input"
-        type="text"
-        placeholder="Search for organization events, teams, or games"
-        aria-label="Search/Create"
-        >
-      <button>search</button>
-    </form>
-    {% endblock %}
-  </section>
-
-  <div class="full-width-container">
-
-    {% block content %}
-    {% endblock %}
-
+          {% if request.user.memberships.all %}
+            <ul>
+              {% for membership in request.user.memberships.all %}
+                <li>{{ membership.name }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>No memberships found.</p>
+          {% endif %}
+        </dd>
+      </dl>
   </div>
+
+{% endblock %}
+
+{% block content %}
+<p>This is content</p>
 {% endblock %}
 
 {% block sidebar %}
   <div class="sidebar__section">
     <ul class="sidebar__list active" aria-label="Main Navigation">
+
       <li><a href="{% url 'app_on_deck' %}">On Deck</a></li>
-      <li><a href="{% url 'app_memberships' %}">Memberships</a></li>
-      <li><a href="{% url 'app_following' %}">Following</a></li>
+      <li><a href="{% url 'app_images' %}">Images</a></li>
+      <li><a href="{% url 'app_address_book' %}">Address Book</a></li>
+
       <li><a href="{% url 'app_orgs' %}">Orgs</a></li>
       <li><a href="{% url 'app_teams' %}">Teams</a></li>
-      <li><a href="{% url 'app_images' %}">Images</a></li>
-      <li><a href="{% url 'app_images' %}">Locations</a></li>
+
+      <li><a href="{% url 'app_watch_list' %}">Watch List</a></li>
+      <li><a href="{% url 'app_memberships' %}">Memberships</a></li>
+
     </ul>
   </div>
 {% endblock %}

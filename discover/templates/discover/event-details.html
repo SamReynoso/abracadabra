@@ -2,57 +2,107 @@
 
 {% block title %}Event Details{% endblock %}
 
-{% block main %}
 
-<div class="details-page pad-2 m-2">
 
-      <div class="details-page__col">
-        <h2>{{ event.name }}</h2>
-        <p>
-          {{ event.description }}
-        </p>
-        <hr>
-        <h3>{{ event.organization.name }}</h3>
-        <a href="{% url "org_details" event.organization.safe_slug %}">view</a>
-        <p>{{ event.organization.description }}</p>
-        <hr>
-        <h3>About this Event</h3>
-        <ul>
-          <li>User filled info</li>
-          <li>User filled info</li>
-          <li>User filled info</li>
-          <li>User filled info</li>
-        </ul>
-      </div>
+{% block header%}
+<div class="row wrap gap-1">
+  <img src="{{ event.organization.logo_url }}" alt="{{ event.organization.name }} Logo">
 
-      <div class="details-page__col">
-        <h2>{{ event.formatted_price }}</h2>
-        <h3>Per person or group</h3>
-        <h3>About this Event</h3>
-        <hr>
-        <ul>
-          <li>
-            <form class="mb-1" method="POST" action="{% url 'event_register' event.safe_slug %}" enctype="multipart/form-data">
-              {% csrf_token %}
-              <button type="submit" class="btn mb-1">Register As Guest</button>
-            </form>
-          </li>
-          <li><a class="btn" href="{% url 'event_register' event.safe_slug %}">Create an account</a></li>
-          <li><button class="btn">add to list</a></li>
-        </ul>
-        <hr>
-        <p>Dev note: or the tournament is live/over. We have to show something here.</p>
-        <ul>
-          <li><a href="/gameday/">gameday</a></li>
-        </ul>
-      </div>
+  <div class="row wrap gap-1">
 
-    <div class="large-poster">
-      <img class="large-poster" src="{{ event.poster_url }}" alt="Event Poster">
+    <div>
+      <h2>Host</h2>
+      <dl class="grid">
+        <dt>Organization</dt>
+        <dd>{{ event.organization.name }}</dd>
+        <dt>Description</dt>
+        <dd>{{ event.organization.description }}</dd>
+      </dl>
     </div>
 
+    <div>
+      <h4>Director</h4>
+      <div class="row gap-1">
+        <img class="thumbnail" src="{{ event.director.profile_picture_url }}" alt="{{ event.director.username }} Profile Picture">
+        <dl class="grid">
+          <dt>name</dt>
+          <dd>{{ event.director.fist_name }} {{ event.director.last_name }}</dd>
+          {% if event.director.username %}
+            <dt>Username</dt>
+            <dd>{{ event.director.username }}</dd>
+          {% endif %}
+          {% if event.director.email %}
+            <dt>Email</dt>
+            <dd>{{ event.director.email }}</dd>
+          {% endif %}
+          {% if event.director.bio %}
+            <dt>Bio</dt>
+            <dd>{{ event.director.bio }}</dd>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
+
+  </div>
 
 
 </div>
+{% endblock %}
+
+
+
+{% block content%}
+
+<h1>{{ event.name }}</h1>
+
+<div class="row wrap gap-2">
+  <img class="poster large" src="{{ event.poster_url }}" alt="Event Poster">
+
+  <div>
+    <h3>Event Details</h3>
+    <dl class="grid mb-1">
+      <dt>Start Date</dt>
+      <dd>{{ event.start_date|date:"F j, Y" }}</dd>
+      <dt>End Date</dt>
+      <dd>{{ event.end_date|date:"F j, Y" }}</dd>
+      <dt>Format</dt>
+      <dd>{{ event.event_type }}</dd>
+    </dl>
+
+    <h4>Description</h4>
+    <p>{{ event.description }}</p>
+    <h3>{{ event.start_date|date:"F j, Y" }}</h3>
+    <h3>{{ event.formatted_price }}</h3>
+
+    <form class="mb-1" method="POST" action="{% url 'event_register' event.safe_slug %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <button type="submit" class="btn mb-1">Register As Guest</button>
+    </form>
+  </div>
+</div>
+
+  <div>
+    <h2>Locations</h2>
+    {% if event.locations.count == 0 %}
+      <p>No locations available for this event.</p>
+    {% else %}
+      <address>
+        {% for location in event.locations.all %}
+          <span>{{ location.name }} - {{ location.address.street }} {{ location.address.street2 }}, {{ location.address.city }}, {{ location.address.state }} {{ location.address.postal_code }}</span><br>
+        {% endfor %}
+      </address>
+    {% endif %}
+
+    <h2>Divisions</h2>
+    {% if event.divisions.count == 0 %}
+      <p>No divisions available for yet.</p>
+    {% endif %}
+    {% for division in event.divisions.all %}
+      <h4>Division: {{ division.name }}</h4>
+      <p>{{ division.description }}</p>
+    {% endfor %}
+
+  </div>
+
 {% endblock %}
 

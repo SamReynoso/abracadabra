@@ -1,13 +1,8 @@
-{% extends "discover/base.html" %}
+{% extends "core/base.html" %}
 {% block title %}Abracadabra Sports{% endblock %}
 
-{% block main %}
-<header class="page-header">
-  <h1>Welcome to Abracadabra Sports</h1>
-  <p>Discover and join your favorite sports activities.</p>
-</header>
-<div class="full-width-container">
-  <section class="home__section">
+{% block content %}
+  <section class="card-section">
     <div>
       <h1>Join the Game!</h1>
       <p class="quote">
@@ -17,11 +12,10 @@
     </div>
     <div>
       <h2>Discover Sports</h2>
-      <a class="sport-icon-link" href="/discover/basketball/">
-      <img class="sport-icon" src="/assets/sport-icons/basketball-1.png" alt="Basketball Icon" class="icon"><br>
+      <a class="sport-icon-link" href="{% url 'basketball' %}">
+      <img class="sport-icon" src="/assets/sport-icons/basketball.webp" alt="Basketball Icon" class="icon"><br>
       Basketball
       </a>
     </div>
   </section>
-</div>
 {% endblock %}

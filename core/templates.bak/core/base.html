@@ -8,19 +8,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="/static/css/themes/discover.css">
-
     <link rel="stylesheet" href="/static/css/core.css">
-    {% block extra_head %}
-    {% endblock %}
     <link rel="stylesheet" href="/static/css/elements.css">
     <link rel="stylesheet" href="/static/css/layout.css">
     <link rel="stylesheet" href="/static/css/utils.css">
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/themes/discover.css">
+    <link rel="stylesheet" href="/static/css/forms/sidebar-search.css">
 
+    {% block extra_head %}
+    {% endblock %}
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
 
-
-    <script type="text/javascript" src="/static/js/htmx.js"></script>
 
     <title>{% block title %}Abracadabra Sports{% endblock %}</title>
 
@@ -32,7 +30,7 @@
 <nav class="navigations">
   <div class="nav__section">
 
-    <button id="sidebarToggle" class="nav-btn side-bar-toggle">
+    <button id="sidebarToggle" class="nav-btn">
       <img class="nav-icon" src="/assets/icons/menu.svg" alt="Open Sidebar">
     </button>
 
@@ -52,7 +50,7 @@
         alt="User Profile"
         id="navbarDropdowArrow"
         >
-        {{ request.user.display_name }}
+      {{ request.user.display_name }}
     </button>
   {% else %}
     <a class="nav-btn user-btn" href="">
@@ -79,7 +77,7 @@
   <h3>Abracadashboard</h3>
   <div class="navbar__dropdown__section">
   <ul>
-    <li><a href="{% url 'app_on_deck' %}">Abracadashboard</a></li>
+    <li><a href="">Abracadashboard</a></li>
   </ul>
   </div>
 </div>

@@ -6,20 +6,6 @@
   hx-swap="outerHTML"
   >
 
-  <div 
-    hx-get="{% url 'event_images_fragment' event.safe_slug %}"
-    hx-target="#imageDetailsContent"
-    hx-swap="innerHTML"
-    onclick="document.getElementById('imageDetails').showModal()"
-    >
-    <img 
-      class="poster-preview"
-      src="{{ event.poster_url }}" 
-      alt="Event Poster Preview"
-      class="thumbnail pad-1"
-      >
-  </div>
-
   {% csrf_token %}
   <div class="form-fields">
     {{ form.as_p }}
@@ -39,7 +25,7 @@
 
     <button
       type="button"
-      class="btn"
+      class="btn btn-secondary"
       hx-get="{% url 'event_details_fragment' event.safe_slug %}"
       hx-target="#content{{ event.safe_slug }}"
       hx-swap="innerHTML"
@@ -47,8 +33,5 @@
       Cancel
     </button>
   </div>
-</form>
 
-<div class="m-1">
-  <button class="btn-link" href="#">Locations</a>
-</div>
+</form>

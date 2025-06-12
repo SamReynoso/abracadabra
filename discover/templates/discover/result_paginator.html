@@ -1,16 +1,40 @@
 {% for event in events %}
-  <section class="search-result" onclick="location.href='{% url 'event_details' event.safe_slug %}'">
-    <h3>{{ event.organization.name }}</h3>
-    <div class="event-poster">
-      <img class="search-poster" src="{{ event.poster_url}}" alt="Event Poster">
+  <section class="card-section result wide">
+
+    <div>
+      <div>
+        <img class="poster small" src="{{ event.poster_url }}" alt="{{ event.name }} Poster" class="icon"><br>
+      </div>
+
+      <h3>Date: {{ event.start_date|date:"F j, Y" }}</h3>
+      <h3 class="mb-1">Price: {{ event.formatted_price }}</h3>
+
+      <form action="/api/event" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="event_id" value="1">
+        <button class="btn" type="submit" class="btn">Join Event</button>
+      </form>
     </div>
-    <h2>{{ event.name }} ({{ event.start_date }})</h2>
-    <p class="event-description">
-      {{ event.short_description }}
-    </p>
-    <p class="event-description">
-      {{ event.description }}
-    </p>
+
+    <div class="result-description">
+      <h2>{{ event.name }}</h2>
+      <p>{{ event.description }}</p>
+
+      <dl class="grid content">
+        <dt>Start Date</dt>
+        <dd>{{ event.start_date|date:"F j, Y" }}</dd>
+        <dt>End Data</dt>
+        <dd>{{ event.end_date|date:"F j, Y" }}</dd>
+        <dt>Format</dt>
+        <dd>{{ event.event_type }}</li>
+        <dt>Host</dt>
+        <dd>{{ event.organization }}</dd>
+        <dt>Director:</dt>
+        <dd>{{ event.director }}</dd>
+      </dl>
+
+    </div>
+
   </section>
 {% endfor %}
 

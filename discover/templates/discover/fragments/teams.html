@@ -1,41 +1,60 @@
 <section id="teamAndDivisionSection">
-  <fieldset id="teams" class="mb-1">
+  <fieldset id="teams" class="mb-1 pad-1">
     <legend>Your Teams</legend>
       <form class="inline-input-form mb-1" id="teamForm" method="post" hx-post="{% url 'team_form' %}" hx-target="#team-info" hx-swap="outerHTML">
         {% csrf_token %}
         <input type="text" id="team-name" name="name" required class="form-control" placeholder="Name a new team" />
         <button
           hx-post="{% url 'team_form' %}"
-          hx-target="#teamForm"
+          hx-target="#teamAndDivisionSection"
           hx-swap="outerHTML"
           >
           Create
         </button>
       </form>
+
     {% for team in teams %}
-    <h2>{{ team.name }}</h2>
+
+
     <form class="pad-1" id="divisionForm">
-              {% csrf_token %}
-      <table class="table">
+      {% csrf_token %}
+
+      <h2>{{ team.name }}</h2>
+
+      <button 
+        class="btn btn-danger"
+        hx-post="{% url 'team_delete' team.id %}"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-target="#teamAndDivisionSection"
+        hx-swap="outerHTML"
+        >
+        <span class="ml-1">Delete {{ team.name }}</span>
+      </button>
+
+      <div class="mb-1">
         {% for division in team.divisions.all %}
-        <tr>
-          <td>
-            {{ division }}
-          </td>
-          <td>
-            <img
-            class="icon"
-            src="/assets/cross_red.svg"
-            alt="Delete Division"
-            hx-delete=""
+
+        <div>
+
+          <button
+            hx-post="{% url 'division_delete' division.id %}"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"'
             hx-target="#teamAndDivisionSection"
             hx-swap="outerHTML"
             >
-          </td>
-        </tr>
-        {% endfor %}
-        <tr>
-          <td>
+            <img class="btn tag" src="/assets/icons/cross.svg" alt="Delete Division">
+          </button>
+
+          <span class="ml-1">
+            {{ division.team.name }} {{ division.gender }} (U/O) {{ division.age }} [{{ division.level }}]
+          </span>
+
+        </div>
+
+      {% endfor %}
+      </div>
+
+        <div>
             <input type="hidden" name="team" value="{{ team.id }}">
 
             <label>
@@ -69,19 +88,16 @@
                 <option value="varsity">Varsity</option> <option value="club">Club</option>
               </select>
             </label>
-          </td>
-          <td>
-            <img
-            class="icon"
-            src="/assets/add.svg"
-            hx-form="#divisionForm"
-            hx-post="{% url 'division_form' %}"
-            hx-target="#teamAndDivisionSection"
-            hx-swap="outerHTML"
-            >
-          </td>
-        </tr>
-      </table>
+            <button
+              class="btn pad-1"
+              hx-form="#divisionForm"
+              hx-post="{% url 'division_form' %}"
+              hx-target="#teamAndDivisionSection"
+              hx-swap="outerHTML"
+              >
+              add
+            </button>
+        </div>
     </form>
     {% endfor %}
 
@@ -96,14 +112,14 @@
 
   <form id="registrationForm" method="POST" action="{% url 'teams' %}" enctype="multipart/form-data">
     <fieldset class="mb-2">
-      <legend>These Teams will be registered for the event</legend>
+      <legend>Registered Teams for these Event</legend>
       {% csrf_token %}
       {% for team in teams %}
         {% for division in team.divisions.all %}
           <input type="hidden" name="divisions" value="{{ division.id }}">
         {% endfor %}
       {% endfor %}
-      {% for registration in registrations %}
+      {% for registration in drafts%}
         {% if registration.status == 'draft' %}
         <div class="pad-1">
 

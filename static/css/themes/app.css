@@ -13,4 +13,6 @@
   --content-background-color: transparent;
   --page-header-background-color: transparent;
   --list-header-background-color: #68686c;
+
+  --invert: invert(1);
 }

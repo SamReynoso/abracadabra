@@ -5,10 +5,13 @@ from . import views
 urlpatterns = [
     path("", views.on_deck, name="app_on_deck"),
     path("images/", views.images, name="app_images"),
-    path("memberships/", views.memberships, name="app_memberships"),
-    path("following/", views.following, name="app_following"),
+    path("address-book/", views.address_book, name="app_address_book"),
+
     path("orgs/", views.orgs, name="app_orgs"),
     path("teams/", views.teams, name="app_teams"),
+
+    path("memberships/", views.memberships, name="app_memberships"),
+    path("watch-list/", views.watch_list, name="app_watch_list"),
 
     path("upload-image/", views.upload_image, name="upload_image"),
     path("update-image/<id>/", views.update_image, name="update_image"),
@@ -24,6 +27,7 @@ urlpatterns = [
     path("event-images/<safe_slug>/", views.event_images, name="event_images_fragment"),
     path("event-image-accept/<event_slug>/<image_slug>/", views.event_image_accept, name="event_image_accept_fragment"),
     path("event-form/<safe_slug>/", views.event_form, name="event_form_fragment"),
+    path("event-delete/<safe_slug>/", views.event_delete, name="event_delete_fragment"),
 
     path("event-lifecycle/<safe_slug>/", views.event_lifecycle, name="event_lifecycle_fragment"),
     path("event-manage/<safe_slug>/", views.event_manage, name="event_manage"),

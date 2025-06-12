@@ -1,53 +1,86 @@
 {% extends 'app/base.html' %}
 
-{% block controls %}
-
-<header class="page-header">
+{% block header %}
+  <h1>Organizations</h1>
   {% if organization %}
 
     <!-- Organization Details Card -->
-    <section class="details-card">
+    <section>
       <div class="row gap-1">
-        <div id="orgImageForm">
-          <img class="org-thumbnail" src="{{ organization.logo.url }}" alt="{{ organization.name }} Logo">
+        <div>
+          {% if organization.logo %}
+            <img class="org-thumbnail" src="{{ organization.logo.url }}" alt="{{ organization.name }} Logo">
+          {% else %}
+            <canvas id="placeholderAnimation" width="100" height="100"></canvas>
+          {% endif %}
         </div>
 
         <div>
-          <h1>{{ organization.name }}</h1>
-          <p class="details-card__description">{{ organization.short_description }}</p>
+          <dl class="grid">
+            <dt>Organization Name:</dt>
+            <dd>{{ organization.name }}</dd>
+            <dt>Short Description:</dt>
+            <dd>{{ organization.short_description }}</dd>
+          </dl>
           <details>
-            <summary class="event-summary">Summary</summary>
-            <p>Full Description:{{ organization.description }}<p>
-            <p>Founded: {{ organization.founded }}</p>
-            <p>Location: {{ organization.location }}</p>
-            <p>Contact: {{ organization.contact_email }}</p>
-            <p>Website: <a href="{{ organization.website }}" target="_blank">{{ organization.website }}</a></p>
-            <p>Social Media: <a href="{{ organization.social_media }}" target="_blank">{{ organization.social_media }}</a></p>
-            <p>Created: {{ organization.created_at }}</p>
-            <p>Last Updated: {{ organization.updated_at }}</p>
-
+            <summary class="event-summary">More</summary>
             <button class="btn">Edit</button>
           </details>
+        </div>
+      </div>
+    </section>
           <details>
-            <summary>Other Organizations</summary>
+            <summary>Switch Organizations</summary>
+            <h2>Select an Organization</h2>
             <ul>
               {% for org in organizations %}
+              {% if org.id != organization.id %}
               <form action="{% url 'set_organization' org.id %}" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn-link">{{ org.name }}</button>
               </form>
+              {% else %}
+                <li class="current-org">----{{ org.name }}</li>
+              {% endif %}
               {% endfor %}
               {% if not organizations %}
                 <li>No other organizations found.</li>
               {% endif %}
             </ul>
+
+            <div>
+              <h3>Create New Organization</h3>
+              <form class="inline-input-form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input
+                  class="search-input"
+                  name="name"
+                  type="text"
+                  placeholder="Start An Org to manage events"
+                  aria-label="Start An Org to manage events"
+                    >
+                <button>Create</button>
+              </form>
+                {% if form.errors %}
+                  <div class="form-errors">
+                    <p>Please correct the errors below:</p>
+                    <ul>
+                      {% for field in form %}
+                        {% for error in field.errors %}
+                          <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                      {% endfor %}
+                      {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+            </div>
           </details>
-        </div>
-      </div>
-    </section>
   {% else %}
 
-    <div class="placeholder-animation">
+    <div class="row gap-1 pad-1">
       <canvas id="placeholderAnimation" width="100" height="100"></canvas>
       <div>
         <h2 class="placeholder-title">Start an organization</h2>
@@ -58,122 +91,64 @@
     </div>
 
   {% endif %}
-</header>
 
-{% endblock controls %}
+{% endblock%}
 
-
-{% block search %}
-
-{% if organization %}
-<form class="inline-input-form">
-  <input
-    class="search-input"
-    type="text"
-    placeholder="Search for organization events, teams, or games"
-    aria-label="Search/Create"
-    >
-  <button>search</button>
-</form>
-{% else %}
-    <h1>Create an Organization</h1>
-    <form class="inline-input-form" method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      <input
-        class="search-input"
-        name="name"
-        type="text"
-        placeholder="Start An Org to manage events"
-        aria-label="Start An Org to manage events"
-          >
-      <button>Start</button>
-    </form>
-    {% if form.errors %}
-      <div class="form-errors">
-        <p>Please correct the errors below:</p>
-        <ul>
-          {% for field in form %}
-            {% for error in field.errors %}
-              <li>{{ field.label }}: {{ error }}</li>
-            {% endfor %}
-          {% endfor %}
-          {% for error in form.non_field_errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
-{% endif %}
-{% endblock search %}
 
 {% block content %}
-{% if organization %}
 
+
+
+
+{% if organization %}
 <div style="display: inline-block; width: 100%;">
   <button 
-    class="btn"
+    class="btn mb-1"
     hx-get="{% url 'api_new_event' %}"
-    hx-target="#days"
+    hx-target="#eventContainer"
     hx-swap="beforeend"
     data-frag-id="newEvent"
     >Add Event</button>
 </div>
 
 <!-- New Event Form Template -->
-<div class="app-card-container" id="days">
-  <h2>In Progress</h2>
+<div class="app-card-container mb-2" id="eventContainer">
+  <h2>Events</h2>
   {% for event in in_progress %}
     {% include 'app/fragments/event_card.html' with event=event %}
   {% endfor %}
 
 </div>
 
-<!-- Upcoming Events -->
 <div class="app-card-container">
-  <h2>Upcoming Events</h2>
-  {% for event in upcoming_events %}
-    <div class="app-card">
-      <h3>{{ event.name }}</h3>
-      <p>{{ event.date }}</p>
-      <p>{{ event.description }}</p>
-      <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Edit</button>
-    </div>
-  {% endfor %}
-</div>
-
-<!-- Past Events -->
-<div class="app-card-container">
-  <h2>Past Events</h2>
-  {% for event in past_events %}
-    <div class="app-card">
-      <h3>{{ event.name }}</h3>
-      <p>{{ event.date }}</p>
-      <p>{{ event.description }}</p>
-      <button class="btn" onclick="cloneNodeOnClickForHTMX('hiddenTemplate', 'days')">Edit</button>
-    </div>
-  {% endfor %}
+  <h2>Members</h2>
 </div>
 {% endif %}
 
-<dialog class="modal" id="imageDetails">
+<dialog class="modal" id="uploadDialog">
   <form method="dialog">
-    <button class="btn">Close</button>
+    <button class="close-btn"></button>
   </form>
-  <div id="imageDetailsContent">
-    <!-- Image details will be loaded here -->
-  </div>
-</dialog>
 
+  <form method="POST" action="{% url 'upload_image' %}" enctype="multipart/form-data" id="uploadForm" >
+    {% csrf_token %}
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click();">
+      <img id="preview" class="image-upload-preview" />
+      <p class="image-drop-prompt" id="dropPrompt"> Click or drag a file here to upload </p>
+    </div>
+
+    <input style="display: none;" name="image" type="file" accept="image/*" id="fileInput" />
+    <input class="form-control mb-2" name="caption" type="text" placeholder="Image caption" />
+    <button class="btn btn-primary" type="submit" id="uploadButton" form="uploadForm" >Upload</button>
+  </form>
+</dialog>
 
 {% endblock %}
 
 
 {% block script %}
 
-
-
-{% if not organization %}
-<script type="text/javascript" src="https://unpkg.com/paper"></script>
+<script type="text/javascript" src="/static/js/paper@0.12.18.js"></script>
 <script>
 const canvas = document.getElementById('placeholderAnimation');
 paper.setup(canvas);
@@ -239,7 +214,6 @@ view.onFrame = function () {
 }
 </script>
 
-{% endif %}
 <script>
 
 document.body.addEventListener('htmx:afterSwap', function(event) {
@@ -252,57 +226,11 @@ document.body.addEventListener('htmx:afterSwap', function(event) {
   const rect = newNode.getBoundingClientRect();
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   window.scrollTo({
-    top: rect.top + scrollTop - ( 7 * 16 ), // Adjust the offset as needed
+    top: rect.top + scrollTop - ( 7 * 16 ),
     behavior: 'smooth'
   });
-//  newNode.scrollIntoView({
-//    behavior: 'smooth',
-//    block: 'start'
-//  });
 
 })
-</script>
-
-
-
-<script>
-
-function searchAddress(el) {
-  const query = el.value.trim();
-  const container = el.closest(".form-container");
-  const suggestions = container.querySelector(".suggestions");
-
-  if (!query) {
-    suggestions.innerHTML = "";
-    return;
-  }
-
-  fetch("https://photon.komoot.io/api/?q=" + encodeURIComponent(query) + "&limit=5")
-    .then(response => response.json())
-    .then(data => {
-      suggestions.innerHTML = "";
-
-      data.features.forEach(feature => {
-        const item = document.createElement("li");
-        item.textContent = feature.properties.name + ", " + (feature.properties.city || "");
-
-        item.addEventListener("click", function () {
-          container.querySelector(".street").value = feature.properties.name || "";
-          container.querySelector(".city").value = feature.properties.city || "";
-          container.querySelector(".state").value = feature.properties.state || "";
-          container.querySelector(".postal_code").value = feature.properties.postcode || "";
-          container.querySelector(".country").value = feature.properties.country || "";
-          container.querySelector(".lat").value = feature.geometry.coordinates[1];
-          container.querySelector(".lon").value = feature.geometry.coordinates[0];
-
-          el.value = item.textContent;
-          suggestions.innerHTML = "";
-        });
-
-        suggestions.appendChild(item);
-      });
-    });
-}
 </script>
 
 {% endblock %}

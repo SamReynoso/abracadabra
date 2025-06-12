@@ -1,12 +1,16 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-<button class="button" id="uploadButton" onclick="document.getElementById('uploadDialog').showModal()">
-  <span class="icon icon-upload"></span>
-  Upload Image
-</button>
-
 <section class="image-gallery" aria-label="Image preview">
+
+  <div class="upload-image-icon">
+    <img
+      src="/assets/icons/upload.svg"
+      alt="Add an image."
+      style="filter: invert(1);"
+      onclick="document.getElementById('uploadDialog').showModal()"
+      />
+  </div>
 
   {% for image in images %}
   <div 
@@ -30,7 +34,7 @@
 
 <dialog class="modal" id="uploadDialog">
   <form method="dialog">
-    <button class="btn">Close</button>
+    <button class="close-btn"></button>
   </form>
 
   <form method="POST" action="{% url 'upload_image' %}" enctype="multipart/form-data" id="uploadForm" >

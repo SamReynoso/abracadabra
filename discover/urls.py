@@ -20,5 +20,8 @@ urlpatterns = [
     path('guest/team-form/', views.team_form, name='team_form'),
     path('guest/division-form/', views.division_form, name='division_form'),
 
+    path('guest/division-delete/<division_id>', views.division_delete, name='division_delete'),
+    path('guest/team-delete/<team_id>', views.team_delete, name='team_delete'),
+
     path('clear-cookie/', views.clear_cookie, name='clear_cookie'),
     ]

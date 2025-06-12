@@ -1,0 +1,41 @@
+<h1>Delete Event</h1>
+<form method="POST" action="{% url 'event_delete_fragment' event.safe_slug %}">
+
+  {% csrf_token %}
+
+  <div class="row gap-2">
+    <div class="content">
+      <dl class="grid">
+        <dt>Name:</dt>
+        <dd>{{ event.name }}</dd>
+        <dt>Created:</dt>
+        <dd>{{ event.created_at|date:"F j, Y" }}</dd>
+        <dt>Type:</dt>
+        <dd>{{ event.event_type }}</dd>
+        <dt>Start Date:</dt>
+        <dd>{{ event.start_date|date:"F j, Y" }}</dd>
+        <dt>End Date:</dt>
+        <dd>{{ event.end_date|date:"F j, Y" }}</dd>
+        <dt>Price:</dt>
+        <dd>{{ event.formatted_price }}</dd>
+        <dt>Location:</dt>
+        <dd>
+          {% if event.locations.count == 1 %}
+            <address>
+              <span>{{ event.locations.first.name }} - {{ event.locations.first.street }}, {{ event.locations.first.city }}, {{ event.locations.first.state }} {{ event.locations.first.zip }}</span>
+            </address>
+          {% else %}
+          <address>
+            {% for location in event.locations.all %}
+              <span>{{ location.name }} - {{ location.address.street }} {{ location.address.street2 }} {{ location.address.city }}, {{ location.address.state }} {{ location.address.postal_code }}</span><br>
+            {% endfor %}
+          </address>
+        {% endif %}
+    </dl>
+  </div>
+  <input type="hidden" name="event_id" value="{{ event.id }}">
+  <div>
+    <button type="submit" class="btn btn-danger">Delete Event</button>
+  </div>
+  </div>
+</form>

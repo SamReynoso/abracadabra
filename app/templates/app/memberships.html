@@ -1,7 +1,30 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-<p>
-  This page shows events that are currently in progress or upcoming. You can add new events, view details, and manage your organization's activities.
-</p>
+<h2 class="page-title">Memberships</h2>
+{% for membership in memberships %}
+<div class="content">
+  <dl class="grid">
+    <dt>Organization:</dt>
+    <dd>
+      <form action="{% url 'set_organization'  membership.organization.name %}" method="POST">
+        {% csrf_token %}
+        <button class="btn-link" type="submit" class="btn-link">{{ membership.organization.name }}</button>
+      </form>
+    </dd>
+    <dt>Start Date:</dt>
+    <dd>{{ membership.created_at|date:"F j, Y" }}</dd>
+    <dt>Role:</dt>
+    <dd>{{ membership.role }}</dd>
+    <dt>Primary:</dt>
+    <dd>
+      {% if membership.primary %}
+      <img src="/assets/icons/check.svg" alt="Primary Membership" class="tag">
+      {% else %}
+      <img src="/assets/icons/circle.svg" alt="Primary Membership" class="tag">
+      {% endif %}
+    </dd>
+  </dl>
+</div>
+{% endfor %}
 {% endblock content %}

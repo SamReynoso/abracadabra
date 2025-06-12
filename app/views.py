@@ -20,15 +20,15 @@ from models.models import (
 from .forms import EventForm, LifeCycleForm, NewOrganizationForm
 
 
-# def set_profile_picture(request, context):
-#     profile_picture = Images.objects.filter(
-#         user=request.user, is_profile_picture=True
-#     ).first()
-#     if profile_picture:
-#         profile_picture_url = profile_picture.image.url
-#     else:
-#         profile_picture_url = None
-#     context['profile_picture_url'] = profile_picture_url
+def set_profile_picture(request, context):
+     profile_picture = Images.objects.filter(
+         user=request.user, is_profile_picture=True
+     ).first()
+     if profile_picture:
+         profile_picture_url = profile_picture.image.url
+     else:
+         profile_picture_url = None
+     context['profile_picture_url'] = profile_picture_url
 
 
 def on_deck(request):
@@ -46,6 +46,13 @@ def images(request):
     }
     set_profile_picture(request, context)
     return render(request, "app/images.html", context)
+
+
+def address_book(request):
+    context = {
+            "addresses": Address.objects.filter(user=request.user).order_by('-created_at'),
+    }
+    return render(request, "app/address_book.html", context)
 
 
 def image_details(request, id):
@@ -92,19 +99,23 @@ def upload_image(request):
                     caption=request.POST.get('caption', ''),
                     )
             img.save()
-            return render(request, "app/imgages.html", {"image": img})
+            return render(request, "app/images.html", {"image": img})
         else:
             return render(request, "app/upload_error.html", {"error": "No image provided."})
     return render(request, "app/upload_image.html", {})
 
 
 def memberships(request):
-    context = {}
+    context = {
+        'memberships': Membership.objects.filter(user=request.user).order_by('-created_at'),
+        'roles': Role,
+        'event_types': EventType,
+    }
     set_profile_picture(request, context)
     return render(request, "app/memberships.html", context)
 
 
-def following(request):
+def watch_list(request):
     context = {}
     set_profile_picture(request, context)
     return render(request, "app/following.html", context)
@@ -275,7 +286,7 @@ def event_images(request, safe_slug: str):
 
     context = {
             "event": Event.from_slug(safe_slug),
-            "images": images * 5,  # For demonstration, repeat images to fill space
+            "images": images,
             }
     return render(request, "app/fragments/event_images.html", context)
 
@@ -301,6 +312,16 @@ def event_form(request, safe_slug: str):
         }
     return render(request, "app/fragments/event_form.html", context)
 
+def event_delete(request, safe_slug: str):
+    event = Event.from_slug(safe_slug)
+    assert event is not None, "Event must exist for the given slug"
+    if request.method == "POST":
+        event.delete()
+        return redirect('app_orgs')
+    context = {
+        "event": event,
+    }
+    return render(request, "app/fragments/event_delete.html", context)
 
 def event_lifecycle(request, safe_slug: str):
     event = Event.from_slug(safe_slug)

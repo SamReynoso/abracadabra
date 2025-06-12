@@ -1,0 +1,95 @@
+.results-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+section.card-section.result {
+  width: calc(450px - 1rem);
+}
+
+section.card-section.result.wide {
+  background-color: var(--content-background-color);
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+
+@media (max-width: 1200px) {
+  .results-container {
+    padding: 0;
+  }
+  section.card-section.result {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    border-radius: 0;
+
+  }
+
+  section.card-section.result div{
+    max-width: 350px;
+  }
+
+  section.card-section.result div.result-description { 
+    width: 30ch;
+  }
+}
+
+@media (max-width: 650px) {
+  section.card-section.result {
+    display: flex;
+    flex-direction: column;
+  }
+
+  section.card-section.result.wide {
+    flex-direction: row;
+  }
+
+  section.card-section.result div.result-description { 
+  }
+
+}
+
+form.inline-input-form {
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 80ch;
+  border: 1px solid var(--border-color);
+  border-radius: .5rem;
+}
+
+
+form.inline-input-form input {
+  width: 100%;
+  padding: 0.5rem;
+  line-height: 1;
+  border: none;
+  border-top-left-radius: .5rem;
+  border-bottom-left-radius: .5rem;
+}
+
+form.inline-input-form button {
+  background-color: white;
+  color: black;
+  height: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-top-right-radius: .5rem;
+  border-bottom-right-radius: .5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+form.inline-input-form button:hover {
+  background-color: var(--link-color);
+  color: var(--text-color);
+}

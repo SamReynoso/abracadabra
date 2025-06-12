@@ -87,6 +87,18 @@ class User(AbstractUser):
         except cls.DoesNotExist:
             raise ValueError(f"User with slug '{slug}' does not exist.")
 
+    @property
+    def profile_picture_url(self):
+        if self.profile_picture:
+            return self.profile_picture.url
+        return "/assets/defaults/anonymous-user.svg"
+
+    @property
+    def display_name(self):
+        if self.first_name and self.last_name:
+            return f"{self.first_name} {self.last_name}"
+        return self.username
+
 
 class Images(ABSClass):
     user = models.ForeignKey(
@@ -101,6 +113,11 @@ class Images(ABSClass):
             )
     caption = models.CharField(max_length=255, blank=True)
     is_profile_picture = models.BooleanField(default=False)
+
+
+    @property
+    def display_name(self):
+        return "foobar"
 
 
 class Organization(ABSClass):
@@ -122,6 +139,16 @@ class Organization(ABSClass):
             blank=True,
             null=True
             )
+
+    @property
+    def logo_url(self):
+        """
+        Return the URL of the organization's logo image.
+        """
+        if self.logo:
+            return self.logo.image.url
+        return "/assets/defaults/globe.svg"
+
 
     class Meta: # type: ignore
         verbose_name_plural = 'Organizations'
@@ -230,14 +257,28 @@ class Event(ABSClass):
 
 
     @property
+    def director(self):
+        membership = self.organization.memberships.filter(
+            role=Role.DIRECTOR,
+        ).first()
+        if membership:
+            return membership.user
+        return None
+
+    @property
     def currency(self) -> float:
         return np.round(self.price / 100, 2)
 
     @property
+    def display_location(self):
+        locations = self.locations.all()
+        if locations.exists():
+            first  = locations.first()
+            return f"{first.address.city}, {first.address.state}, {first.address.country}"
+        return None
+
+    @property
     def formatted_price(self) -> str:
-        """
-        Return the price formatted as a string with a dollar sign.
-        """
         return f"${self.currency:.2f}"
 
     def set_price(self, price: float | int | str) -> None:

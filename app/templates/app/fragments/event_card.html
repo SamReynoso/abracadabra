@@ -1,20 +1,32 @@
 <!-- Event details card for event: {{ event.name }}-->
 <div class="relative">
   <ul class="collapse-navigation-list" id="collapse{{ event.safe_slug }}" data-collapse-id="collapse{{ event.safe_slug }}">
+
     <li>
-      <button
-        class="btn-link"
-        hx-get="{% url 'event_form_fragment' event.safe_slug %}"
+      <button 
+        class="btn-dropdown"
+        hx-get="{% url 'event_details_fragment' event.safe_slug %}"
         hx-target="#content{{ event.safe_slug }}"
         hx-swap="innerHTML"
         >
-        Info
+        Details
       </button>
     </li>
 
     <li>
       <button
-        class="btn-link"
+        class="btn-dropdown"
+        hx-get="{% url 'event_form_fragment' event.safe_slug %}"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Edit
+      </button>
+    </li>
+
+    <li>
+      <button
+        class="btn-dropdown"
         hx-get="{% url 'event_location_fragment' event.safe_slug %}"
         hx-target="#content{{ event.safe_slug }}"
         hx-swap="innerHTML"
@@ -25,7 +37,7 @@
 
     <li>
       <button
-        class="btn-link"
+        class="btn-dropdown"
         hx-get="{% url 'event_images_fragment' event.safe_slug %}"
         hx-target="#content{{ event.safe_slug }}"
         hx-swap="innerHTML"
@@ -36,34 +48,38 @@
 
     <li>
       <a
-        class="btn-link"
+        class="btn-dropdown"
         href="{% url 'event_manage' event.safe_slug %}"
         >
         Manage
       </a>
     </li>
     <li>
-      <a class="btn-link" href="{% url 'event_details' event.safe_slug %}">Page</a>
+      <a class="btn-dropdown" href="{% url 'event_details' event.safe_slug %}">Page</a>
+    </li>
+
+    <li>
+      <button
+        class="btn-dropdown delete-btn"
+        hx-get="{% url 'event_delete_fragment' event.safe_slug %}"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Delete
+      </button>
     </li>
   </ul>
 
   <details class="app-card" id="details{{ event.safe_slug}}" data-card-id="details{{ event.safe_slug }}">
     <summary class="app-card__summary">
-      <button 
-        hx-get="{% url 'event_details_fragment' event.safe_slug %}"
-        hx-target="#content{{ event.safe_slug }}"
-        hx-swap="innerHTML"
-        class="btn-link">{{ event.name }}</button>
-
+      <h3 class="app-card__title">{{ event.name }}</h3>
       <button
-        class="ellipsis-button"
+        class="ellipsis-icon"
         src="/assets/menu.svg"
         onclick="openAppDropdown(event)"
         alt="Menu icon for event details"
         data-toggle="collapse{{ event.safe_slug }}"
-        >
-        ...
-      </button>
+        ></button>
     </summary>
 
     <div

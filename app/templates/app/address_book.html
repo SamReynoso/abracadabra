@@ -1,0 +1,66 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<h1>Address Book</h1>
+{% for address in addresses %}
+<div class="content">
+  <h2>{{ address.name }}</h2>
+  <dl class="grid">
+    <dt>Name:</dt>
+    <dd>{{ address.name }}</dd>
+    <dt>street:</dt>
+    <dd>{{ address.street }}</dd>
+    <dt>city:</dt>
+    <dd>{{ address.city }}</dd>
+    <dt>state:</dt>
+    <dd>{{ address.state }}</dd>
+    <dt>postal code:</dt>
+    <dd>{{ address.postal_code }}</dd>
+  </dl>
+
+  <h3>events at this address:</h3>
+  {% for location in address.locations.all %}
+  <div>
+    {{ location.event.name }} - {{ location.event.start_date|date:"Y-m-d H:i" }}
+  </div>
+  {% endfor %}
+</div>
+{% endfor %}
+
+<div class="form-container">
+
+  <form class="app-form" method="POST">
+    {% csrf_token %}
+
+    <input type="hidden" name="lat" class="lat" placeholder="Latitude">
+    <input type="hidden" name="lon" class="lon" placeholder="Longitude">
+
+    <h2>Name Address</h2>
+    <input class="mb-1" type="text" name="name" class="name" placeholder="Add Name" required>
+
+    <div>
+      <h3>Address Details</h3>
+        <h4>Get Suggestions</h4>
+        <input class="search-input" type="text"  placeholder="Start typing..." oninput="searchAddress(this)" autocomplete="off" id="addressInput" />
+      <ul class="suggestions mb-1"></ul>
+
+      <div class="line-space mb-1">
+        <input class="street" type="text" name="street" placeholder="Street Address" />
+        <input class="city" type="text" name="city" placeholder="City" />
+        <input class="state" type="text" name="state" placeholder="State/Province" />
+        <input class="postal_code" type="text" name="postal_code" placeholder="Postal Code" />
+        <input class="country" type="text" name="country" placeholder="Country" value="United States" />
+      </div>
+
+
+
+      <button class="btn" type="submit">Add Address</button>
+
+    </div>
+
+  </form>
+
+</div>
+
+{% endblock %}

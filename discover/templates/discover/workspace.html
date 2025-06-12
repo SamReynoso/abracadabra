@@ -1,17 +1,19 @@
 {% extends "discover/base.html" %}
 {% block title %}Abracadabra Sports{% endblock %}
 
-{% block main %}
-<header class="page-header">
+{% block header %}
+
   <h1>Guest Workspace</h1>
   <ul>
-    <li><strong>Drafts:</strong> ({{ registrations|length }})</li>
-    <li><strong>Submitted:</strong> (0)</li>
-    <li><strong>Confirmed:</strong> (0)</li>
+    <li><strong>Drafts:</strong> ({{ drafts|length }})</li>
+    <li><strong>Pending:</strong> ({{ pending|length }})</li>
+    <li><strong>Registered:</strong> ({{ registered|length }})</li>
   </ul>
-</header>
-<div class="full-width-container">
 
+{% endblock %}
+
+
+{% block content %}
 
 {% include "discover/fragments/contact_info.html" with guest=guest %}
 

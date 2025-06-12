@@ -27,11 +27,27 @@ STATIC_ROOT = 'static/'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-ACCOUNT_SIGNUP_REDIRECT_URL = '/user/profile/'
-LOGIN_REDIRECT_URL = '/user/profile/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/goodbye/'
-ACCOUNT_SIGNUP_REDIRECT_URL = '/welcome/'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
+
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+
+SOCIALACCOUNT_LOGIN_ON_GET=True
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {"access_type": "online"},
+    }
+}
 
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
@@ -75,14 +91,13 @@ MIDDLEWARE = [
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-AUTH_USER_MODEL = 'models.User'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / '../db.sqlite3',
         }
     }
+
 #DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.postgresql',
@@ -111,18 +126,11 @@ TEMPLATES = [
 
 V_P = 'django.contrib.auth.password_validation.'
 
+AUTH_USER_MODEL = 'models.User'
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': V_P + 'UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': V_P + 'MinimumLengthValidator',
-    },
-    {
-        'NAME': V_P + 'CommonPasswordValidator',
-    },
-    {
-        'NAME': V_P + 'NumericPasswordValidator',
-    },
+    { 'NAME': V_P + 'UserAttributeSimilarityValidator', },
+    { 'NAME': V_P + 'MinimumLengthValidator', },
+    { 'NAME': V_P + 'CommonPasswordValidator', },
+    { 'NAME': V_P + 'NumericPasswordValidator', },
 ]
 

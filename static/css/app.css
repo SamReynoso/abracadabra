@@ -277,7 +277,7 @@ form.inline-input-form {
   padding: 0.5rem;
 }
 
-form.app-form {
+.app-form {
   color: #cbd3dc;
   display: flex;
   flex-direction: column;
@@ -294,14 +294,14 @@ form.app-form {
   margin-top: 1rem;
 }
 
-form.app-form p {
+.app-form p {
   display: flex;
   flex-direction: column;
 }
 
-form.app-form input,
-form.app-form textarea,
-form.app-form select {
+.app-form input,
+.app-form textarea,
+.app-form select {
   background-color: #2b3440;
   color: #cbd3dc;
   border: 1px solid #3b4653;
@@ -309,7 +309,7 @@ form.app-form select {
   border-radius: 4px;
 }
 
-form.app-form input.search-input {
+.app-form input.search-input {
   color: #1e2630;
   background-color: white;
   width: 100%;
@@ -318,19 +318,19 @@ form.app-form input.search-input {
   padding: 0.25rem;
 }
 
-form.app-form input:focus,
-form.app-form textarea:focus,
-form.app-form select:focus {
+.app-form input:focus,
+.app-form textarea:focus,
+.app-form select:focus {
   border-color: #00b9ff; /* linode accent */
   outline: none;
 }
 
-form.app-form textarea {
+.app-form textarea {
   resize: vertical;
   height: 4rem;
 }
 
-form.app-form label {
+.app-form label {
   font-weight: bold;
   color: #aab4c1;
 }
@@ -383,7 +383,8 @@ input[type="text"],
 input[type="email"],
 input[type="file"] {
   width: 100%;
-  padding: 0.5rem;
+  max-width: 50ch;
+  padding: 0.25rem;
   box-sizing: border-box;
 }
 
@@ -420,6 +421,8 @@ legend {
 }
 
 .suggestions {
+  width: 100%;
+  max-width: 50ch;
   left: 0;
   background-color: var(--background-color);
   border: 1px solid var(--border-color);

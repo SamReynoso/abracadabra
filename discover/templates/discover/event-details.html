@@ -53,33 +53,34 @@
 
 {% block content%}
 
-<h1>{{ event.name }}</h1>
+<section class="card-section">
+  <h1>{{ event.name }}</h1>
 
-<div class="row wrap gap-2">
-  <img class="poster large" src="{{ event.poster_url }}" alt="Event Poster">
+  <div class="row wrap gap-2">
+    <img class="poster large" src="{{ event.poster_url }}" alt="Event Poster">
 
-  <div>
-    <h3>Event Details</h3>
-    <dl class="grid mb-1">
-      <dt>Start Date</dt>
-      <dd>{{ event.start_date|date:"F j, Y" }}</dd>
-      <dt>End Date</dt>
-      <dd>{{ event.end_date|date:"F j, Y" }}</dd>
-      <dt>Format</dt>
-      <dd>{{ event.event_type }}</dd>
-    </dl>
+    <div>
+      <h3>Event Details</h3>
+      <dl class="grid mb-1">
+        <dt>Start Date</dt>
+        <dd>{{ event.start_date|date:"F j, Y" }}</dd>
+        <dt>End Date</dt>
+        <dd>{{ event.end_date|date:"F j, Y" }}</dd>
+        <dt>Format</dt>
+        <dd>{{ event.event_type }}</dd>
+      </dl>
 
-    <h4>Description</h4>
-    <p>{{ event.description }}</p>
-    <h3>{{ event.start_date|date:"F j, Y" }}</h3>
-    <h3>{{ event.formatted_price }}</h3>
+      <h4>Description</h4>
+      <p>{{ event.description }}</p>
+      <h3>{{ event.start_date|date:"F j, Y" }}</h3>
+      <h3>{{ event.formatted_price }}</h3>
 
-    <form class="mb-1" method="POST" action="{% url 'event_register' event.safe_slug %}" enctype="multipart/form-data">
-      {% csrf_token %}
-      <button type="submit" class="btn mb-1">Register As Guest</button>
-    </form>
+      <form class="mb-1" method="POST" action="{% url 'event_register' event.safe_slug %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <button type="submit" class="btn mb-1">Register As Guest</button>
+      </form>
+    </div>
   </div>
-</div>
 
   <div>
     <h2>Locations</h2>
@@ -103,6 +104,7 @@
     {% endfor %}
 
   </div>
+</section>
 
 {% endblock %}
 

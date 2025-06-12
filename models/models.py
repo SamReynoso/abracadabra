@@ -238,7 +238,7 @@ class Event(ABSClass):
         """
         if self.poster:
             return self.poster.image.url
-        return "/assets/defaults/event-poster.png"
+        return "/assets/defaults/event.webp"
 
     price = models.IntegerField(
             verbose_name='Price (in cents)',

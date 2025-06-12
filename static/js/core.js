@@ -34,7 +34,7 @@ function searchAddress(el) {
                 item.textContent = feature.properties.name + ", " + (feature.properties.city || "");
 
                 item.addEventListener("click", function () {
-                    container.querySelector(".street").value = feature.properties.name || "";
+                    container.querySelector(".street").value = feature.properties.street|| "";
                     container.querySelector(".city").value = feature.properties.city || "";
                     container.querySelector(".state").value = feature.properties.state || "";
                     container.querySelector(".postal_code").value = feature.properties.postcode || "";

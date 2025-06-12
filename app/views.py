@@ -150,25 +150,26 @@ def set_org(request, safe_slug: str):
 
 
 def orgs(request):
-    memberships =  Membership.objects.filter(user=request.user, role=Role.DIRECTOR)
-    organization = None
-    organizations = Organization.objects.none()
-    events = Event.objects.none()  # Default to empty queryset if no memberships
+    directorships =  Membership.objects.filter(user=request.user, role=Role.DIRECTOR)
+    if directorships.exists():
+        prime = directorships.filter(primary=True).first()
 
-    if memberships.exists():
-        organizations = [membership.organization for membership in memberships]
-        primary= memberships.filter(primary=True)
-        print(primary)
-        primary_membership = primary.first() if primary.exists() else None
-        assert primary_membership is not None, "Primary membership should exist"
-        organization = primary_membership.organization 
-        events = organization.events.all().order_by('-created_at')
+        context = {
+                'form': NewOrganizationForm(),
+                'organizations': [membership.organization for membership in directorships],
+                'organization': prime.organization if prime else None,
+                'events': prime.organization.events.all().order_by('-created_at') if prime else [],
+                'members': prime.organization.memberships.all().order_by('-created_at') if prime else [],
+                }
+    else:
+        context = {
+            'form': NewOrganizationForm(),
+            'organizations': [],
+            'organization': None,
+            'events': [],
+            'members': [],
+        }
 
-    context = {
-            'organization': organization, 
-            'organizations': organizations,
-            'in_progress': events.filter(status=EventStatus.CREATED),
-            }
 
     if request.method == "POST":
         form = NewOrganizationForm(request.POST)
@@ -188,8 +189,6 @@ def orgs(request):
         else:
             context['form'] = form
             context['errors'] = form.errors
-    else:
-        context['form'] = NewOrganizationForm()
 
     set_profile_picture(request, context)
     return render(request, "app/orgs.html", context)

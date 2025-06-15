@@ -112,13 +112,18 @@
 
   <form id="registrationForm" method="POST" action="{% url 'teams' %}" enctype="multipart/form-data">
     <fieldset class="mb-2">
-      <legend>Registered Teams for these Event</legend>
+
+      <legend>Register Teams for these Event</legend>
       {% csrf_token %}
       {% for team in teams %}
         {% for division in team.divisions.all %}
           <input type="hidden" name="divisions" value="{{ division.id }}">
         {% endfor %}
       {% endfor %}
+      {% if not drafts %}
+      <p class="mb-2">You have no drafts to register.</p>
+      {% endif %}
+
       {% for registration in drafts%}
         {% if registration.status == 'draft' %}
         <div class="pad-1">

@@ -233,7 +233,9 @@ def teams(request):
     context = {
         'guest': guest,
         'teams': Team.objects.filter(owner=guest.owner),
-        'registrations': Registration.objects.filter(owner=guest.owner),
+        'drafts': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.DRAFT),
+        'pending': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.PENDING),
+        'registered': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.REGISTERED),
     }
     return render(request, 'discover/fragments/teams.html', context)
 
@@ -246,9 +248,6 @@ def workspace(request):
     
     context = {
         'guest': guest,
-        'drafts': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.DRAFT),
-        'pending': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.PENDING),
-        'registered': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.REGISTERED),
         'teams': Team.objects.filter(owner=guest.owner),
     }
     return render(request, 'discover/workspace.html', context)

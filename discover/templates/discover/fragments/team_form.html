@@ -1,0 +1,19 @@
+<form class="pad-1" id="teamForm{{ team.safe_slug }}">
+
+  {% csrf_token %}
+  <input type="hidden" name="team_slug" value="{{ team.safe_slug }}">
+
+  <label>
+    <input type="text" name="team_name" placeholder="Team Name" value="{{ team.name|default_if_none:'' }}">
+  </label>
+
+  <button
+    class="btn pad-1"
+    hx-post="{% url 'team_form' %}"
+    hx-target="#contentTeam{{ team.safe_slug }}"
+    hx-swap="outerHTML"
+    >
+    Submit
+  </button>
+
+</form>

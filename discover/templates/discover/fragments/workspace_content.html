@@ -1,0 +1,32 @@
+<section id="teams">
+
+  <h2>Teams</h2>
+
+  <form>
+    {% csrf_token %}
+    <button class="btn mb-1" hx-post="{% url 'team_form' %}" hx-target="#teams" hx-swap="outerHTML">Create Team</button>
+  </form>
+
+  {% for team in teams %}
+
+    {% include 'discover/fragments/team_card.html' with team=team %}
+
+  {% empty %}
+    <!-- No teams available. Create one to get started! -->
+  {% endfor %}
+
+</section>
+
+
+<section id="registrations">
+
+  <h2>Registration</h2>
+
+  {% for registration in registrations %}
+    {% include 'discover/fragments/registration_card.html' with registration=registration %}
+    
+    {% empty %}
+    <!-- No registrations available. Start by registering for an event! -->
+  {% endfor %}
+
+</section>

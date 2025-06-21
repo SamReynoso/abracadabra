@@ -1,0 +1,46 @@
+<div class="m-1">
+
+  <h3>Event Entries</h3>
+
+  <div class="pad-1">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Team</th>
+          <th>Assigned</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+      {% for entry in registration.entries.all %}
+        <tr>
+          <td>{{ entry.status }}</td>
+
+          <td><strong>{{ entry.reported_division.info.name }}</strong></td>
+
+          {% if entry.assigned_division %}
+            <td>{{ entry.assigned_division.info.name }}</td>
+          {% else %}
+            <td>Not Assigned</td>
+          {% endif %}
+
+          <td>
+            <select>
+              <option value="cancel">Cancel</option>
+            </select>
+          </td>
+
+        </tr>
+      {% endfor %}
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

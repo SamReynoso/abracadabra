@@ -3,26 +3,26 @@
 
 {% block header %}
 
-  <h1>Guest Workspace</h1>
-  <ul>
-    <li><strong>Drafts:</strong> ({{ drafts|length }})</li>
-    <li><strong>Pending:</strong> ({{ pending|length }})</li>
-    <li><strong>Registered:</strong> ({{ registered|length }})</li>
-  </ul>
+  <h1>Workspace</h1>
+
+  {% if user.is_authenticated %}
+    {% include "discover/fragments/user_header.html" with user=user %}
+  {% else %}
+    {% include "discover/fragments/guest_header.html" %}
+  {% endif %}
 
 {% endblock %}
 
 
 {% block content %}
 
-{% include "discover/fragments/contact_info.html" with guest=guest %}
-
-<section 
-  hx-get="{% url  'teams' %}"
-  hx-target="#teamAndDivisionSection"
-  hx-swap="outerHTML"
-  hx-trigger="load"
-  id="teamAndDivisionSection"
-  ></section>
+  <div 
+    id="pageContent"
+    hx-get="{% url 'workspace_content' %}"
+    hx-target="#pageContent"
+    hx-swap="innerHTML"
+    hx-trigger="load"
+    >
+  </div>
 
 {% endblock %}

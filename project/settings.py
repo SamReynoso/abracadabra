@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'persona',
     'app',
     'discover',
+    'search',
 #    'gameday',
 #    'info',
 #    'marketing',

@@ -1,6 +1,5 @@
 from django.contrib import admin
-from django.urls import path
-from django.urls import include
+from django.urls import path, include
 
 
 urlpatterns = [
@@ -12,4 +11,5 @@ urlpatterns = [
     path('info/', include('info.urls')),
     path('discover/', include('discover.urls')),
     path('gameday/', include('gameday.urls')),
+    path('search/', include('search.urls')),
 ]

@@ -1,0 +1,78 @@
+<div class="m-1">
+
+  <from class="pad-1" id="registrationForm{{ registration.safe_slug }}" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    <input type="hidden" name="registration_slug" value="{{ registration.safe_slug }}">
+
+
+    <h3>Registration Form</h3>
+
+    <div class="pad-1">
+
+      <h4>Notes:</h4>
+
+      <textarea
+        class="form-control"
+        id="registrationForm"
+        name="notes"
+        rows="3"
+        value="{{ registration.notes }}"
+        placeholder="Please enter your registration details here."
+        style="width: 100%;"
+        >
+      </textarea>
+
+    </div>
+
+    <div class="pad-1">
+
+      <h3>Team Divisions</h3>
+
+      {% for team in registration.owner.teams.all %}
+
+        <h4>{{ team.name }}</h4>
+
+        {% for division in team.divisions.all %}
+
+          <input
+            type="checkbox"
+            id="division{{ division.safe_slug }}"
+            name="division{{ division.safe_slug }}"
+            value="yes"
+            checked="yes"
+            >
+          <label for="division{{ division.safe_slug }}">{{ division.info.name }}</label>
+          <br>
+
+        {% endfor %}
+
+      {% endfor %}
+
+    </div>
+
+    <div class="pad-1">
+      <input
+        type="checkbox"
+        id="confirmation"
+        name="division"
+        value="yes"
+        checked="yes"
+        required`
+        >
+      <label for="confirmation">I confirm that the information provided is accurate and complete.</label>
+    </div>
+
+    <button 
+      class="btn pad-1"
+      hx-post="{% url 'registration_submit' %}"
+      hx-target="#contentRegistration{{ registration.safe_slug }}"
+      hx-swap="innerHTML"
+      hx-include="#registrationForm{{ registration.safe_slug }}"
+      >
+      Submit
+    </button>
+
+  </from>
+
+</div>

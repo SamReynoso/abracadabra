@@ -9,7 +9,7 @@
       <button
         type="submit"
         class="btn"
-        hx-post="{% url 'event_image_accept_fragment' event.safe_slug image.safe_slug %}"
+        hx-post="{% url 'event_image_accept_fragment' %}"
         hx-target="#content{{ event.safe_slug }}"
         hx-swap="innerHTML"
         >

@@ -1,27 +1,17 @@
-import uuid
-from django.shortcuts import redirect, render
-from django.core.paginator import Paginator
-import random
+from django.shortcuts import render, redirect
 
 from models.models import (
         Event, 
-        Guest,
         Organization,
-        Membership,
-        Owner,
-        RegistrationEntry,
-        TeamDivision, 
         User,
-        EventType,
-        EventStatus,
-        RegistrationStatus,
-        RegistrationEntryStatus,
+        Sports,
+        Team,
         Registration,
-        Role,
-        Team
         )
 
-
+from . import fragments
+from .api import CoachHelper
+from .guests import with_owner, get_owner
 
 
 
@@ -30,280 +20,67 @@ def marketplace(request):
 
 
 def basketball(request):
-    context = {"top_events": Event.objects.filter(
-    ).order_by('-created_at')[:3]
-               }
+    context = { 'sport': Sports.BASKETBALL }
     return render(request, 'discover/basketball.html', context)
-
-
-def basketball_spotlight(request, page_number: str):
-    page = int(page_number)
-    events = Event.objects.all()
-    paginator = Paginator(events, 3)
-    if page < 1 or page > paginator.num_pages:
-        page_obj = None
-    else:
-        page_obj = paginator.get_page(page_number)
-    context = {
-        'events': page_obj,
-        'next_page': page + 1 if int(page) < paginator.num_pages else None,
-    }
-    return render(request, 'discover/result_paginator.html', context)
 
 
 def event_details(request, event_slug):
     event = Event.from_slug(event_slug)
-    return render(request, 'discover/event-details.html', { 'event': event })
+    return render(request, 'discover/event_details.html', { 'event': event })
 
 
-def clear_cookie(request):
-    res = redirect(request, 'marketplace')
-    guest_uuid = request.GET.get('guest_uuid', None) or request.COOKIES.get('guest_uuid', None)
-    if guest_uuid:
-        res.delete_cookie('guest_uuid')
-        print(f"Cleared cookie for guest with UUID: {guest_uuid}")
-    else:
-        print("No guest UUID found in request, nothing to clear.")
-    return res
-
-
-def get_guest(request):
-    guest_uuid = request.GET.get('guest_uuid', None) or request.COOKIES.get('guest_uuid', None)
-    if guest_uuid:
-        try:
-            guest = Guest.objects.get(uuid=guest_uuid)
-            print(f"Found guest with UUID: {guest_uuid}")
-            return guest
-        except Guest.DoesNotExist:
-            print(f"Guest with UUID {guest_uuid} does not exist.")
-            return None
-    else:
-        print("No guest UUID provided in request.")
-        return None
-
-
-def create_guest():
-    guest = Guest.objects.create()
-    Owner.objects.create(guest=guest)
-    guest.save()
-    return guest
-
-
-def guest_logout_from_this_device(request):
-    res = redirect('marketplace')
+@with_owner
+def event_registration(request):
+    owner = get_owner(request)
     if request.method == 'POST':
-        guest = get_guest(request)
-        if guest:
-            res.delete_cookie('guest_uuid')
-        return res
-    return res
-
-
-def guest_registration_helper(request, event):
-    guest = get_guest(request)
-    if guest is None:
-        guest = create_guest()
-    Registration.objects.get_or_create(event=event, owner=guest.owner)
-    res = redirect('workspace')
-    res.set_cookie('guest_uuid', guest.uuid, max_age=60*60*24*30)
-    return res
-
-
-def auth_registration_helper(request, event):
-    return guest_registration_helper(request, event)
-
-
-def event_register(request, safe_slug):
-    if request.method == 'POST':
-        event = Event.from_slug(safe_slug)
-        if request.user.is_authenticated:
-            print("User is authenticated, proceeding with auth registration flow for event:", event.name)
-            return auth_registration_helper(request, event)
+        data = request.POST
+        if "registration_slug" in data:
+            CoachHelper.Update.registration(data, owner)
         else:
-            print("Guest registration flow initiated for event:", event.name)
-            return guest_registration_helper(request, event)
-    return redirect('marketplace')
+            print("Creating new registration")
+            CoachHelper.Create.registration(data, owner)
+        return redirect('workspace')
+    raise ValueError("Invalid request method. Use POST to create or update a registration.")
 
 
-def contact_info(request):
-    context = { 'guest': get_guest(request) }
-    return render(request, 'discover/fragments/contact_info.html', context)
-
-
-
-def contact_info_form(request):
-    if request.method == 'POST':
-        guest = get_guest(request)
-        if guest is None:
-            guest = create_guest()
-
-        guest.first_name = request.POST.get('first_name', '')
-        guest.last_name = request.POST.get('last_name', '')
-        guest.email = request.POST.get('email', '')
-        guest.phone = request.POST.get('phone', '')
-        guest.save()
-        context = { 'guest': guest }
-        res = render(request, 'discover/fragments/contact_info.html', context)
-        res.set_cookie('guest_uuid', guest.uuid, max_age=60*60*24*30)
-        return res
-
-    guest = get_guest(request)
-    context = { 'guest': guest }
-    return render(request, 'discover/fragments/contact_info_form.html', context)
-
-
-def team_form(request):
-    guest = get_guest(request)
-    if request.method == 'POST' and guest:
-        name = request.POST.get('name', '')
-        Team.objects.create(name=name, owner=guest.owner)
-    return redirect('teams')
-
-
-def division_form(request):
-    guest = get_guest(request)
-    if request.method == 'POST' and guest:
-        team_id  = request.POST.get('team', '')
-        team = Team.objects.filter(id=team_id, owner=guest.owner).first()
-        if team:
-            TeamDivision.objects.create(
-                    team=team,
-                    gender=request.POST.get('gender', ''),
-                    age=request.POST.get('age', ''),
-                    level=request.POST.get('level', ''),
-                    )
-    return redirect('teams')
-
-
-def division_delete(request, division_id):
-    if request.method == 'POST':
-        guest = get_guest(request)
-        if guest:
-            division = TeamDivision.objects.filter(id=division_id, team__owner=guest.owner).first()
-            if division:
-                division.delete()
-                print(f"Deleted division with ID {division_id} for guest {guest.uuid}")
-            else:
-                print(f"No division found with ID {division_id} for guest {guest.uuid}")
-    return redirect('teams')
-
-
-def team_delete(request, team_id):
-    if request.method == 'POST':
-        guest = get_guest(request)
-        if guest:
-            team = Team.objects.filter(id=team_id, owner=guest.owner).first()
-            if team:
-                team.delete()
-                print(f"Deleted team with ID {team_id} for guest {guest.uuid}")
-            else:
-                print(f"No team found with ID {team_id} for guest {guest.uuid}")
-    return redirect('teams')
-
-
-def handle_teams_post(request):
-    division_ids = request.POST.getlist('divisions', [])
-    registration_ids = request.POST.getlist('registration_ids', [])
-    for reg_id in registration_ids:
-        registration = Registration.objects.get(id=reg_id)
-        if request.POST.get(f'registration-{ reg_id }', '') == 'yes':
-            at_least_one = False
-            for div_id in division_ids:
-                key = f"{ reg_id }-{ div_id }"
-                if request.POST.get(key, '') == 'yes':
-                    division = TeamDivision.objects.get(id=div_id)
-                    RegistrationEntry.objects.create(
-                        registration=registration,
-                        reported_division=division,
-                        assigned_division=None,
-                        status=RegistrationEntryStatus.PENDING,
-                    )
-                    print(f"Created registration entry for registration {reg_id} and division {div_id}")
-                    at_least_one = True
-            if at_least_one:
-                registration.status = RegistrationStatus.PENDING
-                registration.save()
-
-
-def teams(request):
-    if request.method == 'POST':
-        handle_teams_post(request)
-
-    guest = get_guest(request)
-    context = {
-        'guest': guest,
-        'teams': Team.objects.filter(owner=guest.owner),
-        'drafts': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.DRAFT),
-        'pending': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.PENDING),
-        'registered': Registration.objects.filter(owner=guest.owner, status=RegistrationStatus.REGISTERED),
-    }
-    return render(request, 'discover/fragments/teams.html', context)
-
-
+@with_owner
 def workspace(request):
-    guest = get_guest(request)
-    if guest is None:
-        guest = create_guest()
-        return render(request, 'discover/workspace.html', {'guest': guest})
-    
-    context = {
-        'guest': guest,
-        'teams': Team.objects.filter(owner=guest.owner),
-    }
+    owner = get_owner(request)
+    context = { 'owner': owner }
     return render(request, 'discover/workspace.html', context)
+
+@with_owner
+def workspace_content(request):
+    owner = get_owner(request)
+    context = { 
+               'teams': Team.objects.filter(owner=owner),
+               'registrations': Registration.objects.filter(owner=owner),
+               }
+    return render(request, 'discover/fragments/workspace_content.html', context)
+
+
+@with_owner
+def registration_details(request):
+    owner = get_owner(request)
+    data = request.GET
+    registration = CoachHelper.Get.registration(data, owner)
+
+    context = { 'registration': registration }
+    return render(request, 'discover/fragments/registration_details.html', context)
+
+
+@with_owner
+def contact_info(request):
+    owner = get_owner(request)
+    return fragments.guest_contact_info(request, owner.guest)
 
 
 def org_details(request, org_slug):
-    org = Organization.from_slug(org_slug)
-    assert org, "Organization not found"
-    memberships = org.memberships.all()
-    print(f"Memberships for org {org.name}: {memberships}")
-    director = memberships.filter(role=Role.DIRECTOR).first()
-    print(f"Director for org {org.name}: {director}")
-    context = {
-        'organization': org,
-        'memberships': memberships,
-        'director': director,
-        'events': org.events.all(),
-    }
-    return render(request, 'discover/org-details.html', context)
-
-
-def dashboard(request):
-    return render(request, 'discover/dashboard.html')
+    context = { "org": Organization.from_slug(org_slug) }
+    return render(request, 'discover/org_details.html', context)
 
 
 def persona(request, user_slug):
    user = User.from_slug(user_slug)
-   context = {
-           'persona': user,
-           }
-   return render(request, 'discover/persona-details.html', context)
-
-
-PAGES = list(range(100, 2000))
-def load_more(request):
-    global PAGES
-    context = {
-            'next_page': PAGES.pop() if PAGES else None,
-            'events': [ 
-                       {
-                           'id': random.randint(1000, 9999),
-                           'title': 'EVENT Tournament',
-                            'date': 'DATE 2023-10-15',
-                            'short_description': 'SHORT DIS Join us for an\
-                                    exciting basketball tournament featuring\
-                                    top teams from the region.',
-                            'poster_url': f"/mock-poster/{ random.randint(1000, 9999) }",
-                            'org': {
-                                'name': 'ORG Association',
-                            }
-                        },
-                       ]
-            }
-    res = render(request, 'core/fragments/event-results.html', context)    
-    res["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    res["Pragma"] = "no-cache"
-    res["Expires"] = "0"
-    return res
-
+   context = { 'persona': user }
+   return render(request, 'discover/persona_details.html', context)

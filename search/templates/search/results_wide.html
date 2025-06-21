@@ -9,9 +9,9 @@
       <h3>Date: {{ event.start_date|date:"F j, Y" }}</h3>
       <h3 class="mb-1">Price: {{ event.formatted_price }}</h3>
 
-      <form action="/api/event" method="POST">
+      <form action="{% url 'event_registration' %}" method="POST">
         {% csrf_token %}
-        <input type="hidden" name="event_id" value="1">
+        <input type="hidden" name="event_slug" value="{{ event.safe_slug }}">
         <button class="btn" type="submit" class="btn">Join Event</button>
       </form>
     </div>
@@ -38,11 +38,10 @@
   </section>
 {% endfor %}
 
-
 {% if next_page %}
   <div
     id="loadMore"
-    hx-get="{% url 'basketball_spotlight' page_number=next_page %}"
+    hx-get="{% url 'search' %}?sport={{ sport }}&page={{ next_page }}"
     hx-trigger="revealed"
     hx-target="#loadMore"
     hx-swap="outerHTML"

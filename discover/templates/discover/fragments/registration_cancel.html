@@ -1,0 +1,12 @@
+<form class="pad-1" id="registrationCancelForm{{ registration.safe_slug }}">
+
+  {% csrf_token %}
+  <input type="hidden" name="registration_slug" value="{{ registration.safe_slug }}">
+
+  <p>Are you sure you want to cancel your registration for <strong>{{ registration.event.name }}</strong>?</p>
+
+  <button class="btn danger pad-1" hx-post="{% url 'registration_cancel' %}" hx-target="#pageContent" hx-swap="outerHTML">
+    Delete
+  </button>
+
+</form>

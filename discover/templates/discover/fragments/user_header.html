@@ -1,0 +1,34 @@
+<div class="row gap-1 pad-1">
+  <img
+    loading="lazy"
+    src="{{ request.user.profile_picture_url }}"
+    alt="User Profile Picture"
+    class="profile-picture"
+    >
+
+    <dl class="grid">
+      <dt>User Name:</dt>
+      <dd>{{ request.user.username }}</dd>
+      <dt>Display Name:</dt>
+      <dd>{{ request.user.display_name }}</dd>
+      <dt>Email:</dt>
+      <dd>{{ request.user.email }}</dd>
+      <dt>Member Since:</dt>
+      <dd>{{ request.user.date_joined|date:"F j, Y" }}</dd>
+      <dt>Last Login:</dt>
+      <dd>{{ request.user.last_login|date:"F j, Y, g:i A" }}</dd>
+      <dt>Memberships:</dt>
+      <dd>
+
+        {% if request.user.memberships.all %}
+          <ul>
+            {% for membership in request.user.memberships.all %}
+              <li>{{ membership.name }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No memberships found.</p>
+        {% endif %}
+      </dd>
+    </dl>
+</div>

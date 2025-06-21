@@ -1,0 +1,11 @@
+
+<form class="pad-1" id="teamDeleteForm{{ team.safe_slug }}">
+  {% csrf_token %}
+  <input type="hidden" name="team_slug" value="{{ team.safe_slug }}">
+
+  <p>Are you sure you want to delete the team <strong>{{ team.name }}</strong>?</p>
+
+  <button class="btn danger pad-1" hx-post="{% url 'team_form' %}" hx-target="#pageContent" hx-swap="outerHTML">
+    Delete
+  </button>
+</form>

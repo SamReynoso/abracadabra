@@ -1,0 +1,63 @@
+<div class="relative">
+
+  <ul class="collapse-navigation-list" id="collapseTeam{{ team.safe_slug }}" data-collapse-id="collapseTeam{{ team.safe_slug }}" >
+
+    <li>
+      <button 
+        class="btn-dropdown"
+        hx-get="{% url 'division_form' %}?team_slug={{ team.safe_slug }}"
+        hx-target="#contentTeam{{ team.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Divisions
+      </button>
+    </li>
+
+    <li>
+      <button 
+        class="btn-dropdown"
+        hx-get="{% url 'team_form' %}?team_slug={{ team.safe_slug }}"
+        hx-target="#contentTeam{{ team.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Edit
+      </button>
+    </li>
+
+    <li>
+      <button 
+        class="btn-dropdown delete-btn"
+        hx-get="{% url 'team_delete' %}?team_slug={{ team.safe_slug }}"
+        hx-target="#contentTeam{{ team.safe_slug }}"
+        hx-swap="innerHTML" 
+        >
+        Delete
+      </button>
+    </li>
+
+  </ul>
+
+  <details class="app-card" id="detailsTeam{{ team.safe_slug }}" data-card-id="detailsTeam{{ team.safe_slug }}">
+
+    <summary class="app-card__summary">
+
+      <h3>-{{ team.name }}</h3>
+      <button
+        class="ellipsis-icon"
+        src="/assets/menu.svg"
+        onclick="openAppDropdown(event)"
+        alt="Menu icon for event details"
+        data-toggle="collapseTeam{{ team.safe_slug }}"
+        ></button>
+
+    </summary>
+
+    <div id="contentTeam{{ team.safe_slug }}">
+
+      {% include 'discover/fragments/division_form.html' with team=team %}
+
+    </div>
+
+  </details>
+
+</div>

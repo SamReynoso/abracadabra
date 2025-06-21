@@ -38,6 +38,10 @@ button.btn {
   transition: background-color 0.3s ease;
 }
 
+button.btn.danger {
+  background-color: rgb(225, 85, 85);
+}
+
 button.btn-link {
   background-color: transparent;
   color: var(--link-color);
@@ -73,8 +77,8 @@ button.close-btn {
   background-image: url('/assets/icons/cross.svg');
   background-repeat: no-repeat;
   background-size: cover;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   cursor: pointer;
 }
 
@@ -232,5 +236,17 @@ select {
   border-radius: var(--border-radius);
   background-color: white;
   color: black;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+td, th {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  text-align: left;
 }
 

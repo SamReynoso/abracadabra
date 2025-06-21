@@ -5,42 +5,12 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models, transaction
 
-class Role(models.TextChoices):
-    DIRECTOR = 'director', 'Director'
-    ADMIN = 'admin', 'Admin'
-    STAFF = 'staff', 'Staff'
-    COACH = 'coach', 'Coach'
-    PARTICIPANT = 'participant', 'Participant'
-    PARENT = 'parent', 'Parent'
 
-
-class EventType(models.TextChoices):
-    PICKUP = 'pickup', 'Pickup'
-    TOURNAMENT = 'tournament', 'Tournament'
-    LEAGUE = 'league', 'League'
-    CAMP = 'camp', 'Camp'
-
-
-class EventStatus(models.TextChoices):
-    CREATED = 'created', 'Created'
-    UPCOMING = 'upcoming', 'Upcoming'
-    ONGOING = 'ongoing', 'Ongoing'
-    COMPLETED = 'completed', 'Completed'
-    CANCELLED = 'cancelled', 'Cancelled'
-
-
-class RegistrationStatus(models.TextChoices):
-    DRAFT = 'draft', 'Draft'
-    PENDING = 'pending', 'Pending'
-    CANCELLED = 'cancelled', 'Cancelled'
-    REGISTERED = 'registered', 'Registered'
-    COMPLETED = 'completed', 'Completed'
+class Sports(models.TextChoices):
+    BASKETBALL = 'basketball', 'Basketball'
 
 
 class ABSClass(models.Model):
-    """
-    Abstract base class for models that require a primary field.
-    """
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -53,9 +23,6 @@ class ABSClass(models.Model):
 
     @classmethod
     def from_slug(cls,  slug: str):
-        """
-        Create an instance from a slug.
-        """
         pk = str(slug)
         try:
             return cls.objects.get(pk=pk)
@@ -68,9 +35,31 @@ class ABSClass(models.Model):
         abstract = True
 
 
+class Images(ABSClass):
+    user = models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            related_name='images',
+            on_delete=models.CASCADE,
+            blank=True,
+            null=True
+            )
+    image = models.ImageField(
+            upload_to='user_images/',
+            )
+    caption = models.CharField(max_length=255, blank=True)
+    is_profile_picture = models.BooleanField(default=False)
+
+
+    @property
+    def display_name(self):
+        return "foobar"
+
+
 class User(AbstractUser):
-    profile_picture = models.ImageField(
-            upload_to='profile_pictures/',
+    profile_picture = models.ForeignKey(
+            Images,
+            related_name='profile_pictures',
+            on_delete=models.SET_NULL,
             blank=True,
             null=True
             )
@@ -99,286 +88,6 @@ class User(AbstractUser):
             return f"{self.first_name} {self.last_name}"
         return self.username
 
-
-class Images(ABSClass):
-    user = models.ForeignKey(
-            settings.AUTH_USER_MODEL,
-            related_name='images',
-            on_delete=models.CASCADE,
-            blank=True,
-            null=True
-            )
-    image = models.ImageField(
-            upload_to='user_images/',
-            )
-    caption = models.CharField(max_length=255, blank=True)
-    is_profile_picture = models.BooleanField(default=False)
-
-
-    @property
-    def display_name(self):
-        return "foobar"
-
-
-class Organization(ABSClass):
-    name = models.CharField(max_length=255, unique=True)
-    description = models.TextField(blank=True, null=True)
-    short_description = models.CharField(max_length=255, blank=True, null=True)
-    website = models.URLField(blank=True, null=True)
-    logo = models.ForeignKey(
-            Images,
-            related_name='organizations',
-            on_delete=models.SET_NULL,
-            blank=True,
-            null=True
-            )
-    banner = models.ForeignKey(
-            Images,
-            related_name='organization_banners',
-            on_delete=models.SET_NULL,
-            blank=True,
-            null=True
-            )
-
-    @property
-    def logo_url(self):
-        """
-        Return the URL of the organization's logo image.
-        """
-        if self.logo:
-            return self.logo.image.url
-        return "/assets/defaults/globe.svg"
-
-
-    class Meta: # type: ignore
-        verbose_name_plural = 'Organizations'
-        ordering = ['name']
-
-    def __str__(self):
-        return str(self.name)
-
-
-
-class Membership(ABSClass):
-    role = models.CharField(max_length=20, choices=Role.choices)
-    primary = models.BooleanField(default=False)
-    user = models.ForeignKey(
-            settings.AUTH_USER_MODEL,
-            related_name='memberships',
-            on_delete=models.CASCADE
-            )
-    organization = models.ForeignKey(
-            Organization,
-            related_name='memberships',
-            on_delete=models.CASCADE
-            )
-
-    def set_primary(self):
-        """
-        Atomically set this membership as primary and unset others.
-        """
-        with transaction.atomic():
-            Membership.objects.filter(
-                user=self.user,
-                role=self.role
-            ).exclude(pk=self.pk).update(primary=False)
-
-            self.primary = True
-            self.save()
-
-    class Meta: # type: ignore
-        unique_together = ('user', 'organization')
-
-    def __str__(self):
-        return f"{self.user.username} - {self.organization.name} ({self.role})"
-
-
-class Address(ABSClass):
-    name = models.CharField(max_length=255)
-    street = models.CharField(max_length=255, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
-    state = models.CharField(max_length=100, blank=True, null=True)
-    postal_code = models.CharField(max_length=20, blank=True, null=True)
-    country = models.CharField(max_length=100, blank=True, null=True)
-    user = models.ForeignKey(
-            settings.AUTH_USER_MODEL,
-            related_name='addresses',
-            on_delete=models.CASCADE,
-            blank=True,
-            )
-    def __str__(self):
-        return f"{self.street}, {self.city}, {self.state}, {self.country}"
-
-
-
-class Event(ABSClass):
-    name = models.CharField(max_length=255)
-    event_type = models.CharField(
-            max_length=20,
-            choices=EventType.choices,
-            default=EventType.PICKUP
-            )
-    start_date = models.DateTimeField(null=True, blank=True)
-    end_date = models.DateTimeField(null=True, blank=True)
-    short_description = models.CharField(max_length=80, blank=True)
-    description = models.TextField(max_length=255, blank=True)
-
-    poster = models.ForeignKey(
-            Images,
-            related_name='event_posters',
-            on_delete=models.SET_NULL,
-            blank=True,
-            null=True
-            )
-
-    @property
-    def poster_url(self):
-        """
-        Return the URL of the event poster image.
-        """
-        if self.poster:
-            return self.poster.image.url
-        return "/assets/defaults/event.webp"
-
-    price = models.IntegerField(
-            verbose_name='Price (in cents)',
-            default=0
-            )
-    status = models.CharField(
-            max_length=20,
-            choices=EventStatus.choices,
-            default=EventStatus.CREATED
-            )
-    organization = models.ForeignKey(
-            Organization,
-            related_name='events',
-            on_delete=models.CASCADE
-            )
-
-
-    @property
-    def director(self):
-        membership = self.organization.memberships.filter(
-            role=Role.DIRECTOR,
-        ).first()
-        if membership:
-            return membership.user
-        return None
-
-    @property
-    def currency(self) -> float:
-        return np.round(self.price / 100, 2)
-
-    @property
-    def display_location(self):
-        locations = self.locations.all()
-        if locations.exists():
-            first  = locations.first()
-            return f"{first.address.city}, {first.address.state}, {first.address.country}"
-        return None
-
-    @property
-    def formatted_price(self) -> str:
-        return f"${self.currency:.2f}"
-
-    def set_price(self, price: float | int | str) -> None:
-        if isinstance(price, str):
-            if price.startswith('$'):
-                price = price[1:]
-            if price.count('.') == 1:
-                self.price = int(price.replace('.', ''))
-            else:
-                self.price = int(price) * 100
-
-        elif isinstance(price, int):
-            self.price = price * 100
-
-        elif isinstance(price, float):
-            value = price * 100
-            if value != int(value):
-                raise ValueError("Price must be a whole number of cents.")
-            self.price = int(value)
-
-
-    def __str__(self):
-        return str(self.name)
-
-
-class Location(ABSClass):
-    address = models.ForeignKey(
-            Address,
-            related_name='locations',
-            on_delete=models.CASCADE,
-            blank=True,
-            null=True
-            )
-    event = models.ForeignKey(
-            Event,
-            related_name='locations',
-            on_delete=models.CASCADE,
-            blank=True,
-            null=True
-            )
-    def __str__(self):
-        return f"{self.event.name} - {self.address.name}"
-
-
-class DivisionGender(models.TextChoices):
-    MALE = 'male', 'Male'
-    FEMALE = 'female', 'Female'
-
-class DivisionLevel(models.TextChoices):
-    BEGINNER = 'beginner', 'Beginner'
-    INTERMEDIATE = 'intermediate', 'Intermediate'
-    ADVANCED = 'advanced', 'Advanced'
-    ELITE = 'elite', 'Elite'
-    BRONZE = 'bronze', 'Bronze'
-    SILVER = 'silver', 'Silver'
-    GOLD = 'gold', 'Gold'
-    PLATINUM = 'platinum', 'Platinum'
-    JV = 'jv', 'Junior Varsity'
-    VARSITY = 'varsity', 'Varsity'
-    CLUB = 'club', 'Club'
-
-
-class DivisionInfo(ABSClass):
-    name = models.CharField(max_length=255)
-    short_name = models.CharField(max_length=50, blank=True, null=True)
-    gender  = models.CharField(
-            max_length=20,
-            choices=DivisionGender.choices,
-            )
-    level = models.CharField(
-            max_length=20,
-            choices=DivisionLevel.choices,
-            )
-    age = models.IntegerField(
-            verbose_name='Age (in years)',
-            default=0,
-            help_text='Age of participants in this division'
-            )
-    organization = models.ForeignKey(
-            Organization,
-            related_name='divisions',
-            on_delete=models.CASCADE
-            )
-
-    def __str__(self):
-        return str(self.name)
-
-class EventDivision(ABSClass):
-    event = models.ForeignKey(
-            Event,
-            related_name='divisions',
-            on_delete=models.CASCADE
-            )
-    info = models.ForeignKey(
-            DivisionInfo,
-            related_name='event_divisions',
-            on_delete=models.CASCADE,
-            blank=True,
-            null=True
-            )
 
 class Guest(ABSClass):
     first_name = models.CharField(max_length=255)
@@ -452,9 +161,96 @@ class Owner(ABSClass):
         super().save(*args, **kwargs)
 
 
+class Organization(ABSClass):
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True, null=True)
+    short_description = models.CharField(max_length=255, blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
+    logo = models.ForeignKey(
+            Images,
+            related_name='organizations',
+            on_delete=models.SET_NULL,
+            blank=True,
+            null=True
+            )
+    banner = models.ForeignKey(
+            Images,
+            related_name='organization_banners',
+            on_delete=models.SET_NULL,
+            blank=True,
+            null=True
+            )
+    director = models.ForeignKey(
+            Owner,
+            related_name='organizations',
+            on_delete=models.CASCADE,
+            )
+    default_sport = models.CharField(
+            max_length=20,
+            choices=Sports.choices,
+            default=Sports.BASKETBALL
+            )
+
+    @property
+    def logo_url(self):
+        if self.logo:
+            return self.logo.image.url
+        return "/assets/defaults/globe.svg"
+
+
+    class Meta: # type: ignore
+        verbose_name_plural = 'Organizations'
+        ordering = ['name']
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Membership(ABSClass):
+    class Role(models.TextChoices):
+        DIRECTOR = 'director', 'Director'
+        ADMIN = 'admin', 'Admin'
+        STAFF = 'staff', 'Staff'
+        COACH = 'coach', 'Coach'
+        PARTICIPANT = 'participant', 'Participant'
+        PARENT = 'parent', 'Parent'
+
+
+    role = models.CharField(max_length=20, choices=Role.choices)
+    selected = models.BooleanField(default=False)
+    user = models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            related_name='memberships',
+            on_delete=models.CASCADE
+            )
+    organization = models.ForeignKey(
+            Organization,
+            related_name='memberships',
+            on_delete=models.CASCADE
+            )
+
+    def select(self):
+        with transaction.atomic():
+            Membership.objects.filter(
+                user=self.user,
+                role=self.role
+            ).exclude(pk=self.pk).update(selected=False)
+
+            self.selected = True
+            self.save()
+
+    class Meta: # type: ignore
+        unique_together = ('user', 'organization')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.organization.name} ({self.role})"
+
+
+
 class Team(ABSClass):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=50, blank=True, null=True)
+    selected = models.BooleanField(default=False)
     logo = models.ForeignKey(
             Images,
             related_name='team_logos',
@@ -471,6 +267,17 @@ class Team(ABSClass):
             )
 
     @property
+    def select(self):
+        with transaction.atomic():
+            Team.objects.filter(
+                owner=self.owner,
+                selected=True
+            ).exclude(pk=self.pk).update(selected=False)
+
+            self.selected = True
+            self.save()
+
+    @property
     def team_logo_url(self):
         if self.logo:
             return self.logo.image.url
@@ -480,19 +287,171 @@ class Team(ABSClass):
         return str(self.name)
 
 
-class TeamDivision(ABSClass):
-    gender  = models.CharField(
+class Event(ABSClass):
+    class Status(models.TextChoices):
+        CREATED = 'created', 'Created'
+        UPCOMING = 'upcoming', 'Upcoming'
+        ONGOING = 'ongoing', 'Ongoing'
+        COMPLETED = 'completed', 'Completed'
+        CANCELLED = 'cancelled', 'Cancelled'
+
+    class Type(models.TextChoices):
+        PICKUP = 'pickup', 'Pickup'
+        TOURNAMENT = 'tournament', 'Tournament'
+        LEAGUE = 'league', 'League'
+        CAMP = 'camp', 'Camp'
+
+
+
+    name = models.CharField(max_length=255)
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    short_description = models.CharField(max_length=80, blank=True)
+    description = models.TextField(max_length=255, blank=True)
+    event_type = models.CharField(
             max_length=20,
-            choices=DivisionGender.choices,
+            choices=Type.choices,
+            default=Type.PICKUP
             )
-    level = models.CharField(
+    poster = models.ForeignKey(
+            Images,
+            related_name='event_posters',
+            on_delete=models.SET_NULL,
+            blank=True,
+            null=True
+            )
+    price = models.IntegerField(
+            verbose_name='Price (in cents)',
+            default=0
+            )
+    status = models.CharField(
             max_length=20,
-            choices=DivisionLevel.choices,
+            choices=Status.choices,
+            default=Status.CREATED
             )
-    age = models.IntegerField(
-            verbose_name='Age (in years)',
-            default=0,
-            help_text='Age of participants in this division'
+    organization = models.ForeignKey(
+            Organization,
+            related_name='events',
+            on_delete=models.CASCADE
+            )
+    sport = models.CharField(
+            max_length=20,
+            choices=Sports.choices,
+            )
+
+    @property
+    def poster_url(self):
+        if self.poster:
+            return self.poster.image.url
+        return "/assets/defaults/event.webp"
+
+    def save(self, *args, **kwargs):
+        if not self.sport:
+            self.sport = self.organization.default_sport
+        super().save(*args, **kwargs)
+
+
+class Address(ABSClass):
+    name = models.CharField(max_length=255)
+    street = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    state = models.CharField(max_length=100, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
+    user = models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            related_name='addresses',
+            on_delete=models.CASCADE,
+            blank=True,
+            )
+
+    def __str__(self):
+        return f"{self.street}, {self.city}, {self.state}, {self.country}"
+
+
+class Venue(ABSClass):
+    name = models.CharField(max_length=255)
+    address = models.ForeignKey(
+            Address,
+            related_name='locations',
+            on_delete=models.CASCADE,
+            blank=True,
+            null=True
+            )
+    event = models.ForeignKey(
+            Event,
+            related_name='locations',
+            on_delete=models.CASCADE,
+            blank=True,
+            null=True
+            )
+    def __str__(self):
+        return f"{self.event.name} - {self.address.name}"
+
+
+
+class DivisionInfo(ABSClass):
+    class Gender(models.TextChoices):
+        MALE = 'male', 'Male'
+        FEMALE = 'female', 'Female'
+
+
+    class Level(models.TextChoices):
+        BEGINNER = 'beginner', 'Beginner'
+        INTERMEDIATE = 'intermediate', 'Intermediate'
+        ADVANCED = 'advanced', 'Advanced'
+        ELITE = 'elite', 'Elite'
+        BRONZE = 'bronze', 'Bronze'
+        SILVER = 'silver', 'Silver'
+        GOLD = 'gold', 'Gold'
+        PLATINUM = 'platinum', 'Platinum'
+        JV = 'jv', 'Junior Varsity'
+        VARSITY = 'varsity', 'Varsity'
+        CLUB = 'club', 'Club'
+
+
+    gender  = models.CharField(max_length=20, choices=Gender.choices)
+    level = models.CharField(max_length=20, choices=Level.choices)
+    age = models.IntegerField(verbose_name='Age (in years)')
+
+    @property
+    def name(self):
+        return f"{ self.gender } (O/U) { self.age } [{ self.level }]"
+
+
+class DivisionOrg(ABSClass):
+    info = models.ForeignKey(
+            DivisionInfo,
+            related_name='division_orgs',
+            on_delete=models.CASCADE,
+            )
+    organization = models.ForeignKey(
+            Organization,
+            related_name='divisions',
+            on_delete=models.CASCADE
+            )
+
+
+class DivisionEvent(ABSClass):
+    info = models.ForeignKey(
+            DivisionInfo,
+            related_name='division_events',
+            on_delete=models.CASCADE,
+            blank=True,
+            null=True
+            )
+    event = models.ForeignKey(
+            Event,
+            related_name='divisions',
+            on_delete=models.CASCADE
+            )
+
+
+class DivisionTeam(ABSClass):
+    info = models.ForeignKey(
+            DivisionInfo,
+            related_name='division_team',
+            on_delete=models.CASCADE,
             )
     team = models.ForeignKey(
             Team,
@@ -501,16 +460,23 @@ class TeamDivision(ABSClass):
             )
 
 
-
 class Registration(ABSClass):
+    class Status(models.TextChoices):
+        DRAFT = 'draft', 'Draft'
+        PENDING = 'pending', 'Pending'
+        CANCELLED = 'cancelled', 'Cancelled'
+        REGISTERED = 'registered', 'Registered'
+        COMPLETED = 'completed', 'Completed'
+
+
     registration_date = models.DateTimeField(auto_now_add=True)
     notes = models.TextField(blank=True, null=True)
     payment_status = models.BooleanField(default=False)
     payment_date = models.DateTimeField(blank=True, null=True)
     status = models.CharField(
             max_length=20,
-            choices=RegistrationStatus.choices,
-            default=RegistrationStatus.DRAFT
+            choices=Status.choices,
+            default=Status.DRAFT
             )
     event = models.ForeignKey(
             Event, 
@@ -526,27 +492,27 @@ class Registration(ABSClass):
             )
 
 
-class RegistrationEntryStatus(models.TextChoices):
-    PENDING = 'pending', 'Pending'
-    CONFIRMED = 'confirmed', 'Confirmed'
-    CANCELLED = 'cancelled', 'Cancelled'
-    REJECTED = 'rejected', 'Rejected'
-    ASSIGNED = 'assigned', 'Assigned'
+class Entry(ABSClass):
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        CONFIRMED = 'confirmed', 'Confirmed'
+        CANCELLED = 'cancelled', 'Cancelled'
+        REJECTED = 'rejected', 'Rejected'
+        ASSIGNED = 'assigned', 'Assigned'
 
 
-class RegistrationEntry(ABSClass):
     registration = models.ForeignKey(
             Registration,
             related_name='entries',
             on_delete=models.CASCADE
             )
     reported_division = models.ForeignKey(
-            TeamDivision,
+            DivisionTeam,
             related_name='registration_entries',
             on_delete=models.CASCADE,
             )
     assigned_division = models.ForeignKey(
-            EventDivision,
+            DivisionEvent,
             related_name='registration_entries',
             on_delete=models.SET_NULL,
             blank=True,
@@ -554,11 +520,71 @@ class RegistrationEntry(ABSClass):
             )
     status = models.CharField(
             max_length=20,
-            choices=RegistrationEntryStatus.choices,
-            default=RegistrationEntryStatus.PENDING
+            choices=Status.choices,
+            default=Status.PENDING
             )
-    confirmed = models.BooleanField(default=False)
-    assigned = models.BooleanField(default=False)
 
 
+class Game(ABSClass):
+    class Status(models.TextChoices):
+        DRAFT = 'draft', 'Draft'
+        SCHEDULED = 'scheduled', 'Scheduled'
+        IN_PROGRESS = 'in_progress', 'In Progress'
+        COMPLETED = 'completed', 'Completed'
+        CANCELLED = 'cancelled', 'Cancelled'
 
+
+    status = models.CharField(
+            max_length=20,
+            choices=Status.choices,
+            default=Status.SCHEDULED,
+            )
+    team1_score = models.IntegerField(
+            default=0,
+            help_text='Score for Team 1'
+            )
+    team2_score = models.IntegerField(
+            default=0,
+            help_text='Score for Team 2'
+            )
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField(blank=True, null=True)
+    play_area = models.CharField(
+            max_length=255,
+            blank=True,
+            null=True,
+            help_text='Optional field to specify the play area for the game'
+            )
+    game_number = models.CharField(
+            max_length=20,
+            blank=True,
+            null=True,
+            help_text='Optional field to specify the game number'
+            )
+    venue = models.ForeignKey(
+            Venue,
+            related_name='games',
+            on_delete=models.CASCADE
+            )
+    event = models.ForeignKey(
+            Event,
+            related_name='games',
+            on_delete=models.CASCADE
+            )
+    division = models.ForeignKey(
+            DivisionEvent,
+            related_name='games',
+            on_delete=models.CASCADE
+            )
+    team1 = models.ForeignKey(
+            Team,
+            related_name='team1_games',
+            on_delete=models.CASCADE
+            )
+    team2 = models.ForeignKey(
+            Team,
+            related_name='team2_games',
+            on_delete=models.CASCADE
+            )
+    def __str__(self):
+        return f"{self.event.name} - {self.team1.name} vs {self.team2.name}"

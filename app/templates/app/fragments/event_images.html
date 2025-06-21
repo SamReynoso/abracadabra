@@ -9,16 +9,20 @@
   </div>
 
   {% for image in images %}
-  <div 
-    hx-get="{% url 'event_image_accept_fragment' event.safe_slug image.safe_slug %}"
-    hx-target="#content{{ event.safe_slug }}"
-    hx-swap="innerHTML"
-    >
+  <form>
+    <input type="hidden" name="event_slug" value="{{ event.safe_slug }}" />
+    <input type="hidden" name="image_slug" value="{{ image.safe_slug }}" />
+    <button
+      hx-get="{% url 'event_image_accept_fragment' %}"
+      hx-target="#content{{ event.safe_slug }}"
+      hx-swap="innerHTML"
+      >
 
-    <img
-      src="{{ image.image.url }}"
-      alt="{{ image.caption }}"
-      />
-  </div>
+      <img
+        src="{{ image.image.url }}"
+        alt="{{ image.caption }}"
+        />
+    </button>
+  </form>
   {% endfor %}
 </div>

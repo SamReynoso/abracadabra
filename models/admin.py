@@ -6,15 +6,15 @@ from .models import (
         Membership,
         Event,
         Address,
-        Location,
+        Venue,
         Registration,
-        RegistrationEntry,
+        Entry,
         Owner,
         Guest,
         Team,
-        TeamDivision,
         DivisionInfo,
-        EventDivision,
+        DivisionTeam,
+        DivisionEvent,
 )
 
 
@@ -23,52 +23,52 @@ class OrganizationAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_filter = ('created_at', 'updated_at')
 admin.site.register(Organization, OrganizationAdmin)
-
-class MembershipAdmin(admin.ModelAdmin):
-    list_display = ('user', 'organization', 'role', 'primary')
-    search_fields = ('user__username', 'organization__name', 'role')
-    list_filter = ('role', 'primary')
-admin.site.register(Membership, MembershipAdmin)
-
+# 
+# 
+# class MembershipAdmin(admin.ModelAdmin):
+#     list_display = ('user', 'organization', 'role', 'selected')
+#     search_fields = ('user__username', 'organization__name', 'role')
+#     list_filter = ('role', 'selected')
+# admin.site.register(Membership, MembershipAdmin)
+# 
+# 
 class EventAdmin(admin.ModelAdmin):
     list_display = ('name', 'organization', 'event_type', 'start_date', 'end_date', 'status')
     search_fields = ('name', 'organization__name', 'event_type')
     list_filter = ('status', 'event_type', 'start_date', 'end_date')
     date_hierarchy = 'start_date'
 admin.site.register(Event, EventAdmin)
-
-class AddressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name', 'street', 'city', 'state', 'postal_code')
-    search_fields = ('user__username', 'name', 'street', 'city', 'state', 'postal_code')
-    list_filter = ('created_at', 'updated_at')
-admin.site.register(Address, AddressAdmin)
-
-class LocationAdmin(admin.ModelAdmin):
-    list_display = ('event', 'address')
-    search_fields = ('event__name', 'address__name')
-    list_filter = ('created_at', 'updated_at')
-admin.site.register(Location, LocationAdmin)
-
-
+# 
+# 
+# class AddressAdmin(admin.ModelAdmin):
+#     list_display = ('user', 'name', 'street', 'city', 'state', 'postal_code')
+#     search_fields = ('user__username', 'name', 'street', 'city', 'state', 'postal_code')
+#     list_filter = ('created_at', 'updated_at')
+# admin.site.register(Address, AddressAdmin)
+# 
+# 
 class RegistrationAdmin(admin.ModelAdmin):
     list_display = ('owner', 'event', 'status', 'created_at')
     search_fields = ('event__name', 'status')
     list_filter = ('status', 'created_at')
     date_hierarchy = 'created_at'
 admin.site.register(Registration, RegistrationAdmin)
-
-
-class OwnerAdmin(admin.ModelAdmin):
-    list_display = ('guest', 'auth_user', 'contact', 'created_at')
-    search_fields = ('guest__uuid', 'user__username')
-    list_filter = ('created_at',)
-admin.site.register(Owner, OwnerAdmin)
-
-class GuestAdmin(admin.ModelAdmin):
-    list_display = ('uuid', 'first_name', 'last_name', 'email', 'phone', 'created_at')
-    search_fields = ('uuid', 'name', 'email', 'phone')
-    list_filter = ('created_at',)
-admin.site.register(Guest, GuestAdmin)
+# 
+# 
+# class OwnerAdmin(admin.ModelAdmin):
+#     list_display = ('guest', 'auth_user', 'contact', 'created_at')
+#     search_fields = ('guest__uuid', 'user__username')
+#     list_filter = ('created_at',)
+# admin.site.register(Owner, OwnerAdmin)
+# 
+# 
+# class GuestAdmin(admin.ModelAdmin):
+#     list_display = ('uuid', 'first_name', 'last_name', 'email', 'phone', 'created_at')
+#     search_fields = ('uuid', 'name', 'email', 'phone')
+#     list_filter = ('created_at',)
+# admin.site.register(Guest, GuestAdmin)
+# 
+# 
 
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'owner', 'created_at')
@@ -76,26 +76,23 @@ class TeamAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
 admin.site.register(Team, TeamAdmin)
 
-class TeamDivisionAdmin(admin.ModelAdmin):
-    list_display = ('team', 'gender', 'age', 'level', 'created_at')
-    search_fields = ('team__name', 'name')
-    list_filter = ('created_at',)
-admin.site.register(TeamDivision, TeamDivisionAdmin)
-
-class RegistrationEntryAdmin(admin.ModelAdmin):
-    list_display = ('registration', 'reported_division', 'assigned_division', 'status', 'created_at')
-    search_fields = ('registration__owner__guest__uuid', 'reported_division__team__name', 'assigned_division__team__name', 'status')
-    list_filter = ('created_at',)
-admin.site.register(RegistrationEntry, RegistrationEntryAdmin)
 
 
 class DivisionInfoAdmin(admin.ModelAdmin):
-    list_display = ('gender', 'age', 'level', 'organization', 'created_at')
+    list_display = ('gender', 'age', 'level', 'created_at')
     list_filter = ('created_at',)
 admin.site.register(DivisionInfo, DivisionInfoAdmin)
 
 
-class EventDivisionAdmin(admin.ModelAdmin):
-    list_display = ('event', 'info', 'created_at')
+class DivisionTeamAdmin(admin.ModelAdmin):
+    list_display = ('team', 'info', 'created_at')
     list_filter = ('created_at',)
-admin.site.register(EventDivision, EventDivisionAdmin)
+admin.site.register(DivisionTeam, DivisionTeamAdmin)
+
+
+class EntryAdmin(admin.ModelAdmin):
+    list_display = ('registration', 'reported_division', 'assigned_division', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+admin.site.register(Entry, EntryAdmin)
+
+ 

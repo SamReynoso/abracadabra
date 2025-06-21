@@ -1,0 +1,60 @@
+<div class="relative">
+
+  <ul class="collapse-navigation-list" id="collapse{{ registration.safe_slug }}" data-collapse-id="collapse{{ registration.safe_slug }}">
+
+    <li>
+      <button
+        class="btn-dropdown"
+        hx-get="{% url 'registration_form' %}?registration_slug={{ registration.safe_slug }}"
+        hx-target="#contentRegistration{{ registration.safe_slug }}"
+        hx-swap="innerHTML">
+        Submit
+      </button>
+    </li>
+
+    <li>
+      <button
+        class="btn-dropdown delete-btn"
+        hx-get="{% url 'registration_cancel' %}?registration_slug={{ registration.safe_slug }}"
+        hx-target="#contentRegistration{{ registration.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Cancel
+      </button>
+    </li>
+  </ul>
+
+  <!-- Event details card for event -->
+
+  <details class="app-card" id="details{{ registration.safe_slug }}" data-card-id="details{{ registration.safe_slug }}">
+    <summary class="app-card__summary">
+
+      <div class="row gap-1 center">
+        <h3 class="app-card__title">{{ registration.event.name }}</h3>
+        <p class="app-card__subtitle">{{ registration.status }}</p>
+      </div>
+
+      <button
+        class="ellipsis-icon"
+        src="/assets/menu.svg"
+        onclick="openAppDropdown(event)"
+        alt="Menu icon for event details"
+        data-toggle="collapse{{ registration.safe_slug }}"
+        >
+      </button>
+
+    </summary>
+
+    <div id="contentRegistration{{ registration.safe_slug }}">
+
+      {% if registration.status == "draft" %}
+        {% include 'discover/fragments/registration_form.html' with registration=registration %}
+      {% else %}
+        {% include 'discover/fragments/registration_details.html' with registration=registration %}
+      {% endif %}
+
+    </div>
+
+  </details>
+</div>
+

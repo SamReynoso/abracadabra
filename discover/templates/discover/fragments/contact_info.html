@@ -1,23 +1,13 @@
 <fieldset id="contactInfo" class="mb-1 pad-1">
-  <legend>Contact Information</legend>
+
+  <legend>Guest Information</legend>
   <dl class="grid mb-1">
-    <dt>First Name:</dt>
-    <dd>{{ guest.first_name }}</dd>
-    <dt>Last Name:</dt>
-    <dd>{{ guest.last_name }}</dd>
-    <dt>Email:</dt>
-    <dd>{{ guest.email }}</dd>
-    <dt>Phone:</dt>
-    <dd>{{ guest.phone }}</dd>
+    <dt>First Name:</dt><dd>{{ guest.first_name }}</dd>
+    <dt>Last Name:</dt><dd>{{ guest.last_name }}</dd>
+    <dt>Email:</dt><dd>{{ guest.email }}</dd>
+    <dt>Phone:</dt><dd>{{ guest.phone }}</dd>
   </dl>
 
-  <button 
-    class="btn"
-    hx-get="{% url 'contact_info_form' %}"
-    hx-target="#contactInfo"
-    hx-swap="outerHTML"
-    >
-    Edit
-  </button>
+  <button class="btn" hx-get="{% url 'contact_info_form' %}" hx-target="#contactInfo" hx-swap="outerHTML">Edit</button>
 
 </fieldset>

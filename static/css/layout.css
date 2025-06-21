@@ -22,7 +22,9 @@ section.card-section.result.wide {
 @media (max-width: 1200px) {
   .results-container {
     padding: 0;
+    margin-bottom: 1rem;
   }
+
   section.card-section.result {
     width: 100%;
     display: flex;

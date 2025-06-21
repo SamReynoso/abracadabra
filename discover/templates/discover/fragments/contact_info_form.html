@@ -1,44 +1,29 @@
 <form method="post" action="{% url 'contact_info' %}" id="contactInfoForm">
+
   {% csrf_token %}
   <input type="hidden" name="guest_uuid" value="{{ guest.uuid }}">
 
   <fieldset id="contact-info" class="mb-1 pad-1">
-    <legend>Contact Information</legend>
+    <legend>Guest Information</legend>
 
-    <button
-      class="close-btn mb-2"
-      hx-get="{% url 'contact_info' %}"
-      hx-target="#contactInfoForm"
-      hx-swap="outerHTML"
-      >
+    <button class="close-btn mb-1" hx-get="{% url 'contact_info' %}" hx-target="#contactInfoForm" hx-swap="outerHTML">
     </button>
 
       <dl class="grid mb-1">
         <dt><label for="first-name">First Name:</label></dt>
-        <dd>
-          <input type="text" id="first-name" name="first_name" value="{{ guest.first_name }}"><br>
-        </dd>
+        <dd><input type="text" id="first-name" name="first_name" value="{{ guest.first_name }}"><br></dd>
 
         <dt><label for="last-name">Last Name:</label></dt>
-        <dd>
-          <input type="text" id="last-name" name="last_name" value="{{ guest.last_name }}"><br>
-        </dd>
+        <dd><input type="text" id="last-name" name="last_name" value="{{ guest.last_name }}"><br></dd>
 
         <dt><label for="email">Email:</label></dt>
-        <dd>
-          <input type="email" id="email" name="email" value="{{ guest.email }}"><br>
-        </dd>
+        <dd><input type="email" id="email" name="email" value="{{ guest.email }}"><br></dd>
 
         <dt><label for="phone">Phone:</label></dt>
-        <dd>
-          <input type="tel" id="phone" name="phone" value="{{ guest.phone }}"><br>
-        </dd>
+        <dd><input type="tel" id="phone" name="phone" value="{{ guest.phone }}"><br></dd>
       </dl>
 
-    <button
-      class="btn"
-      hx-post="{% url 'contact_info_form' %}"
-      hx-target="#contactInfoForm"
-      >Save</button><br>
+    <button class="btn" hx-post="{% url 'contact_info_form' %}" hx-target="#contactInfoForm">Save</button><br>
   </fieldset>
+
 </form>

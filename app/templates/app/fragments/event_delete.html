@@ -1,7 +1,8 @@
 <h1>Delete Event</h1>
-<form method="POST" action="{% url 'event_delete_fragment' event.safe_slug %}">
+<form method="POST" action="{% url 'event_delete' %}">
 
   {% csrf_token %}
+  <input type="hidden" name="event_slug" value="{{ event.safe_slug }}">
 
   <div class="row gap-2">
     <div class="content">
@@ -33,9 +34,9 @@
         {% endif %}
     </dl>
   </div>
-  <input type="hidden" name="event_id" value="{{ event.id }}">
+
   <div>
     <button type="submit" class="btn btn-danger">Delete Event</button>
   </div>
-  </div>
+
 </form>

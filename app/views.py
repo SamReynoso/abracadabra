@@ -6,6 +6,8 @@ from models.models import (
         Address,
         )
 from .forms import NewOrganizationForm
+from models.helper import Helper
+from . import fragments
 
 
 
@@ -18,7 +20,41 @@ def on_deck(request):
 
 
 def images(request):
-    return render(request, "app/images.html")
+    context = { 'images': request.user.images.all().order_by('-created_at') }
+    return render(request, "app/images.html", context)
+
+
+def image_upload(request):
+    user = request.user
+    if request.method == "POST":
+        data = request.POST
+        files = request.FILES
+        Helper.Create.image(data, files, user)
+        return redirect('app_images')
+    raise ValueError("Invalid request method. Only POST is allowed.")
+
+
+def image_form(request):
+    user = request.user
+    if request.method == "POST":
+        data = request.POST
+        image = Helper.Update.image(data, user)
+        return redirect('app_images')
+    else:
+        data = request.GET 
+        image = Helper.Get.image(data, user)
+    return fragments.image_form(request, image)
+
+
+
+def image_delete(request):
+    user = request.user
+    if request.method == "POST":
+        data = request.POST
+        image = Helper.Get.image(data, user)
+        image.delete()
+        return redirect('app_images')
+    raise ValueError("Invalid request method. Only POST is allowed.")
 
 
 def address_book(request):
@@ -50,8 +86,9 @@ def teams(request):
 
 def orgs(request):
     directorships =  Membership.objects.filter(user=request.user, role=Membership.Role.DIRECTOR)
+
     if directorships.exists():
-        prime = directorships.filter(primary=True).first()
+        prime = directorships.filter(selected=True).first()
 
         context = {
                 'form': NewOrganizationForm(),
@@ -73,7 +110,10 @@ def orgs(request):
         form = NewOrganizationForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            organization = Organization.objects.create(name=data['name'])
+            organization = Organization.objects.create(
+                    name=data['name'],
+                    director=request.user,
+                    )
             organization.save()
             Membership.objects.create(
                 user=request.user,
@@ -102,7 +142,26 @@ def select_org(request):
     return redirect('app_orgs')
 
 
+def event_details_fragment(request):
+    event = Helper.Get.event(request.GET, request.user)
+    return fragments.event_details(request, event)
+
+
+def event_delete(request):
+    user = request.user
+    if request.method == "POST":
+        data = request.POST
+        event = Helper.Get.event(data, request.user)
+        event.delete()
+        return redirect('app_orgs')
+    data = request.GET
+    event = Helper.Get.event(data, user)
+    return fragments.event_delete_form(request, event)
+
+
 def event_manage(request, safe_slug: str):
     event = Event.from_slug(safe_slug)
     context = { "event": event, }
     return render(request, "app/event_manage.html", context)
+
+

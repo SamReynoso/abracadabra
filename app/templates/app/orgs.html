@@ -1,12 +1,13 @@
 {% extends 'app/base.html' %}
 
 {% block header %}
-  <h1>Organizations</h1>
+  <h1 class="mb-1">Organizations</h1>
   {% if organization %}
 
     <!-- Organization Details Card -->
     <section>
-      <div class="row gap-1">
+      <div class="row gap-1 mb-1">
+
         <div>
           {% if organization.logo %}
             <img class="org-thumbnail" src="{{ organization.logo.url }}" alt="{{ organization.name }} Logo">
@@ -15,69 +16,49 @@
           {% endif %}
         </div>
 
-        <div>
-          <dl class="grid">
-            <dt>Organization Name:</dt>
-            <dd>{{ organization.name }}</dd>
-            <dt>Short Description:</dt>
-            <dd>{{ organization.short_description }}</dd>
-          </dl>
-          <details>
-            <summary class="event-summary">More</summary>
-            <button class="btn">Edit</button>
-          </details>
-        </div>
-      </div>
-    </section>
-          <details>
-            <summary>Switch Organizations</summary>
-            <h2>Select an Organization</h2>
-            <ul>
-              {% for org in organizations %}
-              {% if org.id != organization.id %}
-              <form action="{% url 'set_organization' org.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn-link">{{ org.name }}</button>
-              </form>
-              {% else %}
-                <li class="current-org">----{{ org.name }}</li>
-              {% endif %}
-              {% endfor %}
-              {% if not organizations %}
-                <li>No other organizations found.</li>
-              {% endif %}
-            </ul>
+        <dl class="grid">
+          <dt>Organization Name:</dt><dd><a href="{% url 'organization_details' organization.safe_slug %}">{{ organization.name }}</a></dd>
+          <dt>Short Description:</dt><dd>{{ organization.short_description }}</dd>
+          <dt>Website:</dt>
 
-            <div>
-              <h3>Create New Organization</h3>
-              <form class="inline-input-form" method="POST" enctype="multipart/form-data">
+          <dd>
+            {% if organization.website %}
+              <a href="{{ organization.website }}" target="_blank" rel="noopener noreferrer">{{ organization.website }}</a>
+            {% else %}
+              Not provided
+            {% endif %}
+          </dd>
+          <dt>Director:</dt><dd><a href="#">{{ organization.director.display_name }}</a></dd>
+          <dt>Default Sport:</dt><dd>{{ organization.default_sport }}</dd>
+        </dl>
+
+      </div>
+
+
+    <a href="#">Edit Organization</a></br>
+    <a href="#">Create New Organization</a>
+
+    <details>
+      <summary>Switch Organizations</summary>
+      <ul>
+        {% for org in organizations %}
+          {% if org.id != organization.id %}
+
+            <li>
+              <form action="{% url 'set_organization' %}" method="POST">
                 {% csrf_token %}
-                <input
-                  class="search-input"
-                  name="name"
-                  type="text"
-                  placeholder="Start An Org to manage events"
-                  aria-label="Start An Org to manage events"
-                    >
-                <button>Create</button>
+                <input type="hidden" name="org_slug" value="{{ org.safe_slug }}">
+                <button type="submit" class="btn-link">{{ org.name }}</button>
+
               </form>
-                {% if form.errors %}
-                  <div class="form-errors">
-                    <p>Please correct the errors below:</p>
-                    <ul>
-                      {% for field in form %}
-                        {% for error in field.errors %}
-                          <li>{{ field.label }}: {{ error }}</li>
-                        {% endfor %}
-                      {% endfor %}
-                      {% for error in form.non_field_errors %}
-                        <li>{{ error }}</li>
-                      {% endfor %}
-                    </ul>
-                  </div>
-                {% endif %}
-            </div>
-          </details>
+            </li>
+
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </details>
+  </section>
+
   {% else %}
 
     <div class="row gap-1 pad-1">
@@ -101,19 +82,33 @@
 
 
 {% if organization %}
-<div style="display: inline-block; width: 100%;">
+
+<form method="POST" enctype="multipart/form-data" action="{% url 'event_form' %}">
+
+  {% csrf_token %}
+  <input type="hidden" name="organization_slug" value="{{ organization.safe_slug }}">
+
   <button 
     class="btn mb-1"
-    hx-get="{% url 'api_new_event' %}"
+    hx-="{% url 'event_form' %}"
     hx-target="#eventContainer"
     hx-swap="beforeend"
     data-frag-id="newEvent"
-    >Add Event</button>
-</div>
+    >
+    Add Event
+  </button>
+
+</form>
 
 <!-- New Event Form Template -->
 <div class="app-card-container mb-2" id="eventContainer">
-  <h2>Events</h2>
+  <!-- <div class="app-card-header"> -->
+    <h2>Events</h2>
+    <!--
+    <a href="#">pending</a>
+    <a href="#">all</a>
+  </div>
+    -->
   {% for event in events %}
     {% include 'app/fragments/event_card.html' with event=event %}
   {% endfor %}
@@ -123,7 +118,7 @@
 <div class="app-card-container">
   <h2>Members</h2>
   {% for member in members %}
-  <p>
+  <p class="pad-1">
     {% if member.role == 'director' %}
       <span class="badge badge-admin">Director</span>
     {% endif %}
@@ -170,7 +165,8 @@
     <button class="close-btn"></button>
   </form>
 
-  <form method="POST" action="{% url 'upload_image' %}" enctype="multipart/form-data" id="uploadForm" >
+  <form method="POST" action="{% url 'image_upload' %}" enctype="multipart/form-data" id="uploadForm" >
+
     {% csrf_token %}
     <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click();">
       <img id="preview" class="image-upload-preview" />
@@ -180,6 +176,7 @@
     <input style="display: none;" name="image" type="file" accept="image/*" id="fileInput" />
     <input class="form-control mb-2" name="caption" type="text" placeholder="Image caption" />
     <button class="btn btn-primary" type="submit" id="uploadButton" form="uploadForm" >Upload</button>
+
   </form>
 </dialog>
 

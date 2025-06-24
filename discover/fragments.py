@@ -43,16 +43,26 @@ def division_form(request, team):
     return render(request, 'discover/fragments/division_form.html', context)
 
 
-def handle_division_delete(request, team):
+def handle_team_update(request, team):
     context = {
             'team': team,
             'registrations': Registration.objects.filter(owner=team.owner)
                }
-    return render(request, 'discover/fragments/handle_division_delete.html', context)
+    return render(request, 'discover/fragments/handle_team_update.html', context)
+
+def handle_division_update(request, team):
+    context = {
+            'team': team,
+            'registrations': Registration.objects.filter(owner=team.owner)
+               }
+    return render(request, 'discover/fragments/handle_division_update.html', context)
 
 def registration_form(request, registration):
     context = { 'registration': registration }
-    return render(request, 'discover/fragments/registration_form.html', context)
+    if registration.status == Registration.Status.DRAFT:
+        print("Rendering registration form for draft registration")
+        return render(request, 'discover/fragments/registration_form.html', context)
+    return render(request, 'discover/fragments/registration_details.html', context)
 
 
 def registration_cancel(request, registration):

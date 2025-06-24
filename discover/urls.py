@@ -6,8 +6,8 @@ urlpatterns = [
     path('basketball/', views.basketball, name='basketball'),
     path('event/<event_slug>/', views.event_details, name='event_details'),
     path('event-registration/', views.event_registration, name='event_registration'),
-    path('org/<org_slug>/', views.org_details, name='org_details'),
-    path('persona/<user_slug>/', views.persona, name='discover_persona'),
+    path('organization/<org_slug>/', views.organization_details, name='organization_details'),
+    path('persona/<user_slug>/', views.user_persona, name='user_persona'),
 
     path('workspace/', views.workspace, name='workspace'),
     path('workspace-content/', views.workspace_content, name='workspace_content'),

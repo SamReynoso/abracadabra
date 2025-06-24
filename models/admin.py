@@ -2,6 +2,7 @@ from django.contrib import admin
 
 
 from .models import (
+        Images,
         Organization,
         Membership,
         Event,
@@ -16,6 +17,13 @@ from .models import (
         DivisionTeam,
         DivisionEvent,
 )
+
+
+class ImagesAdmin(admin.ModelAdmin):
+    list_display = ('user', 'image', 'created_at')
+    search_fields = ('user__username', 'image')
+    list_filter = ('created_at',)
+admin.site.register(Images, ImagesAdmin)
 
 
 class OrganizationAdmin(admin.ModelAdmin):

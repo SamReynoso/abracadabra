@@ -1,5 +1,5 @@
 <dl class="app-card__details fit">
-  <dt><strong>Lifecycle Status</strong></dt>
+  <dt><strong>Status</strong></dt>
   <dd>
     {{ event.status }}
   </dd>
@@ -10,53 +10,29 @@
 
     <img class="poster medium" src="{{ event.poster_url }}" alt="{{ event.name }} Poster">
     <dl class="app-card__details">
-      <dt>Name</dt>
-      <dd>{{ event.name }}</dd>
-      <dt>Type</dt>
-      <dd>{{ event.event_type }}</dd>
-      <dt>Start</dt>
-      <dd>{{ event.start_date }}</dd>
-      <dt>End</dt>
-      <dd>{{ event.end_date }}</dd>
-      <dt>Price</dt>
-      <dd>{{ event.formatted_price }}</dd>
-      <dt>Location</dt>
-      <dd
-        {% if event.locations.count == 1 %}
+      <dt>Name</dt><dd>{{ event.name }}</dd>
+      <dt>Type</dt><dd>{{ event.event_type }}</dd>
+      <dt>Start</dt><dd>{{ event.start_date }}</dd>
+      <dt>End</dt><dd>{{ event.end_date }}</dd>
+      <dt>Price</dt><dd>{{ event.price }}</dd>
 
-          <address>
-            <span>{{ event.locations.first.name }} - {{ event.locations.first.street}}, {{ event.locations.first.city }}, {{ event.locations.first.state }} {{ event.locations.first.zip }}</span>
-          </address>
-
-        {% else %}
-          <address>
-            {% for location in event.locations.all %}
-            <span>{{ location.name}} -  {{ location.address.street }} {{ location.address.street2 }} {{ location.address.city }}, {{ location.address.state }} {{ location.address.postal_code}}</span></br>
-            {% endfor %}
-          </address>
-          
-        {% endif %}
-      </dd>
-      <dt>Link</dt>
-      <dd>
-        <a href="https://example.com/event-link" target="_blank" rel="noopener noreferrer">Event Site</a>
-      <dd>
+      <dt>Venues</dt>
+      <dd>Placeholeder</dd>
+      <dt>Link</dt><dd><a href="https://example.com/event-link" target="_blank" rel="noopener noreferrer">Event Site</a><dd>
+        <dt></dt>
+        <dd>
+        <a class="btn-dropdown" href="{% url 'event_details' event.safe_slug %}">Page</a>
+        </dd>
     </dl>
   </div>
 
   <dl>
     <dt><strong>Short Description</strong></dt>
-    <dd class="pad-1">
-      <p>
-        {{ event.short_description }}
-      </p>
-    </dd>
+    <dd class="pad-1"><p>{{ event.short_description }}</p></dd>
+
     <dt><strong>Description</strong></dt>
-    <dd class="pad-1">
-      <p>
-        {{ event.description }}
-      </p>
-    </dd>
+    <dd class="pad-1"><p>{{ event.description }}</p></dd>
   </dl>
+
 </div>
 

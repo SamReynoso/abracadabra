@@ -1,0 +1,15 @@
+
+<div class="app-card-container" id="entries">
+  <h2>Divisions</h2>
+  {% for division in event.divisions.all %}
+      <div class="app-card">
+          <h3>{{ division.name }}</h3>
+          <p>{{ division.description }}</p>
+          <p>Start Date: {{ division.start_date }}</p>
+          <p>End Date: {{ division.end_date }}</p>
+          <button class="btn btn-primary" onclick="assignEntries('{{ division.id }}')">Assign Entries</button>
+      </div>
+  {% empty %}
+  <p>No divisions available for this event.</p>
+  {% endfor %}
+</div>

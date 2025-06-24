@@ -1,12 +1,12 @@
 <form
   class="app-form"
   method="post"
-  hx-post="{% url 'event_form_fragment' event.safe_slug %}"
-  hx-target="#newEventForm"
-  hx-swap="outerHTML"
+  hx-post="{% url 'event_form' %}"
   >
 
   {% csrf_token %}
+  <input type="hidden" name="event_slug" value="{{ event.safe_slug }}">
+
   <div class="form-fields">
     {{ form.as_p }}
   </div>
@@ -16,8 +16,8 @@
     <button
       type="submit"
       class="btn"
-      hx-post="{% url 'event_form_fragment' event.safe_slug %}"
-      hx-target="#content{{ event.safe_slug }}"
+      hx-post="{% url 'event_form' %}"
+      hx-target="#eventCard{{ event.safe_slug }}"
       hx-swap="innerHTML"
       >
       Submit
@@ -26,7 +26,7 @@
     <button
       type="button"
       class="btn btn-secondary"
-      hx-get="{% url 'event_details_fragment' event.safe_slug %}"
+      hx-get="{% url 'event_details_fragment' %}?event_slug={{ event.safe_slug }}"
       hx-target="#content{{ event.safe_slug }}"
       hx-swap="innerHTML"
       >

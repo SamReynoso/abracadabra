@@ -41,7 +41,7 @@ class Helper:
 
         @staticmethod
         def organization(data, user):
-            org_slug = data.get('org_slug', '')
+            org_slug = data.get('organization_slug', '')
             if not org_slug:
                 raise ValueError("Organization slug is required.")
             organization = Organization.from_slug(org_slug)
@@ -77,22 +77,22 @@ class Helper:
 
     class Create:
         @staticmethod
-        def image(data, user):
-            if 'image' not in data:
+        def image(data, files, user):
+            if 'image' not in files:
                 raise ValueError("Image file is required.")
-            return Images(
+            return Images.objects.create(
+                image=files['image'],
+                caption=data.get('caption', ''),
                 user=user,
-                image=data['image'],
             )
 
         @staticmethod
         def event(data, user):
             organization = Helper.Get.organization(data, user)
-            return Event(
-                name=data.get('name', ),
+            return Event.objects.create(
+                name=data.get('name', 'new event'),
                 organization=organization,
                 status=Event.Status.CREATED,
-                director=user,
             )
 
         @staticmethod
@@ -103,10 +103,11 @@ class Helper:
                     age=data.get('age', ''),
                     gender=data.get('gender', ''),
                     )
-            DivisionOrg.objects.get_or_create(
+            obj, _ = DivisionOrg.objects.get_or_create(
                 organization=org_obj,
                 info=info_obj,
             )
+            return obj
 
         @staticmethod
         def address(data, user):
@@ -124,7 +125,7 @@ class Helper:
             obj.name = data.get('name', '')
             obj.description = data.get('description', '')
             obj.save()
-            return event
+            return obj
 
         @staticmethod
         def image(data, user):

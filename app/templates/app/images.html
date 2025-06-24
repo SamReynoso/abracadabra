@@ -14,10 +14,10 @@
 
   {% for image in images %}
   <div 
-    hx-get="{% url 'image_details' image.id %}"
+    hx-get="{% url 'image_form' %}?image_slug={{ image.safe_slug }}"
     hx-target="#imageDetailsContent"
     hx-swap="innerHTML"
-    onclick="console.log('hello mo'); document.getElementById('imageDetails').showModal()"
+    onclick="document.getElementById('imageDetails').showModal()"
     >
       <img src="{{ image.image.url }}" alt="{{ image.caption }}" class="image-preview" />
   </div>
@@ -33,21 +33,27 @@
 </dialog>
 
 <dialog class="modal" id="uploadDialog">
+
   <form method="dialog">
     <button class="close-btn"></button>
   </form>
 
-  <form method="POST" action="{% url 'upload_image' %}" enctype="multipart/form-data" id="uploadForm" >
+  <form method="POST" action="{% url 'image_upload' %}" enctype="multipart/form-data" id="uploadForm" >
+
     {% csrf_token %}
+
     <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click();">
       <img id="preview" class="image-upload-preview" />
       <p class="image-drop-prompt" id="dropPrompt"> Click or drag a file here to upload </p>
     </div>
 
-    <input style="display: none;" name="image" type="file" accept="image/*" id="fileInput" />
-    <input class="form-control mb-2" name="caption" type="text" placeholder="Image caption" />
-    <button class="btn btn-primary" type="submit" id="uploadButton" form="uploadForm" >Upload</button>
+    <input name="image" type="file" accept="image/*" id="fileInput" />
+    <input class="mb-1" name="caption" type="text" placeholder="Image caption" />
+    <br>
+    <button class="btn" type="submit">Upload</button>
+
   </form>
+
 </dialog>
 
 {% endblock content %}
@@ -55,6 +61,7 @@
 
 {% block script %}
 <script>
+
   const dropZone = document.getElementById('dropZone');
   const fileInput = document.getElementById('fileInput');
   const preview = document.getElementById('preview');
@@ -63,8 +70,10 @@
   function handleFile(file) {
     if (!file || !file.type.startsWith('image/')) return;
 
+    console.log('File selected:', file);
     const reader = new FileReader();
     reader.onload = e => {
+      console.log('File read successfully:', e.target.result);
       preview.src = e.target.result;
       preview.style.display = 'block';
       dropPrompt.classList.add('hidden');
@@ -93,6 +102,8 @@
       handleFile(e.dataTransfer.files[0]);
     }
   });
+
 </script>
+
 {% endblock script %}
 

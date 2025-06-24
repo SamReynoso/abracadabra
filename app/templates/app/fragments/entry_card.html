@@ -1,9 +1,9 @@
-<div class="relative">
-  <ul class="collapse-navigation-list" id="collapse{{ event.safe_slug }}" data-collapse-id="collapse{{ event.safe_slug }}">
+<div class="relative" id="entryCard{{ entry.safe_slug }}">
+  <ul class="collapse-navigation-list" id="collapse{{ entry.safe_slug }}" data-collapse-id="collapse{{ entry.safe_slug }}">
     <li>
       <button
         class="btn-link"
-        hx-get="{% url 'assign_entry' entry.safe_slug %}"
+        hx-get="{% url 'entry_assign_form' %}?entry_slug={{ entry.safe_slug }}"
         hx-target="#modalContent"
         hx-swap="innerHTML"
         onclick="document.getElementById('assignModal').showModal();"
@@ -17,8 +17,8 @@
         {% csrf_token %}
         <button
           class="btn-link"
-          hx-post="{% url 'confirm_entry' entry.safe_slug %}"
-          hx-target="#pendingAndConfirmed"
+          hx-get="{% url 'entry_confirm_form' %}?entry_slug={{ entry.safe_slug }}"
+          hx-target="#content{{ entry.safe_slug }}"
           hx-swap="innerHTML"
           >
           Confirm
@@ -31,8 +31,8 @@
         {% csrf_token %}
         <button
           class="btn-link"
-          hx-post="{% url 'reject_entry' entry.safe_slug %}"
-          hx-target="#pendingAndConfirmed"
+          hx-get="{% url 'entry_reject_form' %}?entry_slug={{ entry.safe_slug }}"
+          hx-target="#content{{ entry.safe_slug }}"
           hx-swap="innerHTML"
           >
           Reject
@@ -44,28 +44,35 @@
   <details class="app-card">
 
     <summary class="app-card__summary">
-      {{ entry.reported_division.team.name }} - {{ entry.reported_division.gender }} (O/U){{ entry.reported_division.age }} [{{ entry.reported_division.level }}]
+
+      <div class="row gap-1 center"> 
+        <h3 class="app-card__title">{{ entry.name }}</h3>
+      </div>
       {% if entry.assigned %} 
         <span class="assigned">Assigned</span>
       {% else %}
         <span class="unassigned">Unassigned</span>
       {% endif %}
       <button
-        class="ellipsis-button"
-        src="/assets/menu.svg"
+        class="ellipsis-icon"
         onclick="openAppDropdown(event)"
-        alt="Menu icon for event details"
-        data-toggle="collapse{{ event.safe_slug }}"
+        alt="Menu icon for entry details"
+        data-toggle="collapse{{ entry.safe_slug }}"
         >
-        ...
       </button>
     </summary>
 
-    <ul class="pad-1">
-      <li><strong>Name:</strong> {{ registration.owner.info.first_name}} {{ registration.owner.info.last_name }}</li>
-      <li><strong>Email:</strong> {{ registration.owner.info.email }}</li>
-      <li><strong>Phone:</strong> {{ registration.owner.info.phone }}</li>
-    </ul>
+    <div id="content{{ entry.safe_slug }}" class="pad-1">
+
+      <h4>Contact Information</h4>
+
+      <ul class="pad-1">
+        <li><strong>Name:</strong> {{ registration.owner.info.first_name}} {{ registration.owner.info.last_name }}</li>
+        <li><strong>Email:</strong> {{ registration.owner.info.email }}</li>
+        <li><strong>Phone:</strong> {{ registration.owner.info.phone }}</li>
+      </ul>
+
+    </div>
 
   </details>
 </div>

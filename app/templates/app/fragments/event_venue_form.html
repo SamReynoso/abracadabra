@@ -1,13 +1,13 @@
 
 <div class="form-container">
-  <h1>Event Locations</h1>
-  {% for location in event.locations.all %}
+  <h1>Add Venue</h1>
+  {% for venue in event.venue.all %}
   <div class="row gap-1 center mb-2">
     <address class="pad-1">
-      <span>{{ location.name}}</span><br>
-      <span>{{ location.address.street }} {{ location.address.street2 }}</span><br>
-      <span>{{ location.address.city }}, {{ location.address.state }} {{ location.address.postal_code}}</span><br>
-      <span>{{ location.address.country }}</span><br>
+      <span>{{ venue.name}}</span><br>
+      <span>{{ venue.address.street }} {{ venue.address.street2 }}</span><br>
+      <span>{{ venue.address.city }}, {{ venue.address.state }} {{ venue.address.postal_code}}</span><br>
+      <span>{{ venue.address.country }}</span><br>
     </address>
 
     <button
@@ -22,7 +22,7 @@
   </div>
   {% endfor %}
 
-  <h3>Add a location from your address book.</h3>
+  <h3>Add a venue from your address book.</h3>
   <select class="mb-2" name="address" id="address-select">
   {% for address in addresses %}
     <option value="{{ address.id }}" >
@@ -35,13 +35,10 @@
 
 <div class="form-container">
 
-  <form 
-    class="app-form"
-    hx-post="{% url 'event_location_fragment' event.safe_slug %}"
-    hx-target="#teamAndDivisionSection"
-    hx-swap="outerHTML"
-    >
+  <form class="app-form" action="{% url 'event_venue_form' %}" method="POST" enctype="multipart/form-data">
+
     {% csrf_token %}
+    <input type="hidden" name="event_slug" value="{{ event.safe_slug }}" />
 
     <input type="hidden" name="lat" class="lat" placeholder="Latitude">
     <input type="hidden" name="lon" class="lon" placeholder="Longitude">
@@ -62,8 +59,6 @@
         <input class="postal_code" type="text" name="postal_code" placeholder="Postal Code" />
         <input class="country" type="text" name="country" placeholder="Country" value="United States" />
       </div>
-
-
 
       <button class="btn" type="submit">Add Address</button>
 

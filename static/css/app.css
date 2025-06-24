@@ -135,7 +135,6 @@ img.image-upload-preview {
 .app-card-container {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
   height: 100%;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);

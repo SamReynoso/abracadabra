@@ -1,0 +1,21 @@
+{% for registration in registrations %}
+
+  {% if registration.status == "draft" %}
+
+    <div id="contentRegistration{{ registration.safe_slug }}" hx-swap-oob="true">
+
+        <!-- If the registration is in draft status, show the registration form -->
+        {% include 'discover/fragments/registration_form.html' with registration=registration %}
+
+    </div>
+
+  {% endif %}
+
+{% endfor %}
+
+
+<div id="contentTeam{{ team.safe_slug }}">
+
+  {% include 'discover/fragments/division_form.html' with team=team %}
+
+</div>

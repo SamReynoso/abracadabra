@@ -1,10 +1,12 @@
-<section id="teams">
+<section id="teams" class="mb-1">
 
   <h2>Teams</h2>
 
   <form>
+
     {% csrf_token %}
-    <button class="btn mb-1" hx-post="{% url 'team_form' %}" hx-target="#teams" hx-swap="outerHTML">Create Team</button>
+    <button class="btn mb-1" hx-post="{% url 'team_form' %}" hx-target="#pageContent" hx-swap="innerHTML">Create Team</button>
+
   </form>
 
   {% for team in teams %}

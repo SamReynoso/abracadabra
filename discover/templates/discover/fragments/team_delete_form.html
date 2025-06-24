@@ -5,7 +5,7 @@
 
   <p>Are you sure you want to delete the team <strong>{{ team.name }}</strong>?</p>
 
-  <button class="btn danger pad-1" hx-post="{% url 'team_form' %}" hx-target="#pageContent" hx-swap="outerHTML">
+  <button class="btn danger pad-1" hx-post="{% url 'team_delete' %}" hx-target="#pageContent" hx-swap="outerHTML">
     Delete
   </button>
 </form>

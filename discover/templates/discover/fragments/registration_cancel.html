@@ -3,10 +3,30 @@
   {% csrf_token %}
   <input type="hidden" name="registration_slug" value="{{ registration.safe_slug }}">
 
-  <p>Are you sure you want to cancel your registration for <strong>{{ registration.event.name }}</strong>?</p>
+  {% if registration.status == 'cancelled' %}
 
-  <button class="btn danger pad-1" hx-post="{% url 'registration_cancel' %}" hx-target="#pageContent" hx-swap="outerHTML">
-    Delete
-  </button>
+    <p>Would you like to reappy for <strong>{{ registration.event.name }}</strong>?</p>
+
+    <button class="btn pad-1" hx-post="{% url 'registration_cancel' %}" hx-target="#pageContent" hx-swap="outerHTML">
+      Reapply
+    </button>
+
+  {% elif registration.status == 'draft' %}
+
+    <p>Are you sure you want to delete your registration for <strong>{{ registration.event.name }}</strong>?</p>
+
+    <button class="btn danger pad-1" hx-post="{% url 'registration_cancel' %}" hx-target="#pageContent" hx-swap="outerHTML">
+      Delete
+    </button>
+
+    {% else %}
+
+    <p>Are you sure you want to cancel your registration for <strong>{{ registration.event.name }}</strong>?</p>
+
+    <button class="btn danger pad-1" hx-post="{% url 'registration_cancel' %}" hx-target="#pageContent" hx-swap="outerHTML">
+      Cancel
+    </button>
+
+  {% endif %}
 
 </form>

@@ -1,68 +1,84 @@
-<div class="mb-1">
+<div class="pad-1">
 
-  {% for division in team.divisions.all %}
-    <form class="pad-1" id="divisionForm{{ division.safe_slug }}">
-      {% csrf_token %}
-      <input type="hidden" name="division_slug" value="{{ division.safe_slug }}">
+  <form id="divisionsForm{{ division.safe_slug }}">
 
-      <div class="row gap-1">
+    <fieldset id="division-info" class="mb-1">
 
-        <button
-          class="close-btn"
-          hx-post="{% url 'division_delete' %}"
-          hx-target="#registrations"
-          hx-swap="innerHTML"
-          >
-        </button>
+      <legend>Divisions</legend>
 
-        <span style="font-weight: bold; font-size: 1.2em; text-align: center;">
-         {{ division.info.gender }} (U/O) {{ division.info.age }} [{{ division.info.level }}]
-        </span>
+      {% if team.divisions.count == 0 %}
+        <p>No divisions available for this team.</p>
+      {% endif %}
 
-      </div>
+      {% for division in team.divisions.all %}
 
-    </form>
-  {% endfor %}
+        {% csrf_token %}
+        <input type="hidden" name="division_slug" value="{{ division.safe_slug }}">
+
+        <div class="row gap-1 mb-1">
+
+          <button 
+            class="close-btn small"
+            hx-post="{% url 'division_delete' %}"
+            hx-target="#contentTeam{{ team.safe_slug }}"
+            hx-swap="innerHTML"
+            >
+          </button>
+
+          <span style="font-weight: bold; font-size: 1.2em; text-align: center;">
+           {{ division.info.gender }} (U/O) {{ division.info.age }} [{{ division.info.level }}]
+          </span>
+
+        </div>
+      {% endfor %}
+    </fieldset>
+
+  </form>
+
+  <form class="ml-1 mb-1" id="divisionForm{{ team.safe_slug }}">
+
+    {% csrf_token %}
+    <input type="hidden" name="team_slug" value="{{ team.safe_slug }}">
+
+    <label>
+      <select name="gender"> 
+        <option value="none">gender</option> <option value="male">male</option> <option value="female">female</option>
+      </select>
+    </label>
+
+    <label>
+      <select name="age">
+        <option value="none">Age</option> <option value="open">Open</option>
+        <option value="1">U1</option> <option value="2">U2</option> <option value="3">U3</option> <option value="4">U4</option>
+        <option value="5">U5</option> <option value="6">U6</option> <option value="7">U7</option> <option value="8">U8</option>
+        <option value="9">U9</option> <option value="10">U10</option> <option value="11">U11</option> <option value="12">U12</option>
+        <option value="13">U13</option> <option value="14">U14</option> <option value="15">U15</option> <option value="16">U16</option>
+        <option value="17">U17</option> <option value="18">U18</option> <option value="25">U25</option>
+        <option value="30">O30</option> <option value="35">O35</option> <option value="45">O45</option> <option value="55">O55</option>
+        <option value="65">O65</option> 
+      </select>
+    </label>
+
+    <label>
+      <select name="level">
+        <option value="none">Level</option> <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option> <option value="advanced">Advanced</option>
+        <option value="elite">Elite</option> <option value="bronze">Bronze</option>
+        <option value="silver">Silver</option> <option value="gold">Gold</option>
+        <option value="platinum">Platinum</option> <option value="jv">JV</option>
+        <option value="varsity">Varsity</option> <option value="club">Club</option>
+      </select>
+    </label>
+
+    <button 
+      class="btn pad-1" 
+      hx-post="{% url 'division_form' %}"
+      hx-target="#contentTeam{{ team.safe_slug }}"
+      hx-swap="innerHTML"
+      >
+      Add Division
+    </button>
+
+  </form>
 
 </div>
-
-<form class="pad-1" id="divisionForm{{ team.safe_slug }}">
-
-  {% csrf_token %}
-  <input type="hidden" name="team_slug" value="{{ team.safe_slug }}">
-
-  <label>
-    <select name="gender"> 
-      <option value="none">gender</option> <option value="male">male</option> <option value="female">female</option>
-    </select>
-  </label>
-
-  <label>
-    <select name="age">
-      <option value="none">Age</option> <option value="open">Open</option>
-      <option value="1">U1</option> <option value="2">U2</option> <option value="3">U3</option> <option value="4">U4</option>
-      <option value="5">U5</option> <option value="6">U6</option> <option value="7">U7</option> <option value="8">U8</option>
-      <option value="9">U9</option> <option value="10">U10</option> <option value="11">U11</option> <option value="12">U12</option>
-      <option value="13">U13</option> <option value="14">U14</option> <option value="15">U15</option> <option value="16">U16</option>
-      <option value="17">U17</option> <option value="18">U18</option> <option value="25">U25</option>
-      <option value="30">O30</option> <option value="35">O35</option> <option value="45">O45</option> <option value="55">O55</option>
-      <option value="65">O65</option> 
-    </select>
-  </label>
-
-  <label>
-    <select name="level">
-      <option value="none">Level</option> <option value="beginner">Beginner</option>
-      <option value="intermediate">Intermediate</option> <option value="advanced">Advanced</option>
-      <option value="elite">Elite</option> <option value="bronze">Bronze</option>
-      <option value="silver">Silver</option> <option value="gold">Gold</option>
-      <option value="platinum">Platinum</option> <option value="jv">JV</option>
-      <option value="varsity">Varsity</option> <option value="club">Club</option>
-    </select>
-  </label>
-
-  <button class="btn pad-1" hx-post="{% url 'division_form' %}" hx-target="#contentTeam{{ team.safe_slug }}" hx-swap="innerHTML">
-    Add
-  </button>
-
-</form>

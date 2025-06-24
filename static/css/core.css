@@ -135,7 +135,6 @@ div.navbar__dropdown {
   background-color: var(--menu-background-color);
   flex-direction: column;
   position: fixed;
-  padding: 1rem 1.625rem;
   top: calc(var(--nav-height) - .625rem);
   right: 0;
   box-shadow: var(--box-shadow);
@@ -158,7 +157,7 @@ div.navbar__dropdown * {
 
 
 div.navbar__dropdown.show {
-  z-index: 9998;
+  z-index: 10001;
   opacity: 1;
   width: 18.625rem;
   height: 26.625rem;
@@ -168,17 +167,22 @@ div.navbar__dropdown.show * {
   font-size: 1rem;
 }
 
-div.navbar__dropdown a {
-  color: var(--text-color);
+div.navbar__dropdown a,
+div.navbar__dropdown button {
+  color: rgb(40, 40, 40); 
   text-decoration: none;
-  padding: 0.2rem 0.5rem;
+  padding: 1rem 2rem;
   width: 100%;
   display: block;
   transition: color 0.3s ease;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-div.navbar__dropdown a:hover {
-  text-decoration: underline;
+div.navbar__dropdown a:hover, 
+div.navbar__dropdown button:hover {
+  background-color:rgba(0, 0, 0, 0.35); 
+  color: rgb(220, 220, 220); 
 }
 
 div.navbar__dropdown__section {

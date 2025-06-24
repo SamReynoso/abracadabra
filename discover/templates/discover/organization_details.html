@@ -1,0 +1,66 @@
+{% extends 'discover/base.html' %}
+
+{% block title %}Org Profile{% endblock %}
+
+{% block header%}
+<div>
+  <h1>Organization Profile</h1>
+  <p>Learn more about this organization, its members, and upcoming events.</p>
+
+  <div class="row wrap gap-1">
+  </div>
+
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="card-section mb-2">
+  <img src="{{ organization.logo_url }}" alt="{{ organization.name }} Logo">
+  
+  <h2>{{ organization.name }}</h2>
+
+  <dl class="grid">
+    <dt>Director</dt>
+    <dd><a href="{% url 'user_persona' organization.director.safe_slug %}">{{ organization.director.username }}</a></dd>
+    <dt>Location</dt>
+    <dd>{{ organization.location }}</dd>
+    <dt>Sport</dt>
+    <dd>{{ organization.default_sport }}</dd>
+  </dl>
+
+</section>
+
+<section class="card-section">
+  
+  <h2>Events</h2>
+
+  {% for event in organization.events.all %}
+  <div class="card">
+
+    <h3><a href="{% url 'event_details' event.safe_slug %}">{{ event.name }}</a></h3>
+
+    <div class="row gap-1">
+
+      <img class="poster small" src="{{ event.poster_url }}" alt="Event Poster">
+
+      <div>
+
+        <p>{{ event.description|truncatewords:30 }}</p>
+
+        <dl class="grid">
+          <dt>Date</dt>
+          <dd>{{ event.start_date|date:"F j, Y" }}</dd>
+          <dt>Location</dt>
+          <dd>{{ event.location }}</dd>
+        </dl>
+
+      </div>
+
+    </div>
+
+  </div>
+  {% endfor %}
+
+</section>
+{% endblock %}
+

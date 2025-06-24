@@ -70,3 +70,8 @@
   width: fit-content;
   height: fit-content;
 }
+
+.reverse {
+  transform: rotate(180deg);
+}
+

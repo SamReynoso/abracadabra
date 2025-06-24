@@ -1,4 +1,4 @@
-<div class="relative">
+<div class="relative" id="registrationCard{{ registration.safe_slug }}"> 
 
   <ul class="collapse-navigation-list" id="collapse{{ registration.safe_slug }}" data-collapse-id="collapse{{ registration.safe_slug }}">
 
@@ -8,7 +8,7 @@
         hx-get="{% url 'registration_form' %}?registration_slug={{ registration.safe_slug }}"
         hx-target="#contentRegistration{{ registration.safe_slug }}"
         hx-swap="innerHTML">
-        Submit
+        Details
       </button>
     </li>
 
@@ -19,7 +19,13 @@
         hx-target="#contentRegistration{{ registration.safe_slug }}"
         hx-swap="innerHTML"
         >
-        Cancel
+        {% if registration.status == "draft" %}
+          Delete
+        {% elif registration.status == "cancelled" %}
+          Reapply
+        {% else %}
+          Cancel Registration
+        {% endif %}
       </button>
     </li>
   </ul>
@@ -36,7 +42,6 @@
 
       <button
         class="ellipsis-icon"
-        src="/assets/menu.svg"
         onclick="openAppDropdown(event)"
         alt="Menu icon for event details"
         data-toggle="collapse{{ registration.safe_slug }}"
@@ -48,13 +53,16 @@
     <div id="contentRegistration{{ registration.safe_slug }}">
 
       {% if registration.status == "draft" %}
+        <!-- If the registration is in draft status, show the registration form -->
         {% include 'discover/fragments/registration_form.html' with registration=registration %}
       {% else %}
+        <!-- If the registration is not in draft status, show the registration details -->
         {% include 'discover/fragments/registration_details.html' with registration=registration %}
       {% endif %}
 
     </div>
 
   </details>
+
 </div>
 

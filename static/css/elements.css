@@ -42,6 +42,10 @@ button.btn.danger {
   background-color: rgb(225, 85, 85);
 }
 
+button.btn.danger:hover {
+  background-color: rgb(200, 70, 70);
+}
+
 button.btn-link {
   background-color: transparent;
   color: var(--link-color);
@@ -177,8 +181,16 @@ dl.grid dt {
 .thumbnail {
   width: 3rem;
   aspect-ratio: 1;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: var(--border-radius);
+}
+
+.logo-thumbnail {
+  width: 3rem;
+  height: 3rem;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
 }
 
 .poster {
@@ -248,5 +260,10 @@ td, th {
   padding: 0.5rem;
   border: 1px solid var(--border-color);
   text-align: left;
+}
+
+.quote-author {
+  font-size: 0.9rem;
+  font-style: italic;
 }
 

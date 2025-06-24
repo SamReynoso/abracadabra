@@ -1,0 +1,119 @@
+{% extends 'discover/base.html' %}
+
+{% block title %}{{ event.name }}{% endblock %}
+
+
+{% block header%}
+<div class="row wrap gap-1">
+
+  <div>
+
+    <h3 class="mb-1">Organization</h3>
+
+    <div class="row wrap gap-1 mb-1">
+      <img class="logo-thumbnail" src="{{ event.organization.logo_url }}" alt="{{ event.organization.name }} Logo">
+        <a href="{% url 'organization_details' event.organization.safe_slug %}">{{ event.organization.name }}</a>
+    </div>
+
+  </div>
+
+  <div>
+
+    <h3 class="mb-1">Director</h3>
+
+    <div class="row wrap gap-1 mb-1">
+
+      <img class="logo-thumbnail" src="{{ event.organization.director.profile_picture_url }}" alt="{{ event.organization.director.username }} Profile Picture">
+
+      <dl class="grid">
+        <dt>Profile</dt>
+        <dd>
+          <a href="{% url 'user_persona' event.organization.director.safe_slug %}">Persona</a>
+        </dd>
+        <dt>name</dt>
+        <dd>{{ event.organization.director.fist_name }} {{ event.director.last_name }}</dd>
+        {% if event.organization.director.username %}
+          <dt>Username</dt>
+          <dd>{{ event.organization.director.username }}</dd>
+        {% endif %}
+        {% if event.organization.director.email %}
+          <dt>Email</dt>
+          <dd>{{ event.organization.director.email }}</dd>
+        {% endif %}
+        {% if event.organization.director.bio %}
+          <dt>Bio</dt>
+          <dd>{{ event.organization.director.bio }}</dd>
+        {% endif %}
+      </dl>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+
+
+{% block content%}
+
+<section class="card-section mb-2">
+
+  <h1>{{ event.name }}</h1>
+
+  <div class="row wrap gap-2">
+
+    <img class="poster large" src="{{ event.poster_url }}" alt="Event Poster">
+
+    <div>
+
+      <h4>Event Details</h4>
+
+      <dl class="grid mb-1">
+        <dt>Start Date</dt>
+        <dd>{{ event.start_date|date:"F j, Y" }}</dd>
+        <dt>End Date</dt>
+        <dd>{{ event.end_date|date:"F j, Y" }}</dd>
+        <dt>Format</dt>
+        <dd>{{ event.event_type }}</dd>
+        <dt>Price</dt>
+        <dd>{{ event.price }} cents</dd>
+        <dt>Location</dt>
+        <dd>{{ event.get_location }}</dd>
+      </dl>
+
+      <h4>Description</h4>
+
+      <p>{{ event.description }}</p>
+      <h3>{{ event.start_date|date:"F j, Y" }}</h3>
+      <h3>{{ event.formatted_price }}</h3>
+
+      <form class="mb-1" method="POST" action="{% url 'event_registration' %}" enctype="multipart/form-data">
+
+        {% csrf_token %}
+        <input type="hidden" name="event_slug" value="{{ event.safe_slug }}">
+        <button type="submit" class="btn mb-1">Register</button>
+
+      </form>
+
+    </div>
+  </div>
+
+</section>
+
+<section class="card-section">
+
+    <h2>Divisions</h2>
+    {% if event.divisions.count == 0 %}
+      <p>No divisions available for yet.</p>
+    {% endif %}
+    {% for division in event.divisions.all %}
+      <h4>Division: {{ division.name }}</h4>
+      <p>{{ division.description }}</p>
+    {% endfor %}
+
+</section>
+
+{% endblock %}
+

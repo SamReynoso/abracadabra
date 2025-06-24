@@ -1,0 +1,31 @@
+<div id="content{{ entry.safe_slug }}" class="pad-1">
+  <h2>
+    {{ entry.name }} - Assign Division
+  </h2>
+
+
+  <form class="app-form mt-2" action="" method="POST" enctype="multipart/form-data" id="assignEntryForm">
+    {% csrf_token %}
+
+    <fieldset class="mb-2">
+
+      <legend>Available Division for {{ entry.reported_division.team.name }}</legend>
+      {% for division in divisions %}
+
+        <label class="mb-1">
+          <input type="radio" name="division" value="{{ division.id }}" >
+          </input>
+          <span> {{ division.gender }} (O/U){{ division.age }} [{{ division.level }}] </span>
+        </label><br>
+
+      {% empty %}
+
+        <p>You haven't created any divisions for this event yet.</p>
+
+      {% endfor %}
+    </fieldset>
+
+    <button class="btn" type="submit" form="assignEntryForm">Submit</button>
+
+  </form>
+</div>

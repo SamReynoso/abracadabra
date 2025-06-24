@@ -75,12 +75,12 @@ def contact_info(request):
     return fragments.guest_contact_info(request, owner.guest)
 
 
-def org_details(request, org_slug):
-    context = { "org": Organization.from_slug(org_slug) }
-    return render(request, 'discover/org_details.html', context)
+def organization_details(request, org_slug):
+    context = { "organization": Organization.from_slug(org_slug) }
+    return render(request, 'discover/organization_details.html', context)
 
 
-def persona(request, user_slug):
+def user_persona(request, user_slug):
    user = User.from_slug(user_slug)
    context = { 'persona': user }
-   return render(request, 'discover/persona_details.html', context)
+   return render(request, 'discover/user_persona.html', context)

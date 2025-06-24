@@ -1,4 +1,4 @@
-<div class="m-1">
+<div class="m-1" id="contentRegistrationForm{{ registration.safe_slug }}">
 
   <from class="pad-1" id="registrationForm{{ registration.safe_slug }}" enctype="multipart/form-data">
 
@@ -27,11 +27,11 @@
 
     <div class="pad-1">
 
-      <h3>Team Divisions</h3>
+      <h3>Team</h3>
 
       {% for team in registration.owner.teams.all %}
 
-        <h4>{{ team.name }}</h4>
+        <h4>{{ team.name }} Divisions</h4>
 
         {% for division in team.divisions.all %}
 
@@ -44,6 +44,10 @@
             >
           <label for="division{{ division.safe_slug }}">{{ division.info.name }}</label>
           <br>
+
+        {% empty %}
+
+          <p>No divisions available for this team.</p>
 
         {% endfor %}
 
@@ -66,7 +70,7 @@
     <button 
       class="btn pad-1"
       hx-post="{% url 'registration_submit' %}"
-      hx-target="#contentRegistration{{ registration.safe_slug }}"
+      hx-target="#contentRegistrationForm{{ registration.safe_slug }}"
       hx-swap="innerHTML"
       hx-include="#registrationForm{{ registration.safe_slug }}"
       >

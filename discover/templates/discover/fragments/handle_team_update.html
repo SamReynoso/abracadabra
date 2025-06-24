@@ -1,4 +1,17 @@
-<div class="relative" id="teamCard{{ team.safe_slug }}">
+<h2>Registration</h2>
+
+{% for registration in registrations %}
+
+  {% include 'discover/fragments/registration_card.html' with registration=registration %}
+  
+  {% empty %}
+
+    <!-- No registrations available. Start by registering for an event! -->
+
+{% endfor %}
+
+
+<div class="relative" id="teamCard{{ team.safe_slug }}" hx-swap-oob="true">
 
   <ul class="collapse-navigation-list" id="collapseTeam{{ team.safe_slug }}" data-collapse-id="collapseTeam{{ team.safe_slug }}" >
 
@@ -59,5 +72,6 @@
     </div>
 
   </details>
+
 
 </div>

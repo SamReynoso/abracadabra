@@ -1,0 +1,9 @@
+
+<div class="app-card-container" id="entries">
+    <h2>Entries</h2>
+    {% for registration in event.registrations.all %}
+      {% for entry in registration.entries.all %}
+        {% include 'app/fragments/entry_card.html' with entry=entry %}
+    {% endfor %}
+  {% endfor %}
+</div>

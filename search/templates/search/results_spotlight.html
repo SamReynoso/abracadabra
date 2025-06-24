@@ -11,9 +11,11 @@
       <h4 class="mb-1">{{ event.display_location }}</h4>
 
       <form class="mb-1" method="POST" action="{% url 'event_registration' %}" enctype="multipart/form-data">
+
         {% csrf_token %}
         <input type="hidden" name="event_slug" value="{{ event.safe_slug }}">
         <button type="submit" class="btn mb-1">Register</button>
+
       </form>
 
     </div>

@@ -54,7 +54,6 @@ class EventForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={
                 'placeholder': 'Event Name',
-                'oninput': "writeInputToSummary(event)",
                 }),
             'short_description': forms.TextInput(attrs={'placeholder': 'Short Description'}),
             'description': forms.Textarea(attrs={'placeholder': 'Event Description'}),

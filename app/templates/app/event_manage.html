@@ -2,8 +2,13 @@
 
 {% block header %}
   <!-- Organization Details Card -->
-  
+
   <div class="row gap-1 pad-1">
+
+    <button onclick="history.back()">
+      <img src="/assets/icons/right-arrow.svg" alt="Back" class="nav-icon reverse">
+    </button>
+  
     <img class="poster small" src="{{ event.poster_url }}" alt="{{ event.name }} Poster">
     <div>
       <h1>{{ event.name }}</h1>
@@ -21,22 +26,33 @@
 
 {% block content %}
 
-<section
-  id="pendingAndConfirmed"
-  hx-get="{% url 'pending_confirmed' event.safe_slug %}"
-  hx-target="#pendingAndConfirmed"
-  hx-swap="innerHTML"
-  hx-trigger="load"
-  >
+<section id="entriesContainer" class="mb-2">
+  {% include 'app/fragments/event_manage_entries.html' with event=event %}
+</section>
+
+<section id="divisionsContainer">
+  <button 
+    class="btn mb-1"
+    hx-get="{% url 'manage_division_form' %}?event_slug={{ event.safe_slug }}"
+    hx-target="#modalContent"
+    hx-swap="innerHTML"
+    hx-trigger="click"
+    onclick="document.getElementById('assignModal').showModal();" >
+    Add Divisions
+  </button>
+  {% include 'app/fragments/event_manage_divisions.html' with event=event %}
 </section>
 
 
 <dialog class="modal" id="assignModal">
+
     <form method="dialog">
-        <button class="btn">Close</button>
+      <button class="close-btn"></button>
     </form>
+
     <div class="modal-content" id="modalContent">
     </div>
+
 </dialog>
 
 {% endblock content%}

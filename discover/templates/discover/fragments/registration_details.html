@@ -1,46 +1,84 @@
-<div class="m-1">
+<div class="m-1" id="contentRegistrationDetails{{ registration.safe_slug }}">
 
   <h3>Event Entries</h3>
 
-  <div class="pad-1">
+    <form
+      hx-post=""
+      hx-target="#contentRegistrationDetails{{ registration.safe_slug }}"
+      hx-swap="innerHTML"
+      class="mb-1"
+      >
 
-    <table>
-
-      <thead>
-        <tr>
-          <th>Status</th>
-          <th>Team</th>
-          <th>Assigned</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-
-      <tbody>
+      {% csrf_token %}
+      <input type="hidden" name="registration_slug" value="{{ registration.safe_slug }}">
       {% for entry in registration.entries.all %}
-        <tr>
-          <td>{{ entry.status }}</td>
-
-          <td><strong>{{ entry.reported_division.info.name }}</strong></td>
-
-          {% if entry.assigned_division %}
-            <td>{{ entry.assigned_division.info.name }}</td>
-          {% else %}
-            <td>Not Assigned</td>
-          {% endif %}
-
-          <td>
-            <select>
-              <option value="cancel">Cancel</option>
-            </select>
-          </td>
-
-        </tr>
+        <input type="hidden" name="entry_ids" value="{{ entry.id }}">
       {% endfor %}
 
-      </tbody>
+      <table>
 
-    </table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Team</th>
+            <th>Assigned</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
 
-  </div>
+        <tbody>
+        {% for entry in registration.entries.all %}
+          <tr>
+            <td>{{ entry.status }}</td>
+
+            <td><strong>{{ entry.name }}</strong></td>
+
+            {% if entry.assigned_division %}
+              <td>{{ entry.assigned_division.info.name }}</td>
+            {% else %}
+              <td>Not Assigned</td>
+            {% endif %}
+
+            <td>
+              <select name="entry_action_{{ entry.id }}" class="form-control">
+                <option value="">----</option>
+                {% if entry.status == 'cancelled' %}
+                  <option value="register">Reapply</option>
+                  {% else %}
+                  <option value="cancel">Cancel</option>
+                {% endif %}
+              </select>
+            </td>
+
+          </tr>
+        {% endfor %}
+
+        </tbody>
+
+      </table>
+
+      <button
+        class="btn"
+        type="submit"
+        hx-post="{% url 'entry_update' %}"
+        hx-target="#contentRegistrationDetails{{ registration.safe_slug }}"
+        hx-swap="outerHTML"
+        >
+        Update Entries
+      </button>
+
+      <button
+        class="btn"
+        hx-get="{% url 'registration_form' %}?registration_slug={{ registration.safe_slug }}"
+        hx-target="#contentRegistrationDetails{{ registration.safe_slug }}"
+        hx-swap="outerHTML"
+        >
+        Add Entry
+      </button>
+
+
+
+    </form>
+
 
 </div>

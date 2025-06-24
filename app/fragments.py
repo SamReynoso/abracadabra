@@ -79,3 +79,6 @@ def entry_reject_form(request, entry):
 def manage_division_form(request, division):
     context = { "division": division }
     return render(request, "app/fragments/manage_division_form.html", context)
+
+
+

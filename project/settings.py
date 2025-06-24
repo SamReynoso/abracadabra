@@ -13,7 +13,17 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-ALLOWED_HOSTS = ['abracadabrasports.com']
+ALLOWED_HOSTS = [
+        "localhost",
+        "abracadabrasports.com",
+        "www.abracadabrasports.com"
+        ]
+
+CSRF_TRUSTED_ORIGINS = [
+        "https://www.abracadabrasports.com",
+        "https://abracadabrasports.com"
+        ]
+
 SECRET_KEY =  os.getenv("DJANGO_SECRET_KEY")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 SITE_ID = 3

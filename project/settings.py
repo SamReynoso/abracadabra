@@ -13,10 +13,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['abracadabrasports.com']
 SECRET_KEY =  os.getenv("DJANGO_SECRET_KEY")
-STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
-STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 SITE_ID = 3
 
@@ -25,7 +23,7 @@ ROOT_URLCONF = 'project.urls'
 STATIC_URL = 'static/'
 STATIC_ROOT = 'static/'
 MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR.parent / 'media'
 
 ACCOUNT_SIGNUP_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
@@ -62,8 +60,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-
-    'crispy_forms',
 
     'models',
     'core',

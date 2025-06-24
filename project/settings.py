@@ -26,7 +26,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 SECRET_KEY =  os.getenv("DJANGO_SECRET_KEY")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
-SITE_ID = 3
+SITE_ID = 4
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_URLCONF = 'project.urls'
@@ -101,7 +101,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / '../db.sqlite3',
+        'NAME': BASE_DIR.parent / 'db.sqlite3',
         }
     }
 

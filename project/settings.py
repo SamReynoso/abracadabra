@@ -15,6 +15,7 @@ USE_TZ = True
 
 ALLOWED_HOSTS = [
         "localhost",
+        "127.0.0.1",
         "abracadabrasports.com",
         "www.abracadabrasports.com"
         ]
@@ -24,9 +25,13 @@ CSRF_TRUSTED_ORIGINS = [
         "https://abracadabrasports.com"
         ]
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# SECURE_SSL_REDIRECT = True
+
+
 SECRET_KEY =  os.getenv("DJANGO_SECRET_KEY")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
-SITE_ID = 4
+SITE_ID = 5
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_URLCONF = 'project.urls'

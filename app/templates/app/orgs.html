@@ -90,7 +90,7 @@
 
   <button 
     class="btn mb-1"
-    hx-="{% url 'event_form' %}"
+    hx-post="{% url 'event_form' %}"
     hx-target="#eventContainer"
     hx-swap="beforeend"
     data-frag-id="newEvent"

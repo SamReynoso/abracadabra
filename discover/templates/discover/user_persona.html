@@ -1,14 +1,134 @@
 {% extends 'discover/base.html' %}
 
-{% block title %}Persona{% endblock %}
+{% block title %}{{ persona.display_name }} - Persona{% endblock %}
 
-{% block main %}
-<div class="full-width-container">
-  <div class="max-width-container">
-    <section class="discover__section">
-      <h1>Persona</h1>
-    </section>
-  </div>
+{% block header %}
+<div>
+  <h1>{{ persona.display_name }}</h1>
+  <p>Learn more about this person, their interests, and their activities.</p>
 </div>
+{% endblock %}
+
+{% block content %}
+<section class="app__section">
+  <!-- Profile Section -->
+  <div class="app-card-container">
+    <h2>Profile</h2>
+    <div class="details-card">
+      <div class="row gap-2 center">
+        <div class="fit">
+          <img src="{{ persona.profile_picture_url }}" alt="{{ persona.display_name }}" class="logo-thumbnail">
+        </div>
+        <div class="content">
+          <h3>{{ persona.display_name }}</h3>
+          <p class="mb-q">@{{ persona.username }}</p>
+          {% if persona.email %}
+            <p class="mb-q">{{ persona.email }}</p>
+          {% endif %}
+          {% if persona.date_joined %}
+            <p class="mb-q">Member since {{ persona.date_joined|date:"F Y" }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Memberships Section -->
+  <div class="app-card-container">
+    <h2>Memberships</h2>
+    {% if persona.memberships.all %}
+      <div class="results-container">
+        {% for membership in persona.memberships.all %}
+          <section class="card-section result">
+            <div class="app-card">
+              <div class="details-card">
+                <div class="row gap-1 center">
+                  <div class="fit">
+                    <img src="{{ membership.organization.logo_url }}" alt="{{ membership.organization.name }}" class="logo-thumbnail">
+                  </div>
+                  <div class="content">
+                    <h3>{{ membership.organization.name }}</h3>
+                    <span class="role-badge role-{{ membership.role }}">{{ membership.get_role_display }}</span>
+                  </div>
+                </div>
+                
+                {% if membership.organization.short_description %}
+                  <p class="mb-1">{{ membership.organization.short_description }}</p>
+                {% endif %}
+                
+                <div class="row around">
+                  {% if membership.selected %}
+                    <span class="active-indicator">✓ Active</span>
+                  {% endif %}
+                  <span class="member-since">Since {{ membership.created_at|date:"M Y" }}</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="details-card">
+        <div class="center" style="padding: 3rem;">
+          <p style="color: var(--text-muted-color);">No memberships found.</p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Personal Information Section -->
+  {% if persona.first_name or persona.last_name %}
+    <div class="app-card-container">
+      <h2>Personal Information</h2>
+      <div class="details-card">
+        <dl class="app-card__details">
+          {% if persona.first_name %}
+            <dt>First Name</dt>
+            <dd>{{ persona.first_name }}</dd>
+          {% endif %}
+          {% if persona.last_name %}
+            <dt>Last Name</dt>
+            <dd>{{ persona.last_name }}</dd>
+          {% endif %}
+          {% if persona.email %}
+            <dt>Email</dt>
+            <dd>{{ persona.email }}</dd>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+<style>
+.role-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: white;
+}
+
+.role-director { background-color: #ff6b6b; }
+.role-admin { background-color: #4ecdc4; }
+.role-staff { background-color: #45b7d1; }
+.role-coach { background-color: #96ceb4; }
+.role-participant { background-color: #feca57; }
+.role-parent { background-color: #ff9ff3; }
+
+.active-indicator {
+  color: #27ae60;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+.member-since {
+  color: var(--text-muted-color);
+  font-size: 0.8rem;
+}
+</style>
 {% endblock %}
 

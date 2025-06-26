@@ -1,8 +1,19 @@
-<div id="content{{ entry.safe_slug }}" class="pad-1">
+<div id="content{{ entry.safe_slug }}">
 
-  <h4>Reject Entry</h4>
+  <form>
 
-  <p>Reject this registration entry from the event.</p>
+    {% csrf_token %}
+    <input type="hidden" name="event_slug" value="{{ event.safe_slug }}">
+    <input type="hidden" name="entry_slug" value="{{ entry.safe_slug }}">
+
+    <h3>Reject Entry</h3>
+
+    <p>Reject this registration entry into the event.</p>
+
+    <button type="submit" class="btn danger" id="reject-entry-button">
+      Reject Entry
+    </button>
+
+  <form>
 
 </div>
-

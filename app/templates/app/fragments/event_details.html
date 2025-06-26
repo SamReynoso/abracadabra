@@ -1,38 +1,45 @@
-<dl class="app-card__details fit">
-  <dt><strong>Status</strong></dt>
-  <dd>
-    {{ event.status }}
-  </dd>
-</dl>
+<div class="pb-2">
 
-<div class="row wrap gap-2" style="align-items: center;">
-  <div class="row wrap gap-1 pad-1">
-
-    <img class="poster medium" src="{{ event.poster_url }}" alt="{{ event.name }} Poster">
-    <dl class="app-card__details">
-      <dt>Name</dt><dd>{{ event.name }}</dd>
-      <dt>Type</dt><dd>{{ event.event_type }}</dd>
-      <dt>Start</dt><dd>{{ event.start_date }}</dd>
-      <dt>End</dt><dd>{{ event.end_date }}</dd>
-      <dt>Price</dt><dd>{{ event.price }}</dd>
-
-      <dt>Venues</dt>
-      <dd>Placeholeder</dd>
-      <dt>Link</dt><dd><a href="https://example.com/event-link" target="_blank" rel="noopener noreferrer">Event Site</a><dd>
-        <dt></dt>
-        <dd>
-        <a class="btn-dropdown" href="{% url 'event_details' event.safe_slug %}">Page</a>
-        </dd>
-    </dl>
-  </div>
-
-  <dl>
-    <dt><strong>Short Description</strong></dt>
-    <dd class="pad-1"><p>{{ event.short_description }}</p></dd>
-
-    <dt><strong>Description</strong></dt>
-    <dd class="pad-1"><p>{{ event.description }}</p></dd>
+  <dl class="app-card__details fit">
+    <dt><strong>Status</strong></dt>
+    <dd>
+      {{ event.status }}
+    </dd>
   </dl>
 
-</div>
+  <div class="row wrap gap-1" style="align-items: center;">
+    <div class="row wrap gap-1 pad-1">
 
+      <img class="poster medium" src="{{ event.poster_url }}" alt="{{ event.name }} Poster">
+      <dl class="app-card__details">
+        <dt>Name</dt><dd>{{ event.name }}</dd>
+        <dt>Type</dt><dd>{{ event.event_type }}</dd>
+        <dt>Start</dt><dd>{{ event.start_date }}</dd>
+        <dt>End</dt><dd>{{ event.end_date }}</dd>
+        <dt>Price</dt><dd>{{ event.price }}</dd>
+
+        <dt>Venues</dt>
+        <dd>Placeholeder</dd>
+      </dl>
+    </div>
+
+    <dl>
+      <dt><strong>Short Description</strong></dt>
+      <dd class="pad-1"><p class="text-content">This is placeholder text.</p></dd>
+
+      <dt><strong>Description</strong></dt>
+      <dd class="pad-1"><p class="text-content">This is placeholder text.</p></dd>
+    </dl>
+
+
+  </div>
+
+  <div>
+    <h4>Links</h4>
+    <ul>
+      <li><a href="https://example.com/event-link" target="_blank" rel="noopener noreferrer">Your Site</a></li>
+      <li><a href="{% url 'event_details' event.safe_slug %}">Display Page</a></li>
+    </ul>
+  </div>
+
+</div>

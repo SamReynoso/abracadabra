@@ -1,6 +1,7 @@
 from app.forms import EventForm
 from models.models import (
         DivisionOrg,
+        DivisionEvent,
         Venue,
         DivisionOrg,
         Entry,
@@ -35,6 +36,33 @@ class DirectorHelper:
                 raise ValueError("You do not have permission to access this entry.")
             return entry
 
+        @staticmethod
+        def division_event(data, user):
+            division_event_slug = data.get('division_event_slug', '')
+            if not division_event_slug:
+                raise ValueError("Division event slug is required.")
+            try:
+                division_event = DivisionEvent.from_slug(division_event_slug)
+            except DivisionEvent.DoesNotExist:
+                raise ValueError("Division event not found.")
+            if division_event.event.organization.director != user:
+                raise ValueError("You do not have permission to access this division event.")
+            return division_event
+
+    class Create:
+        @staticmethod
+        def division_event(data, event):
+            gender = data.get("gender")
+            age = data.get("age")
+            level = data.get("level")
+            division_info = Helper.GetCreate.division(data)
+            if not division_info:
+                raise ValueError("Division information is required.")
+            division_event, _ = DivisionEvent.objects.get_or_create(
+                    event=event,
+                    info=division_info,
+                    )
+            return division_event
 
 
 def event_form(request):
@@ -110,17 +138,20 @@ def event_delete(request):
         event.delete()
 
 
-
 def entry_assign_form(request):
     user = request.user
     if request.method == "POST":
         data = request.POST
         entry = DirectorHelper.Get.entry(data, user)
-        return fragments.entry_card(request, entry)
+        division_event = DirectorHelper.Get.division_event(data, user)
+        entry.assigned_division = division_event.info
+        entry.status = Entry.Status.ASSIGNED
+        entry.save()
+        print("Entry assigned to division:", entry.assigned_division)
+        return fragments.entry_update_handler(request, entry)
     data = request.GET
     entry = DirectorHelper.Get.entry(data, user)
     return fragments.entry_assign_form(request, entry)
-
 
 
 def entry_confirm_form(request):
@@ -130,7 +161,7 @@ def entry_confirm_form(request):
         entry = DirectorHelper.Get.entry(data, user)
         entry.status = Entry.Status.CONFIRMED
         entry.save()
-        return fragments.entry_details(request, entry)
+        return fragments.entry_update_handler(request, entry)
     data = request.GET
     entry = DirectorHelper.Get.entry(data, user)
     return fragments.entry_confirm_form(request, entry)
@@ -143,7 +174,7 @@ def entry_reject_form(request):
         entry = DirectorHelper.Get.entry(data, user)
         entry.status = Entry.Status.REJECTED
         entry.save()
-        return fragments.entry_details(request, entry)
+        return fragments.entry_update_handler(request, entry)
     data = request.GET
     entry = DirectorHelper.Get.entry(data, user)
     return fragments.entry_reject_form(request, entry)
@@ -158,9 +189,15 @@ def create_org_division(request):
 
 def manage_division_form(request):
     user = request.user
+    if request.method == "POST":
+        data = request.POST
+        event = Helper.Get.event(data, user)
+        DirectorHelper.Create.division_event(data, event)
+        return fragments.event_manage_division(request, event)
     data = request.GET
     event = Helper.Get.event(data, user)
     return fragments.manage_division_form(request, event)
+
 
 def organization_division(request):
     user = request.user
@@ -181,5 +218,6 @@ def organization_division(request):
             division_info = Helper.GetCreate.division(request.POST)
             division_org.info = division_info
             division_org.save()
+        return fragments.organization_division(request, organization)
 
 

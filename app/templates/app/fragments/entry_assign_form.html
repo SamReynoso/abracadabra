@@ -1,21 +1,29 @@
 <div id="content{{ entry.safe_slug }}" class="pad-1">
-  <h2>
-    {{ entry.name }} - Assign Division
-  </h2>
 
+  <h1>Assign Division</h1>
 
-  <form class="app-form mt-2" action="" method="POST" enctype="multipart/form-data" id="assignEntryForm">
+  <dl class="grid mb-1">
+
+    <dt>Team Name:</dt><dd><strong>{{ entry.team.name }}</strong></dd>
+    <dt>Reported:</dt><dd><strong>{{ entry.reported_division.name }}</strong></dd>
+
+  </dl>
+
+  <form class="app-form mt-2" hx-post="{% url 'entry_assign_form' %}" hx-target="#entryCard{{ entry.safe_slug }}" hx-swap="outerHTML">
+
     {% csrf_token %}
+    <input type="hidden" name="entry_slug" value="{{ entry.safe_slug }}">
 
     <fieldset class="mb-2">
 
       <legend>Available Division for {{ entry.reported_division.team.name }}</legend>
-      {% for division in divisions %}
+
+      {% for division in entry.registration.event.divisions.all %}
 
         <label class="mb-1">
-          <input type="radio" name="division" value="{{ division.id }}" >
+          <input type="radio" name="division_event_slug" value="{{ division.safe_slug }}" >
           </input>
-          <span> {{ division.gender }} (O/U){{ division.age }} [{{ division.level }}] </span>
+          {{ division.info.name }}
         </label><br>
 
       {% empty %}
@@ -23,9 +31,11 @@
         <p>You haven't created any divisions for this event yet.</p>
 
       {% endfor %}
+
     </fieldset>
 
-    <button class="btn" type="submit" form="assignEntryForm">Submit</button>
+    <button class="btn" type="submit" onclick="document.getElementById('assignModal').close();">Assign</button>
 
   </form>
+
 </div>

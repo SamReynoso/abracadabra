@@ -31,7 +31,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 SECRET_KEY =  os.getenv("DJANGO_SECRET_KEY")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
-SITE_ID = os.getenv("DJANGO_SITE_ID", "1")
+SITE_ID = int(os.getenv("DJANGO_SITE_ID", "1"))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_URLCONF = 'project.urls'

@@ -1,8 +1,20 @@
 <div id="content{{ entry.safe_slug }}" class="pad-1">
 
-  <h4>Confirm Entry</h4>
+  <form>
 
-  <p>Accept this registration entry into the event.</p>
+    {% csrf_token %}
+    <input type="hidden" name="event_slug" value="{{ event.safe_slug }}">
+    <input type="hidden" name="entry_slug" value="{{ entry.safe_slug }}">
+
+    <h3>Confirm Entry</h3>
+
+    <p>Accept this registration entry into the event.</p>
+
+    <button type="submit" class="btn btn-primary" id="confirm-entry-button">
+      Confirm Entry
+    </button>
+
+  <form>
 
 </div>
 

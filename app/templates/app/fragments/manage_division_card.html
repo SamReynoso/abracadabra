@@ -1,0 +1,51 @@
+<div class="relative" id="divisionCard{{ division.safe_slug }}">
+  <ul
+    class="collapse-navigation-list" 
+    id="collapseDivision{{ division.safe_slug }}"
+    data-collapse-id="collapseDivision{{ division.safe_slug }}"
+    >
+
+    <li>
+      <button class="btn-link">
+        foo
+      </button>
+    </li>
+
+    <li>
+      <button class="btn-link">
+        bar
+      </button>
+    </li>
+
+    <li>
+      <button class="btn-link">
+        baz
+      </button>
+    </li>
+
+  </ul>
+
+  <details class="app-card">
+
+    <summary class="app-card__summary">
+
+      <div class="row gap-1 center"> 
+        <h3 class="app-card__title">{{ division.info.name }}</h3>
+      </div>
+      <button
+        class="ellipsis-icon"
+        onclick="openAppDropdown(event)"
+        alt="Menu icon for entry details"
+        data-toggle="collapseDivision{{ division.safe_slug }}"
+        >
+      </button>
+    </summary>
+
+    <div id="contentDivision{{ division.safe_slug }}" class="pad-1">
+
+      {% include 'app/fragments/division_details.html' with division=division %}
+
+    </div>
+
+  </details>
+</div>

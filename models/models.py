@@ -313,7 +313,7 @@ class DivisionInfo(ABSClass):
         CLUB = 'club', 'Club'
 
     gender  = models.CharField(max_length=20, choices=Gender.choices)
-    level = models.CharField(max_length=20, choices=Level.choices)
+    level = models.CharField(max_length=21, choices=Level.choices)
     age = models.IntegerField(verbose_name='Age (in years)')
 
     @property

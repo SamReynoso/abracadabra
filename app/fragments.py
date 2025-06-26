@@ -55,11 +55,12 @@ def manage_registrations(request, event, registrations): # This is renamed and w
 
 
 
-def entry_card(request, entry):
+def entry_update_handler(request, entry):
     context = { "entry": entry }
-    return render(request, "app/fragments/entry_card.html", context)
+    return render(request, "app/fragments/entry_update_handler.html", context)
 
 def entry_details(request, entry):
+    # This may be unused.
     context = { "entry": entry }
     return render(request, "app/fragments/entry_details.html", context)
 
@@ -76,8 +77,14 @@ def entry_reject_form(request, entry):
     return render(request, "app/fragments/entry_reject_form.html", context)
 
 
-def manage_division_form(request, division):
+
+def event_manage_division(request, division):
     context = { "division": division }
+    return render(request, "app/fragments/event_manage_division.html", context)
+
+
+def manage_division_form(request, event):
+    context = { "event": event}
     return render(request, "app/fragments/manage_division_form.html", context)
 
 

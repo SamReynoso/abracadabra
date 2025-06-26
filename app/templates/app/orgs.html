@@ -1,6 +1,7 @@
 {% extends 'app/base.html' %}
 
 {% block header %}
+
   <h1 class="mb-1">Organizations</h1>
   {% if organization %}
 
@@ -117,47 +118,51 @@
 
 <div class="app-card-container">
   <h2>Members</h2>
-  {% for member in members %}
-  <p class="pad-1">
-    {% if member.role == 'director' %}
-      <span class="badge badge-admin">Director</span>
-    {% endif %}
-    <a href="">{{ member.user.display_name }}</a>
-  </p>
 
+  {% for member in members %}
+
+    <p class="pad-1">
+
+      {% if member.role == 'director' %}
+        <span class="badge badge-admin">Director</span>
+      {% endif %}
+      <a href="">{{ member.user.display_name }}</a>
+
+    </p>
 
   {% endfor %}
+
 </div>
 
 {% else %}
 
-              <h3>Create New Organization</h3>
-              <form class="inline-input-form" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input
-                  class="search-input"
-                  name="name"
-                  type="text"
-                  placeholder="Start An Org to manage events"
-                  aria-label="Start An Org to manage events"
-                    >
-                <button>Create</button>
-              </form>
-                {% if form.errors %}
-                  <div class="form-errors">
-                    <p>Please correct the errors below:</p>
-                    <ul>
-                      {% for field in form %}
-                        {% for error in field.errors %}
-                          <li>{{ field.label }}: {{ error }}</li>
-                        {% endfor %}
-                      {% endfor %}
-                      {% for error in form.non_field_errors %}
-                        <li>{{ error }}</li>
-                      {% endfor %}
-                    </ul>
-                  </div>
-                {% endif %}
+  <h3>Create New Organization</h3>
+  <form class="inline-input-form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input
+      class="search-input"
+      name="name"
+      type="text"
+      placeholder="Start An Org to manage events"
+      aria-label="Start An Org to manage events"
+        >
+    <button>Create</button>
+  </form>
+    {% if form.errors %}
+      <div class="form-errors">
+        <p>Please correct the errors below:</p>
+        <ul>
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
 {% endif %}
 
 <dialog class="modal" id="uploadDialog">

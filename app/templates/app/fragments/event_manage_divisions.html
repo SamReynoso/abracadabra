@@ -1,15 +1,26 @@
+<button 
+  class="btn mb-1"
+  hx-get="{% url 'manage_division_form' %}?event_slug={{ event.safe_slug }}"
+  hx-target="#modalContent"
+  hx-swap="innerHTML"
+  hx-trigger="click"
+  onclick="document.getElementById('assignModal').showModal();"
+  >
+  Add Divisions
+</button>
 
 <div class="app-card-container" id="entries">
+
   <h2>Divisions</h2>
+
   {% for division in event.divisions.all %}
-      <div class="app-card">
-          <h3>{{ division.name }}</h3>
-          <p>{{ division.description }}</p>
-          <p>Start Date: {{ division.start_date }}</p>
-          <p>End Date: {{ division.end_date }}</p>
-          <button class="btn btn-primary" onclick="assignEntries('{{ division.id }}')">Assign Entries</button>
-      </div>
+
+    {% include 'app/fragments/manage_division_card.html' with division=division %}
+
   {% empty %}
-  <p>No divisions available for this event.</p>
+
+    <p>No divisions available for this event.</p>
+
   {% endfor %}
+
 </div>

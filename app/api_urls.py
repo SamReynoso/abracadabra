@@ -12,5 +12,4 @@ urlpatterns = [
     path("entry-reject-form", api.entry_reject_form, name="entry_reject_form"),
 
     path("manage-division-form/", api.manage_division_form, name="manage_division_form"),
-    path("organization-division/", api.organization_division, name="organization_division"),
 ]

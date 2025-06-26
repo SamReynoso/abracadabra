@@ -1,5 +1,7 @@
 <div class="relative" id="entryCard{{ entry.safe_slug }}">
+
   <ul class="collapse-navigation-list" id="collapse{{ entry.safe_slug }}" data-collapse-id="collapse{{ entry.safe_slug }}">
+
     <li>
       <button
         class="btn-link"
@@ -13,32 +15,27 @@
     </li>
 
     <li>
-      <form>
-        {% csrf_token %}
-        <button
-          class="btn-link"
-          hx-get="{% url 'entry_confirm_form' %}?entry_slug={{ entry.safe_slug }}"
-          hx-target="#content{{ entry.safe_slug }}"
-          hx-swap="innerHTML"
-          >
-          Confirm
-        </button>
-      </form>
+      <button
+        class="btn-link"
+        hx-get="{% url 'entry_confirm_form' %}?entry_slug={{ entry.safe_slug }}"
+        hx-target="#content{{ entry.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Confirm
+      </button>
     </li>
 
     <li>
-      <form>
-        {% csrf_token %}
-        <button
-          class="btn-link"
-          hx-get="{% url 'entry_reject_form' %}?entry_slug={{ entry.safe_slug }}"
-          hx-target="#content{{ entry.safe_slug }}"
-          hx-swap="innerHTML"
-          >
-          Reject
-        </button>
-      </form>
+      <button
+        class="btn-link"
+        hx-get="{% url 'entry_reject_form' %}?entry_slug={{ entry.safe_slug }}"
+        hx-target="#content{{ entry.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Reject
+      </button>
     </li>
+
   </ul>
 
   <details class="app-card">
@@ -48,11 +45,9 @@
       <div class="row gap-1 center"> 
         <h3 class="app-card__title">{{ entry.name }}</h3>
       </div>
-      {% if entry.assigned %} 
-        <span class="assigned">Assigned</span>
-      {% else %}
-        <span class="unassigned">Unassigned</span>
-      {% endif %}
+
+      <span class="unassigned">{{ entry.status }}</span>
+
       <button
         class="ellipsis-icon"
         onclick="openAppDropdown(event)"
@@ -60,6 +55,7 @@
         data-toggle="collapse{{ entry.safe_slug }}"
         >
       </button>
+
     </summary>
 
     <div id="content{{ entry.safe_slug }}" class="pad-1">
@@ -67,12 +63,15 @@
       <h4>Contact Information</h4>
 
       <ul class="pad-1">
+
         <li><strong>Name:</strong> {{ registration.owner.info.first_name}} {{ registration.owner.info.last_name }}</li>
         <li><strong>Email:</strong> {{ registration.owner.info.email }}</li>
         <li><strong>Phone:</strong> {{ registration.owner.info.phone }}</li>
+
       </ul>
 
     </div>
 
   </details>
+
 </div>

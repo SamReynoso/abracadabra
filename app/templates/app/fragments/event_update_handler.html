@@ -1,0 +1,97 @@
+<!-- Event details card for event: {{ event.name }}-->
+<div class="relative" id="eventCard{{ event.safe_slug }}" data-card-id="eventCard{{ event.safe_slug }}">
+  <ul class="collapse-navigation-list" id="collapse{{ event.safe_slug }}" data-collapse-id="collapse{{ event.safe_slug }}">
+
+    <li>
+      <button 
+        class="btn-dropdown"
+        hx-get="{% url 'event_details_fragment' %}?event_slug={{ event.safe_slug }}"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Details
+      </button>
+    </li>
+
+    <li>
+      <button
+        class="btn-dropdown"
+        hx-get="{% url 'event_form' %}?event_slug={{ event.safe_slug }}"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Edit
+      </button>
+    </li>
+
+    <li>
+      <button
+        class="btn-dropdown"
+        hx-get="{% url 'event_poster_select' %}?event_slug={{ event.safe_slug }}"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Poster
+      </button>
+    </li>
+
+    <li>
+      <button
+        class="btn-dropdown"
+        hx-get="{% url 'event_venue_form' %}?event_slug={{ event.safe_slug }}"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+       Venue 
+      </button>
+    </li>
+
+    <li>
+      <a
+        class="btn-dropdown"
+        href="{% url 'event_manage' event.safe_slug %}"
+        >
+        Manage
+      </a>
+    </li>
+
+    <li>
+      <button
+        class="btn-dropdown delete-btn"
+        hx-get="{% url 'event_delete' %}?event_slug={{ event.safe_slug }}"
+        hx-target="#content{{ event.safe_slug }}"
+        hx-swap="innerHTML"
+        >
+        Delete
+      </button>
+    </li>
+  </ul>
+
+  <details class="app-card" id="details{{ event.safe_slug}}" data-card-id="details{{ event.safe_slug }}">
+
+    <summary class="app-card__summary">
+      <h3 class="app-card__title">{{ event.name }}</h3>
+
+      <button
+        class="ellipsis-icon"
+        src="/assets/menu.svg"
+        onclick="openAppDropdown(event)"
+        alt="Menu icon for event details"
+        data-toggle="collapse{{ event.safe_slug }}"
+        ></button>
+
+    </summary>
+
+    <div
+      class="pad-1"
+      id="content{{ event.safe_slug }}"
+      >
+      {% include 'app/fragments/event_details.html' with event=event %}
+    </div>
+  </details>
+</div>
+
+<div class="relative" id="divisionCard{{ division.safe_slug }}" hx-oob="tru">
+  {% include 'app/fragments/manage_division_card.html' with division=division %}
+</div>
+

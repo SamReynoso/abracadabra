@@ -31,26 +31,18 @@
 </section>
 
 <section id="divisionsContainer">
-  <button 
-    class="btn mb-1"
-    hx-get="{% url 'manage_division_form' %}?event_slug={{ event.safe_slug }}"
-    hx-target="#modalContent"
-    hx-swap="innerHTML"
-    hx-trigger="click"
-    onclick="document.getElementById('assignModal').showModal();" >
-    Add Divisions
-  </button>
   {% include 'app/fragments/event_manage_divisions.html' with event=event %}
 </section>
-
 
 <dialog class="modal" id="assignModal">
 
     <form method="dialog">
-      <button class="close-btn"></button>
+      <button class="close-btn">
+      </button>
     </form>
 
     <div class="modal-content" id="modalContent">
+      <!-- Dynamic content will be loaded here -->
     </div>
 
 </dialog>

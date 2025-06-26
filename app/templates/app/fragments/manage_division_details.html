@@ -1,0 +1,5 @@
+<h3>Divisions Members</h3>
+{% for entry in division.entries.all %}
+  <p><strong>{{ entry.team.name }}</strong> {{ entry.status }}</p>
+{% endfor %}
+

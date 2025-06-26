@@ -1,0 +1,5 @@
+{% include 'app/fragments/entry_card.html' with entry=entry %}
+
+<section id="divisionsContainer" hx-swap-oob="true">
+  {% include 'app/fragments/event_manage_divisions.html' with event=entry.registration.event %}
+</section>

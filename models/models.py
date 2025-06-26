@@ -318,7 +318,7 @@ class DivisionInfo(ABSClass):
 
     @property
     def name(self):
-        return f"{ self.gender } (O/U) { self.age } [{ self.level }]"
+        return f"(O/U) { self.age } [{ self.level }] - { self.gender }"
 
 
 class DivisionOrg(ABSClass):
@@ -329,6 +329,13 @@ class DivisionOrg(ABSClass):
 class DivisionEvent(ABSClass):
     info = models.ForeignKey( DivisionInfo, related_name='division_events', on_delete=models.CASCADE)
     event = models.ForeignKey(Event, related_name='divisions', on_delete=models.CASCADE)
+
+    @property
+    def entries(self):
+        return Entry.objects.filter(
+            assigned_division=self.info,
+            registration__event=self.event
+            )
 
 
 class DivisionTeam(ABSClass):
@@ -385,7 +392,7 @@ class Entry(ABSClass):
 
     @property
     def name(self):
-        return f"{ self.team.name }  { self.reported_division.gender } (O/U) {self.reported_division.age} [{ self.reported_division.level }]"
+        return f"{ self.team.name } (O/U) {self.reported_division.age} [{ self.reported_division.level }] - { self.reported_division.gender }"
 
 
 class Game(ABSClass):

@@ -85,7 +85,7 @@
 
       <h4>Description</h4>
 
-      <p>{{ event.description }}</p>
+      <p class="text-content mb-1">{{ event.description }}</p>
       <h3>{{ event.start_date|date:"F j, Y" }}</h3>
       <h3>{{ event.formatted_price }}</h3>
 
@@ -109,7 +109,7 @@
       <p>No divisions available for yet.</p>
     {% endif %}
     {% for division in event.divisions.all %}
-      <h4>Division: {{ division.name }}</h4>
+      <h4>Division: {{ division.info.name }}</h4>
       <p>{{ division.description }}</p>
     {% endfor %}
 

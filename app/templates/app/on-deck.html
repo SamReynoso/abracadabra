@@ -2,25 +2,23 @@
 
 {% block content %}
 
-<div class="app-card-container" id="recentActivity">
-  <h2>Recent Activity</h2>
-  {% for event in in_progress %}
-    {% include 'app/event_card.html' with event=event %}
-  {% endfor %}
-</div>
+<section>
+  <h1>Welcome to the AbracaDashboard!</h1>
+  <div class="text-content">
+  <strong>Demo instructions:</strong>
+  <hr class="mb-1">
 
-<div class="app-card-container" id="recentActivity">
-  <h2>Feed</h2>
-  {% for event in in_progress %}
-    {% include 'app/event_card.html' with event=event %}
-  {% endfor %}
-</div>
+    <p>Below will be an new updates that require your attention.</p>
 
-<div class="app-card-container" id="recentActivity">
-  <h2>History</h2>
-  {% for event in in_progress %}
-    {% include 'app/event_card.html' with event=event %}
-  {% endfor %}
-</div>
+    <p>
+      This is just a demo so go ahead and create a new organization and event. Avfter creating you first organization
+      update the name, price, etc. You can then find the even in the discover page and start a registration draft.
+    </p>
+
+    <p>Complete your registration in the workspace by creating a Team.</p>
+
+    <p>Once you've done that, come back here and go to the event management page for that event.</p>
+  </div>
+
 
 {% endblock content %}

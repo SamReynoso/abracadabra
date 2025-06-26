@@ -147,7 +147,6 @@ def entry_assign_form(request):
         entry.assigned_division = division_event.info
         entry.status = Entry.Status.ASSIGNED
         entry.save()
-        print("Entry assigned to division:", entry.assigned_division)
         return fragments.entry_update_handler(request, entry)
     data = request.GET
     entry = DirectorHelper.Get.entry(data, user)

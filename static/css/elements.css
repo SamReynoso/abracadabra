@@ -213,6 +213,14 @@ dl.grid dt {
 }
 
 
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 button.ellipsis-icon {
   background-image: url('/assets/icons/ellipsis.svg');
   background-repeat: no-repeat;

@@ -52,7 +52,7 @@ nav.navigations {
   left: 0;
   height: var(--nav-height);
   border-bottom: 1px solid var(--border-color);
-  z-index: 9999;
+  z-index: 100;
 }
 
 div.nav__section {
@@ -157,7 +157,7 @@ div.navbar__dropdown * {
 
 
 div.navbar__dropdown.show {
-  z-index: 10001;
+  z-index: 101;
   opacity: 1;
   width: 18.625rem;
   height: 26.625rem;
@@ -208,7 +208,7 @@ div.navbar__dropdown__section {
 }
 
 .muted-overlay.active {
-  z-index: 9998;
+  z-index: 98;
   opacity: 1;
 }
 
@@ -249,7 +249,7 @@ aside.sidebar {
   height: 100vh;
   transition: transform 0.2s ease;
   border-right: 1px solid var(--border-color);
-  z-index: 9999;
+  z-index: 99;
 }
 
 .sidebar__section h2 {

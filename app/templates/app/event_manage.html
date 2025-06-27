@@ -12,7 +12,9 @@
     <img class="poster small" src="{{ event.poster_url }}" alt="{{ event.name }} Poster">
 
     <div>
+
       <h1>{{ event.name }}</h1>
+
       <dl class="grid">
         <dt>Type:</dt>
         <dd>{{ event.event_type }}</dd>
@@ -20,7 +22,10 @@
         <dd>{{ event.start_date }}</dd>
         <dt>End Date:</dt>
         <dd>{{ event.end_date }}</dd>
+
     </div>
+
+    <img src="/assets/icons/bracket.svg" id="bracketOpenButton" >
 
   </div>
 
@@ -48,5 +53,12 @@
     </div>
 
   </dialog>
+
+<!-- Bracket Builder Overlay -->
+<div class="overlay bracket" id="overlay">
+</div>
+
+<link rel="stylesheet" href="/static/css/builder.css" />
+<script src="/static/js/bracketbuilder.js"></script>
 
 {% endblock content%}

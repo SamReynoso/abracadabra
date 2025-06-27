@@ -1,0 +1,192 @@
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  left: 0;
+  width: 100vw;
+  top: var(--nav-height);
+  min-height: calc(100vh - var(--nav-height));
+  z-index: -10;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.show {
+  z-index: 110;
+  opacity: 1;
+}
+
+
+.bracket-overlay {
+  background-color: rgb(10, 10, 10);
+}
+
+.bracket__controls {
+  padding: 15px 20px;
+}
+
+.bracket__title {
+  width: 275px;
+  text-align: center;
+}
+
+.bracket__navigation {
+  display: flex;
+  gap: 10px;
+}
+
+.bracketOpen {
+  border-radius: 20%;
+}
+
+.bracketOpen:hover {
+  background-color: rgba(0, 0, 0, .1);
+}
+
+.bracketClose {
+  position: fixed;
+  top: calc(var(--header-height) + 20px);
+  right: 20px;
+}
+
+.overlay.bracket {
+  background-color: rgb(10, 10, 10);
+}
+
+.sheet-table__container {
+  max-height: calc(100% - var(--header-height) - 200px);
+  overflow: auto;
+}
+
+.sheet-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  min-width: 800px;
+}
+
+.sheet-table td {
+  background-color: rgb(20, 20, 20);
+  border: var(--border);
+  padding: 8px 10px;
+  text-align: center;
+  height: 50px;
+}
+
+.day-container {
+  display: flex;
+  gap: var(--gap);
+}
+
+.day-number {
+  padding-top: 4px;
+  margin: 0;
+}
+
+.sheet-table thead th:first-child,
+.sheet-table tbody th:first-child {
+  width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sheet-table__tooltip {
+  width: 200px;
+  background-color: rgb(20, 20, 20);
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+}
+
+
+.overlay__header {
+  padding: 20px;
+}
+
+.element-box {
+  background-color: rgb(30, 30, 30);
+  height: 100px;
+  width: 100%;
+  overflow-x: auto;
+  padding: 10px;
+}
+
+.element-box__container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 15px 20px;
+}
+
+div.game {
+  background-color: rgb(40, 40, 40);
+  transition: background-color .2s;
+  border-radius: 5px;
+  padding: 5px 15px;
+}
+
+div.game.selected {
+  background-color: rgb(40, 155, 0);
+}
+
+div.game.pending {
+  background-color: rgb(25, 25, 25);
+}
+
+div.game.pending.selected {
+  background-color: rgb(25, 25, 25);
+}
+
+div.game.member.pending.selected {
+  background-color: rgb(40, 155, 0); 
+}
+div.game.member.related {
+  background-color: rgb(55, 55, 155);
+}
+
+td {
+  transition: background-color .2s;
+}
+
+td.drag-over {
+  background-color: rgba(255, 255, 255, .1);
+}
+
+td.game {
+  background-color: rgb(40, 40, 40);
+}
+
+td.game.pending {
+  background-color: rgb(25, 25, 25);
+}
+
+td.game.pending.member,
+td.game.member {
+  background-color: rgba(55, 55, 200, .7); 
+}
+
+td.game.pending.member.related,
+td.game.member.related {
+  background-color: rgba(200, 155, 55, .7); 
+}
+
+td.game.member.selected,
+td.game.pending.member.selected { 
+  background-color: rgb(40, 155, 0); 
+}
+
+td.blocked {
+  background-color: rgb(60, 30, 30);
+}
+
+td.game.blocked,
+td.game.pending.blocked {
+  background-color: rgb(50, 25, 25); 
+
+.bracket-canvas {
+    background-color: rgb(40, 40, 40);
+    border-radius: 5px;
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+}

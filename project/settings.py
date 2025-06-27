@@ -38,7 +38,7 @@ ROOT_URLCONF = 'project.urls'
 STATIC_URL = 'static/'
 STATIC_ROOT = 'static/'
 MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR.parent / 'media'
+MEDIA_ROOT = BASE_DIR.parent / 'www' / 'media'
 
 ACCOUNT_SIGNUP_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
@@ -106,7 +106,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR.parent / 'db.sqlite3',
+        'NAME': BASE_DIR.parent / 'www' / 'db.sqlite3',
         }
     }
 

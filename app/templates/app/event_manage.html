@@ -25,7 +25,14 @@
 
     </div>
 
-    <img src="/assets/icons/bracket.svg" id="bracketOpenButton" >
+    <img 
+      role="button"
+      tabindex="0"
+      class="bracket-open"
+      src="/assets/icons/bracket.svg"
+      id="bracketOpenButton" 
+      aria-label="BracketOpenButton"
+      >
 
   </div>
 
@@ -54,11 +61,52 @@
 
   </dialog>
 
-<!-- Bracket Builder Overlay -->
-<div class="overlay bracket" id="overlay">
-</div>
+  <!-- Bracket Builder Overlay -->
+  <div class="overlay bracket" id="bracketBuilderOverlay">
 
-<link rel="stylesheet" href="/static/css/builder.css" />
-<script src="/static/js/bracketbuilder.js"></script>
+    <!-- Header -->
+    <div class="padding-2">
+
+      <!-- Title -->
+      <div class="row gap-1 center">
+        <h1>Bracket Builder</h1>
+        <button class="close-btn" id="closeBracketBuilderButton"></button>
+      </div>
+
+      <!-- Selects -->
+      <div class="form__bar mb">
+        <select name="site" id="siteSelect">
+          <option value="0">Select Site</option>
+        </select>
+        <select name="division" id="divisionSelect">
+          <option value="0">Select Division</option>
+        </select>
+        <select name="bracket" id="bracketTypeSelect">
+          <option value="0">Change Bracket</option>
+        </select>
+        <button class="btn" id="saveButton">Save</button>
+        <button class="btn" id="resetButton">Reset</button>
+        <label for="losersBracket">Losers Bracket</label>
+        <input type="checkbox" id="loserBracketInput" name="losersBracket">
+      </div>
+      
+      <!-- Game Box -->
+      <div class="game-box handled">
+        <div class="game-box__container" id="gamesContainer">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Schedule Table -->
+    <div class="sheet-table__container handled" id='tableContainer'>
+      <h2 class="sheet-table__title">Bracket Builder</h2>
+      <table class="sheet-table" id="bracketBuilderTable">
+      </table>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="/static/css/builder.css" />
+  <script src="/static/js/bracketbuilder.js"></script>
 
 {% endblock content%}

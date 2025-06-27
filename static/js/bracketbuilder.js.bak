@@ -118,7 +118,6 @@ class Ajax {
             divisions: this._rawDivisions(),
         }
     }
-
 }
 
 function loadState() {
@@ -402,7 +401,6 @@ class State {
     }
 
 }
-
 styles = {
     game: 'game',
     pendingGame: 'pending',
@@ -416,7 +414,7 @@ styles = {
     controls: 'bracket__controls',
     navigation: 'bracket__navigation',
     title: 'bracket__title',
-    };
+        };
 
 class Styler {
 
@@ -433,27 +431,25 @@ class Styler {
     static backButton(elm) {
         elm.src = '/assets/icons/right-arrow.svg';
         elm.classList.add('icon');
-        elm.classList.add('invert');
         elm.classList.add('smaller');
-        elm.classList.add('reverse');
+        elm.classList.add('flip');
         elm.classList.add('ml');
     }
 
     static forwardButton(elm) {
         elm.src = '/assets/icons/right-arrow.svg';
         elm.classList.add('icon');
-        elm.classList.add('invert');
         elm.classList.add('smaller');
         elm.classList.add('ml');
     }
 
     static openButton(elm) {
-        elm.src = '/assets/icons/bracket.svg';
         elm.setAttribute('alt', 'Bracket Builder');
         elm.setAttribute('aria-label', 'Bracket Builder');
         elm.setAttribute('role', 'button');
         elm.setAttribute('tabindex', '0');
-        elm.classList.add('invert');
+        elm.classList.add('icon');
+        elm.classList.add('bracketOpen');
     }
 
     static closeButton(elm) {
@@ -988,7 +984,7 @@ class Overlay {
 
         this.controls = new Controls();
         this.pageContainer = document.createElement('div');
-        this.openButton = document.getElementById('bracketOpenButton');
+        this.openButton = document.getElementById('bracketOpenButton')
 
         this.addEventListeners();
         this.registerKernelEvents();
@@ -1045,7 +1041,6 @@ class Overlay {
         this.elm.appendChild(this.pageContainer);
 
         document.body.appendChild(this.elm);
-        document.body.appendChild(this.openButton);
     }
 
     addEventListeners() {
@@ -1062,10 +1057,10 @@ class Overlay {
 
     registerKernelEvents() {
         this.kernel.on('pageChange', (page) => {
+            console.log('Changing page');
             this.setContent(page);
             this.changeTitle(page);
         });
-
         this.kernel.on('siteChange', (number) => this.changeSite(number));
         this.kernel.on('siteAdd', (site) => this.addSiteOptions(site));
         this.kernel.on('divisionAdd', (division) => this.addDivisionOptions(division));
@@ -1142,19 +1137,16 @@ class Kernel extends EventEmitter {
     loadState(stateData) {
         this.state.loadData(stateData);
 
-        this.state.sites.sheets.forEach(
-            site => this.emit('siteAdd', site)
-        );
+        // add sites, divisions, games
+        this.state.sites.sheets
+            .forEach(site => this.emit('siteAdd', site));
 
-        this.state.divisions.data.forEach(
-            division => this.emit('divisionAdd', division)
-        );
+        this.state.divisions.data
+            .forEach(division => this.emit('divisionAdd', division));
 
-        this.state.divisions.data.forEach(
-            division => division.games.forEach(
-                game => this.emit('gameAdd', game)
-            )
-        );
+        this.state.divisions.data
+            .forEach(division => division.games
+                .forEach(game => this.emit('gameAdd', game)));
     }
 
     registerPage(page) {

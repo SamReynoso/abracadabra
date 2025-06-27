@@ -1,0 +1,70 @@
+{
+    "venues": [
+        {
+            "id": null,
+            "index": 0,
+            "name": "Main Gym",
+            "map": {
+                "slots": [
+                    "9:00 AM",
+                    "10:00 AM",
+                    "11:00 AM",
+                    "12:00 PM",
+                    "1:00 PM",
+                    "2:00 PM",
+                    "3:00 PM",
+                    "4:00 PM",
+                    "5:00 PM",
+                    "6:00 PM",
+                    "7:00 PM"
+                ],
+            "days": [0, 1, 2]
+        },
+        {
+            "id": null,
+            "index": 1,
+            "name": "Old Gym",
+            "map": {
+                "slots": [
+                    "9:00 AM",
+                    "10:00 AM",
+                    "11:00 AM",
+                    "12:00 PM",
+                    "1:00 PM",
+                    "2:00 PM",
+                    "3:00 PM",
+                    "4:00 PM",
+                    "5:00 PM",
+                    "6:00 PM",
+                    "7:00 PM"
+                ],
+            "days": [0, 1]
+        },
+        {
+            "id": null,
+            "index": 2,
+            "name": "East Gym",
+            "map": {
+                "slots": [
+                    "9:00 AM",
+                    "10:00 AM",
+                    "11:00 AM"
+                ],
+            "days": [0]
+        },
+        {
+            "id": null,
+            "index": 3,
+            "name": "West Gym",
+            "map": {
+                "slots": [
+                    "9:00 AM",
+                    "10:00 AM",
+                    "11:00 AM",
+                    "12:00 PM"
+                ],
+            "days": [0]
+        },
+        
+    ]
+}
